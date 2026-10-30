@@ -54,10 +54,13 @@ main.tscn (Node2D, main.gd)        state switcher — M1 มีสถานะ�
 | 2 | ปล่อยศัตรูตามเวลา | `SpawnDirector` |
 | 3 | เคลียร์ grid แล้ว insert ศัตรูที่ยังไม่ตายทุกตัว | `EnemySystem` |
 | 4 | separation: ผลักกันเอง | `EnemySystem` |
-| 5 | chase: เดินเข้าหาผู้เล่น + ย้ายตัวที่หลงไกล | `EnemySystem` |
-| 6 | contact: หาตัวที่แตะผู้เล่น → ส่งดาเมจ | `EnemySystem` → `Player` |
+| 5 | contact: หาตัวที่แตะผู้เล่น → ส่งดาเมจ | `EnemySystem` → `Player` |
+| 6 | chase: เดินเข้าหาผู้เล่น + ย้ายตัวที่หลงไกล | `EnemySystem` |
 | 7 | เขียน transform ลง MultiMesh | `EnemySystem` |
 | 8 | อ่านเวลาที่จับไว้ไปแสดง | `DebugOverlay` |
+
+ทุกอย่างที่ query grid ต้องอยู่ระหว่างขั้น 3 กับขั้นที่มีการขยับตัวแรก — contact จึงมาก่อน chase ไม่ใช่หลัง
+ไม่งั้น grid จะสะท้อนตำแหน่งของเฟรมก่อนหน้าและดาเมจจะคลาดจากที่เห็นบนจอ
 
 ## 4. คอมโพเนนต์
 
