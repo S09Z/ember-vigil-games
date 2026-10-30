@@ -1,0 +1,11 @@
+# Godot 4
+.godot/
+/build/*
+!/build/.gdignore
+
+# macOS
+.DS_Store
+
+# local-only
+.claude/settings.local.json
+*.tmp
