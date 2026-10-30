@@ -34,7 +34,7 @@ graph LR
 
 ## M1 — Player + EnemySystem + SpatialGrid
 
-**เงื่อนไขผ่าน (hard gate):** Ghoul 400 ตัวที่ 60 FPS บนเว็บ **ถ้าไม่ผ่าน ห้ามไปต่อ M2**
+**เงื่อนไขผ่าน (hard gate):** Ghoul 400 ตัวบน build เว็บใน Chrome — avg FPS ≥120 และ 1% low ≥90 บน M3 (proxy เผื่อ headroom ~2× ให้ "แล็ปท็อประดับกลาง" ใน design.md) **ถ้าไม่ผ่าน ห้ามไปต่อ M2**
 **ผลลัพธ์ที่จับต้องได้:** เดินตัวละครหนีฝูง Ghoul ได้ โดนตีแล้ว HP ลด ตายได้ ยังไม่มีอาวุธ
 
 ### M1-A โครงสร้างพื้นฐาน (core/)
@@ -43,8 +43,9 @@ graph LR
 |---|---|---|---|---|
 | M1-1 | `SpatialGrid`: hash grid, `clear()` / `insert(id, pos)` / `query_radius(pos, r, out_buffer)` คืนค่าใส่ buffer ที่ส่งเข้ามา ห้าม allocate ต่อการเรียก | `core/spatial_grid.gd` | T | M |
 | M1-2 | `Pool`: free-list ของ index สำหรับ struct-of-arrays โตเป็นชั้น ๆ ไม่ย่อกลับกลางรอบ | `core/pool.gd` | T | S |
-| M1-3 | `Rng`: wrapper ของ `RandomNumberGenerator` ที่ seed ได้ + `weighted_pick()` ใช้ซ้ำรอบเดิมตอน debug | `core/rng.gd` | T | S |
-| M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS / จำนวนศัตรู / ms ต่อระบบ อ่านค่าผ่าน signal หรือ getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | S |
+| M1-3 | `Rng`: wrapper ของ `RandomNumberGenerator` ที่ seed ได้ + `point_in_ring()` ใช้ซ้ำรอบเดิมตอน debug (`weighted_pick()` เลื่อนไป M2-12 ตาม YAGNI) | `core/rng.gd` | T | S |
+| M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
+| M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS ปัจจุบัน + avg และ 1% low ในหน้าต่าง 600 เฟรม (ring buffer) + จำนวนศัตรู + ms ต่อขั้น อ่านผ่าน getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | M |
 
 ### M1-B ผู้เล่น
 
@@ -59,19 +60,22 @@ graph LR
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
 | M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
-| M1-9 | `EnemySystem` โครง SoA: `PackedVector2Array` pos/vel + `PackedFloat32Array` hp + type + alive, `spawn()` / `kill()` / การบีบอัดช่องว่าง ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
+| M1-9 | `EnemySystem` โครง SoA: pos/vel เป็น `PackedVector2Array`, hp เป็น `PackedFloat32Array`, type/alive เป็น `PackedByteArray`, `spawn()` / `kill()` คืน slot เข้า `Pool` โดย **slot คงที่ ไม่บีบอัด array** (index ต้องอ้างข้ามเฟรมได้ให้ M3) ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
 | M1-10 | วาดด้วย `MultiMeshInstance2D` ชิ้นเดียว อัปเดต transform ต่อเฟรมแบบไม่ allocate | `run/enemy_system.gd` | — | M |
 | M1-11 | การเดิน: ไล่ผู้เล่นตรง ๆ + HP scaling `1 + t/150` ตอน spawn + ตัวที่ห่างเกิน 600 ถูกย้ายไป spawn ใหม่ใกล้ผู้เล่น | `run/enemy_system.gd` | T | M |
 | M1-12 | ชนผู้เล่น: หาเพื่อนบ้านจาก `SpatialGrid` ไม่ใช้ `Area2D`/physics body กับศัตรู | `run/enemy_system.gd` | T | M |
+| M1-17 | separation: ศัตรูผลักกันเองทุกเฟรม คิดเฉพาะคู่ `j > i` ผลักสองฝั่งพร้อมกัน เข้าเป็นความเร็วไม่ใช่การกระโดดตำแหน่ง | `run/enemy_system.gd` | T | M |
 | M1-13 | `SpawnDirector`: อัตรา `min(12, 1.0 + t/20)` ตัว/วิ, เกิดในวงแหวน 380–420 จากผู้เล่น, เพดาน 400 ตัว อ่านค่าจาก data ไม่ hardcode | `run/spawn_director.gd` | T | M |
 
 ### M1-D ยืนยัน gate
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-14 | ฉาก benchmark: ปล่อย Ghoul 400 ตัวทันที ล็อก seed ของ `Rng` ให้วัดซ้ำได้ | ฉาก benchmark ใต้ `tests/` (ถูก `exclude_filter` กันออกจาก build เว็บแล้ว) | — | S |
+| M1-19 | `run.tscn` + `run.gd` เป็นเจ้าของลำดับการอัปเดต (เรียก `tick()` ของทุกระบบเอง ระบบลูกไม่มี `_physics_process`) + `main.gd` เขียนเป็น state switcher ที่ M1 มีสถานะเดียว + Camera2D ตามผู้เล่น | `run/run.gd`, `run/run.tscn`, `main.gd`, `main.tscn` | — | M |
+| M1-20 | เพิ่มกฎ copy-on-write ลง CLAUDE.md: ห้ามส่ง Packed array ออกจากระบบ ให้รับ buffer เข้ามาเติมแทน | `CLAUDE.md` | — | S |
+| M1-14 | F4 = spawn ศัตรูให้เต็มเพดานทันทีในฉาก run จริง (ต้องติดไปกับ build เว็บ เพราะ gate วัดบนเว็บ) + ล็อก seed ของ `Rng` ให้วัดซ้ำได้ | `run/run.gd`, `run/spawn_director.gd` | — | S |
 | M1-15 | วัดบนเดสก์ท็อปก่อน แล้ว export เว็บ วัดใน Chrome จดค่า FPS และ ms ต่อระบบลงท้ายไฟล์นี้ | `docs/roadmap.md` (ส่วน perf log) | — | M |
-| M1-16 | ถ้าไม่ถึง 60 FPS: ลำดับการแก้ตามนี้ → ลดงานใน loop ต่อเฟรม, แบ่งเช็คการชนเป็นหลายเฟรม (เช่น ครึ่งละเฟรม), ลดขนาดเซลล์ grid, สุดท้ายค่อยลดเพดานศัตรูแล้วแก้ design.md ตาม | — | — | L |
+| M1-16 | ถ้าไม่ผ่านเกณฑ์: แก้ตามลำดับในหัวข้อ 8 ของ spec → อ่าน ms ต่อขั้นก่อน, ปรับ `cell_size`, แบ่ง separation เป็นหลายเฟรม, เปลี่ยนไปบีบอัด array + handle (index, generation), สุดท้ายลดเพดานศัตรูแล้วแก้ design.md | — | — | L |
 
 ---
 
@@ -110,7 +114,7 @@ graph LR
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M2-12 | ตัวสุ่มการ์ด: 3 ใบจากของที่ถืออยู่และยังไม่เต็ม + ของใหม่ถ้ามีช่องว่าง + อาวุธเฉพาะอาชีพตัวเองเท่านั้น, ของที่ถืออยู่น้ำหนัก ×2 | `run/level_up_deck.gd` | T | L |
+| M2-12 | ตัวสุ่มการ์ด: 3 ใบจากของที่ถืออยู่และยังไม่เต็ม + ของใหม่ถ้ามีช่องว่าง + อาวุธเฉพาะอาชีพตัวเองเท่านั้น, ของที่ถืออยู่น้ำหนัก ×2 (ต้องเพิ่ม `Rng.weighted_pick()` ที่เลื่อนมาจาก M1) | `core/rng.gd`, `run/level_up_deck.gd` | T | L |
 | M2-13 | การ์ดสำรองเมื่อไม่มีอะไรให้เลือก: Hearth Bread (ฮีล 30) / Ember Purse (+5 Embers ตอนจบรอบ) | `run/level_up_deck.gd`, `data/` | T | S |
 | M2-14 | `LevelUpPanel`: หยุดเกม แสดง 3 การ์ด เลือกด้วย 1/2/3 หรือคลิก แสดงเลเวลเดิม → ใหม่ | `ui/level_up_panel.gd/.tscn` | — | M |
 | M2-15 | คิวเลเวลอัป: ขึ้นหลายเลเวลพร้อมกันต้องโชว์การ์ดต่อเนื่องทีละใบ ไม่ตกหาย | `run/run_state.gd`, `ui/level_up_panel.gd` | T | S |
