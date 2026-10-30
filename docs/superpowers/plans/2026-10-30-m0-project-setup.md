@@ -344,7 +344,7 @@ done
 find core data run meta ui -name .gitkeep | sort
 ```
 
-Expected: 11 บรรทัด ตรงกับผังใน CLAUDE.md
+Expected: 12 บรรทัด ตรงกับผังใน CLAUDE.md
 ไม่สร้างไฟล์ `.gd` เปล่าล่วงหน้า — ไฟล์สคริปต์เกิดเมื่อมีโค้ดจริงใน M1 ขึ้นไป
 
 - [ ] **Step 2: เพิ่ม input map**
@@ -620,7 +620,7 @@ dedicated_server=false
 custom_features=""
 export_filter="all_resources"
 include_filter=""
-exclude_filter=""
+exclude_filter="addons/gut/*, tests/*"
 export_path="build/web/index.html"
 patches=PackedStringArray()
 encryption_include_filters=""
@@ -651,6 +651,7 @@ EOF
 - `variant/thread_support=false` คือหัวใจของ M0 — ทำให้ build ไม่ต้องใช้ `SharedArrayBuffer` จึงไม่ต้องตั้ง header `Cross-Origin-Opener-Policy` / `Cross-Origin-Embedder-Policy` บนโฮสต์ และอัปขึ้น itch.io ได้ตรง ๆ
 - `html/canvas_resize_policy=2` = adaptive เหมาะกับการฝังใน iframe ของ itch.io
 - `vram_texture_compression/*=false` เพราะเกมเป็น 2D พิกเซลอาร์ต ไม่ต้องมี texture variant บีบอัดมาถ่วงขนาดไฟล์
+- `exclude_filter="addons/gut/*, tests/*"` กัน GUT กับไฟล์เทสต์ไม่ให้ถูกแพ็กไปให้ผู้เล่นโหลด (เพิ่มระหว่างลงมือจริง: `index.pck` ลดจาก 1.4 MB เหลือ 12 KB)
 
 - [ ] **Step 2: export**
 
