@@ -30,7 +30,7 @@ godot --headless --path . --import
 
 ### Task 0: เตรียม branch
 
-- [ ] **Step 1: แยก branch**
+- [x] **Step 1: แยก branch**
 
 ```bash
 git checkout -b m1-core-systems
