@@ -8,16 +8,17 @@
 
 ## Tech stack
 
-- Godot 4 (ใช้เวอร์ชัน stable ล่าสุด ตั้งแต่ 4.5 ขึ้นไป)
+- Godot **4.7.2.stable** (pin ไว้เพราะ export templates ที่ติดตั้งในเครื่องเป็นเวอร์ชันนี้)
 - **GDScript เท่านั้น** ห้ามใช้ C# เพราะต้อง export เป็นเว็บ
 - Renderer: **Compatibility** (ตัวที่ใช้กับเว็บ)
 - Web export: **ปิด thread support** เพื่อให้รันบนเว็บทั่วไปและ itch.io ได้โดยไม่ต้องตั้ง header พิเศษ
 - ความละเอียดฐาน 640×360, stretch mode `canvas_items`, aspect `expand`
-- Unit test: GUT (`addons/gut`)
+- Unit test: GUT 9.7.1 (`addons/gut`) — ถ้าวันหลังทำ CI ใช้ `-gjunit_xml_file` ออก JUnit XML ได้
 
 ## Commands
 
-บน macOS ตัวโปรแกรมอยู่ที่ `/Applications/Godot.app/Contents/MacOS/Godot` ให้ตั้ง alias เป็น `godot` หรือใช้ path เต็ม
+บน macOS ตัวโปรแกรมอยู่ที่ `/Applications/Godot.app/Contents/MacOS/Godot` ตั้ง alias ได้ด้วย
+`alias godot="/Applications/Godot.app/Contents/MacOS/Godot"`
 
 ```bash
 # import และเช็คว่าโปรเจกต์โหลดได้ไม่มี error
@@ -26,12 +27,22 @@ godot --headless --path . --import
 # รันเทสต์ทั้งหมด
 godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 
-# export เวอร์ชันเว็บ (ต้องติดตั้ง export templates ก่อน)
+# export เวอร์ชันเว็บ
 godot --headless --path . --export-release "Web" build/web/index.html
 
-# เปิดเวอร์ชันเว็บในเครื่อง
+# เปิดเวอร์ชันเว็บในเครื่อง แล้วเข้า http://localhost:8000
 python3 -m http.server 8000 -d build/web
+
+# ทำ zip สำหรับอัปขึ้น itch.io (index.html ต้องอยู่ที่รากของ zip)
+cd build/web && zip -r ../web.zip . && cd -
 ```
+
+ถ้าแก้คอนฟิกที่กระทบ web export ให้เช็คว่า `build/web/` **ไม่มี** ไฟล์ `index.worker.js` ถ้ามีแปลว่า thread support
+ถูกเปิดโดยไม่ได้ตั้งใจ ซึ่งจะต้องตั้ง header COOP/COEP บนโฮสต์ และ itch.io ทำให้ไม่ได้
+console ของเบราว์เซอร์ต้องขึ้นบรรทัด `single-threaded, no GDExtension support` เสมอ
+
+`export_presets.cfg` ตั้ง `exclude_filter` ไม่ให้ `addons/gut/*` และ `tests/*` ติดไปกับ build เว็บ
+เพิ่มโค้ดที่ใช้เฉพาะตอนเทสต์ต้องอยู่ใต้สองโฟลเดอร์นี้ ไม่งั้นผู้เล่นต้องโหลดมันด้วย
 
 ก่อนบอกว่างานเสร็จ ต้องรัน import และเทสต์ผ่าน ถ้าแก้ส่วนที่กระทบ performance ต้อง export เว็บแล้วลองเปิดดูด้วย
 
