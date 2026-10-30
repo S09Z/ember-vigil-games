@@ -33,3 +33,11 @@ func test_canvas_texture_filter_is_nearest() -> void:
 	# Pixel art must not be filtered.
 	var filter: int = int(ProjectSettings.get_setting("rendering/textures/canvas_textures/default_texture_filter"))
 	assert_eq(filter, 0)
+
+
+func test_movement_and_system_actions_exist() -> void:
+	var required: Array[String] = [
+		"move_up", "move_down", "move_left", "move_right", "pause", "toggle_debug",
+	]
+	for action: String in required:
+		assert_true(InputMap.has_action(action), "missing input action: %s" % action)
