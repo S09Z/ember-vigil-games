@@ -188,7 +188,7 @@ git commit -m "Add fixed-capacity slot pool"
 - Create: `core/rng.gd`
 - Test: `tests/test_rng.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_rng.gd`:
 
@@ -224,18 +224,31 @@ func test_point_in_ring_respects_both_radii() -> void:
 		var d: float = r.point_in_ring(center, 380.0, 420.0).distance_to(center)
 		assert_between(d, 380.0, 420.0)
 
+func test_point_in_ring_covers_every_direction() -> void:
+	var r: Rng = Rng.new(8)
+	var quadrants: Dictionary = {}
+	for i in 200:
+		var offset: Vector2 = r.point_in_ring(Vector2.ZERO, 380.0, 420.0)
+		quadrants[Vector2(signf(offset.x), signf(offset.y))] = true
+	assert_eq(quadrants.size(), 4, "enemies must be able to spawn on every side of the player")
+
 func test_randi_range_is_inclusive_and_bounded() -> void:
 	var r: Rng = Rng.new(11)
 	for i in 100:
 		assert_between(r.randi_range(3, 5), 3, 5)
+
+func test_randf_range_stays_in_bounds() -> void:
+	var r: Rng = Rng.new(13)
+	for i in 100:
+		assert_between(r.randf_range(-2.5, 7.5), -2.5, 7.5)
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Run: คำสั่งเทสต์
 Expected: FAIL — ไม่รู้จัก `Rng`
 
-- [ ] **Step 3: เขียน `core/rng.gd`**
+- [x] **Step 3: เขียน `core/rng.gd`**
 
 ```gdscript
 class_name Rng
@@ -272,7 +285,7 @@ func point_in_ring(center: Vector2, radius_min: float, radius_max: float) -> Vec
 	return center + Vector2(cos(angle), sin(angle)) * radius
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -280,7 +293,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add core/rng.gd tests/test_rng.gd
