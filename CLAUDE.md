@@ -97,9 +97,48 @@ res://
 - logic ที่ไม่ผูกกับภาพต้องมี GUT test: XP curve, การสุ่มการ์ดเลเวลอัป, เงื่อนไข evolution, การคำนวณ Embers, SpatialGrid, การซื้ออัปเกรดถาวร
 - ส่วนความรู้สึกในการเล่นใช้ playtest checklist ท้าย `docs/design.md`
 
-### Git
-- commit ทีละเรื่องเล็ก ๆ ข้อความเป็นภาษาอังกฤษแบบ imperative เช่น `Add Ranger longbow weapon`
+## Git workflow (development branch + one draft PR per sub-task)
+
+### Branches
+- Work locally on `development`. Never commit directly to `main`.
+- At session start run `git branch --show-current`; if it is not `development`, switch to it and
+  `git pull --ff-only`. Create `development` from `origin/main` if it does not exist.
+- Never force-push, rewrite history, merge a PR, or enable auto-merge unless I ask.
+
+### Per sub-task loop (one sub-task = one commit = one PR)
+1. Finish the sub-task and run its Verify command. Show the output. Do not claim done without it.
+2. Run `godot --headless --path . --import` and
+   `godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit`.
+   Fix failures before committing.
+3. Commit on `development` as `<id>: <what changed>`, using the sub-task ids from `docs/roadmap.md`
+   (for example `M1-1: add fixed-capacity slot pool`). Changes outside the plan use `fix:`, `feat:`
+   or `docs:`. One sub-task per commit, clean tree.
+4. `git push origin development`.
+5. Cut a feature branch from `origin/development` and push it:
+   `git push origin HEAD:refs/heads/feature/<id>-<short-slug>`.
+6. Open a DRAFT PR into `main`:
+   `gh pr create --draft --base main --head <feature-branch> --title "<same as commit>" --body "..."`.
+   The body states what changed, how it was verified, which plan item it ticks, and known gaps.
+7. Open the PR as soon as the sub-task is done. Do not wait for the whole phase.
+8. Report the commit hash, PR link, verify result, and anything not done or not verified. Do not
+   start the next sub-task unless I tell you to.
+
+### Rules
+- PRs are stacked: a feature branch cut from `origin/development` also contains earlier unmerged
+  commits. Say so in the PR body and give the merge order, oldest first. After a merge, bring
+  `development` up to date with `main`.
+- If a pre-commit hook fails, nothing was committed. Fix the cause, re-stage, and make a new commit.
+  Never use `--no-verify`.
+- Never commit secrets, data, model weights or generated artifacts. Check `git status` before
+  `git add -A`.
 - ห้าม commit โฟลเดอร์ `build/` และ `.godot/`
+- Tick a plan box only after Verify passes. Never weaken a Verify criterion to make it pass; if it
+  is wrong, stop and ask me.
+- In the same commit as the sub-task, tick its `- [ ]` step in the plan under
+  `docs/superpowers/plans/` and mark the sub-task ✅ in `docs/roadmap.md`.
+- If blocked, mark the status `blocked`, write the question, commit, and stop.
+- Ask before any destructive or outward-facing action: deleting data, force-push, closing or
+  merging a PR, large downloads.
 
 ## สิ่งที่ยังไม่ทำใน MVP (อย่าเริ่มเองถ้าผู้ใช้ไม่ได้ขอ)
 - co-op หรือ multiplayer
