@@ -41,3 +41,9 @@ func test_movement_and_system_actions_exist() -> void:
 	]
 	for action: String in required:
 		assert_true(InputMap.has_action(action), "missing input action: %s" % action)
+
+
+func test_main_scene_is_set_and_loadable() -> void:
+	var main_scene: String = str(ProjectSettings.get_setting("application/run/main_scene"))
+	assert_eq(main_scene, "res://main.tscn")
+	assert_true(ResourceLoader.exists(main_scene), "main scene must exist on disk")
