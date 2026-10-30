@@ -46,7 +46,7 @@ Expected: ว่าง (ยกเว้น `.mcp.json` ที่ยังไม�
 - Create: `core/pool.gd`
 - Test: `tests/test_pool.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_pool.gd`:
 
@@ -85,6 +85,7 @@ func test_double_release_does_not_corrupt_the_free_list() -> void:
 	var a: int = p.acquire()
 	p.release(a)
 	p.release(a)
+	assert_push_error("repeated release", "a caller bug must be reported, not swallowed")
 	assert_eq(p.active_count(), 0)
 	assert_eq(p.acquire(), a)
 	assert_eq(p.acquire(), 1)
@@ -99,12 +100,14 @@ func test_reset_frees_everything() -> void:
 	assert_eq(p.acquire(), 0)
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Run: `godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit`
 Expected: FAIL — parse error ว่าไม่รู้จัก identifier `Pool`
+(`assert_push_error()` จำเป็น เพราะ GUT 9 ถือว่า `push_error` ที่ไม่ได้ประกาศไว้คือเทสต์ตก
+มันยืนยันว่า error ถูกรายงานจริงด้วย จึงแข็งกว่าการปล่อยผ่าน)
 
-- [ ] **Step 3: เขียน `core/pool.gd`**
+- [x] **Step 3: เขียน `core/pool.gd`**
 
 ```gdscript
 class_name Pool
@@ -160,16 +163,17 @@ func capacity() -> int:
 	return _capacity
 ```
 
-- [ ] **Step 4: import แล้วรันเทสต์ ต้องผ่าน**
+- [x] **Step 4: import แล้วรันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
 godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
-Expected: PASS ทั้งหมด (6 เทสต์ใหม่ + 7 เทสต์ของ M0)
-หมายเหตุ: `test_double_release_...` จะพิมพ์บรรทัด error ของ `push_error` ออกมาหนึ่งบรรทัด ซึ่งเป็นสิ่งที่ตั้งใจ ไม่ใช่เทสต์ตก
+Expected: PASS ทั้งหมด (6 เทสต์ใหม่ + 7 เทสต์ของ M0) และ **Scripts ต้องเป็น 2**
+GUT ข้ามไฟล์เทสต์ที่ parse ไม่ผ่านโดยรายงานเป็น warning ไม่ใช่ failure จึงยังขึ้น "All tests passed!" ได้
+ต้องดูบรรทัด Scripts ทุกครั้ง ไม่ใช่ดูแค่ว่าผ่านหรือไม่ผ่าน
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add core/pool.gd tests/test_pool.gd
