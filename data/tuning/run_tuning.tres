@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RunTuning" format=3]
+
+[ext_resource type="Script" path="res://data/run_tuning.gd" id="1_vhebb"]
+
+[resource]
+script = ExtResource("1_vhebb")
+enemy_cap = 400
+spawn_ring_min = 380.0
+spawn_ring_max = 420.0
+recycle_distance = 600.0
+spawn_rate_base = 1.0
+spawn_rate_time_divisor = 20.0
+spawn_rate_cap = 12.0
+hp_scale_divisor = 150.0
+player_iframe_duration = 0.5
+separation_strength = 60.0
+grid_cell_size = 16.0

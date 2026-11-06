@@ -308,7 +308,7 @@ git commit -m "Add seedable RNG wrapper"
 - Create: `core/spatial_grid.gd`
 - Test: `tests/test_spatial_grid.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_spatial_grid.gd`:
 
@@ -370,11 +370,11 @@ func test_query_never_grows_the_output_buffer() -> void:
 	assert_eq(_out.size(), before, "query_radius fills the caller's buffer, it never grows it")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `SpatialGrid`
 
-- [ ] **Step 3: เขียน `core/spatial_grid.gd`**
+- [x] **Step 3: เขียน `core/spatial_grid.gd`**
 
 ```gdscript
 class_name SpatialGrid
@@ -466,7 +466,7 @@ func _cell_index(cx: int, cy: int) -> int:
 	return ((cy & _grid_mask) << _grid_shift) | (cx & _grid_mask)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -474,7 +474,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add core/spatial_grid.gd tests/test_spatial_grid.gd
@@ -484,6 +484,8 @@ git commit -m "Add allocation-free spatial grid for neighbour queries"
 ---
 
 ### Task 4: Resource schema + ตัวเลขจาก design.md
+
+> **สถานะ:** ส่วน `RunTuning` + แถว design.md ทำแล้วใน M1-18 (ทดสอบใน `tests/test_run_tuning.gd`) ส่วน `ClassDef` + `knight.tres` ทำแล้วใน M1-5 (`tests/test_class_def.gd`) `EnemyDef` ทำใน M1-8 จึงยังไม่ติ๊ก step ด้านล่าง
 
 **Files:**
 - Create: `data/class_def.gd`, `data/enemy_def.gd`, `data/run_tuning.gd`
@@ -704,6 +706,8 @@ git commit -m "Add class, enemy and run tuning resources with design numbers"
 ---
 
 ### Task 5: `Player` — เดิน, HP, armor, อมตะ
+
+> **สถานะ:** ส่วนเดิน + `last_move_dir` + `setup(def)` ทำแล้วใน M1-6 (`apply_input()` แยกออกมาให้เทสต์ได้ และตั้ง `motion_mode = FLOATING` สำหรับมุมมองจากบน, ยังไม่ใส่ Camera2D เพราะเป็นของ M1-19) ส่วน HP/armor/อมตะ/signal (`take_damage`, `tick_timers`, `setup(def, tuning)`) ทำใน M1-7 จึงยังไม่ติ๊ก step ด้านล่าง
 
 **Files:**
 - Create: `run/player.gd`, `run/player.tscn`
@@ -1750,13 +1754,15 @@ git commit -m "Add F4 debug action for filling the enemy cap"
 
 ### Task 12: `DebugOverlay` — F3, FPS avg และ 1% low, ms ต่อขั้น
 
+> **สถานะ (M1-4):** ทำแล้ว แต่ต่างจากโค้ดตัวอย่าง: `EnemySystem` ยังไม่มี จึงไม่ `bind(enemies)` ตรง ๆ แต่ใช้ `bind_extra_lines(provider: Callable)` ให้ระบบส่งข้อความมาเอง (จำนวนศัตรู / ms ต่อขั้น) และเพิ่ม `build_text()` เป็น public สำหรับเทสต์ ตอนทำ M1-9 ให้ bind จาก `run.gd` ด้วย Callable ที่ประกอบข้อความจาก getter ของ EnemySystem. แก้ `1%%` ในสตริงที่ไม่ผ่าน `%` ด้วย
+
 **Files:**
 - Create: `ui/debug_overlay.gd`, `ui/debug_overlay.tscn`
 - Test: `tests/test_debug_overlay.gd`
 
 เทสต์ครอบแค่คณิตศาสตร์ของสถิติ ส่วนการแสดงผลดูด้วยตา
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_debug_overlay.gd`:
 
@@ -1799,11 +1805,11 @@ func test_the_window_is_a_ring_buffer() -> void:
 	assert_almost_eq(_overlay.average_fps(), 120.0, 0.5, "old frames must be overwritten")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `DebugOverlay`
 
-- [ ] **Step 3: เขียน `ui/debug_overlay.gd`**
+- [x] **Step 3: เขียน `ui/debug_overlay.gd`**
 
 ```gdscript
 class_name DebugOverlay
@@ -1904,7 +1910,7 @@ func _build_text() -> String:
 	return "\n".join(lines)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -1912,7 +1918,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: เขียน `ui/debug_overlay.tscn`**
+- [x] **Step 5: เขียน `ui/debug_overlay.tscn`**
 
 ```
 [gd_scene load_steps=2 format=3]
@@ -1933,7 +1939,7 @@ theme_override_font_sizes/font_size = 8
 text = "F3"
 ```
 
-- [ ] **Step 6: commit**
+- [x] **Step 6: commit**
 
 ```bash
 git add ui/debug_overlay.gd ui/debug_overlay.tscn tests/test_debug_overlay.gd
