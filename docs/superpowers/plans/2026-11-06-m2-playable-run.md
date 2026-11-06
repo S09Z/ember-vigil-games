@@ -1555,7 +1555,7 @@ func test_the_back_button_signal() -> void:
 **Interfaces:**
 - Produces: `CampScreen extends CanvasLayer` — signal `start_pressed()`, `set_embers(total: int) -> void`, `static embers_text(total: int) -> String` (`"Embers 0"`, `"Embers 1,234"`), ปุ่ม "เริ่มคืน" (ข้อความบนปุ่มเป็น `"Begin the night"`) ยิง `start_pressed` ไม่ทำอย่างอื่น (ร้านและเลือกอาชีพเป็นของ M3–M4)
 
-- [ ] **Step 1: เขียนเทสต์**
+- [x] **Step 1: เขียนเทสต์**
 ```gdscript
 func test_embers_text() -> void:
 	assert_eq(CampScreen.embers_text(0), "Embers 0")
@@ -1571,10 +1571,10 @@ func test_pressing_start_emits_once_per_press() -> void:
 func test_negative_embers_are_clamped_to_zero() -> void:
 	assert_eq(CampScreen.embers_text(-5), "Embers 0")
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน script + ฉาก** (พื้นหลังสีเดียวกับ `main.tscn` เดิม ชื่อเกมและปุ่ม)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-20: add the minimal camp screen`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน script + ฉาก** (พื้นหลังสีเดียวกับ `main.tscn` เดิม ชื่อเกมและปุ่ม)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-20: add the minimal camp screen`**
 
 ---
 
