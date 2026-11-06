@@ -1230,7 +1230,7 @@ func test_many_gems_collected_in_one_tick_all_report() -> void:
 - Produces: `LevelUpCard extends RefCounted` — `enum Kind { WEAPON, FALLBACK }`, `kind: Kind`, `weapon: WeaponDef`, `new_level: int` (เลเวลที่จะได้ เช่น ได้ใหม่ = 1, อัป LV2→LV3 = 3), `fallback: CardDef` (Task 22 สร้าง `CardDef`; ในงานนี้ `fallback` ใช้ได้เฉพาะ `null` จึงให้ Task 21 ประกาศ `CardDef` ว่างขั้นต่ำใน `data/card_def.gd` ที่มีแค่ `id: StringName` แล้ว Task 22 เติมฟิลด์), `is_upgrade() -> bool`
 - Produces: `LevelUpDeck` — `static draw(state: RunState, class_def: ClassDef, fallbacks: Array[CardDef], rng: Rng, count: int = 3) -> Array[LevelUpCard]` พูลอาวุธ = `class_def.class_weapons` ที่ (ยังไม่มีและช่องว่าง) หรือ (มีแล้วและยังไม่เต็มเลเวล) น้ำหนักของที่ถืออยู่ = 2.0 ของใหม่ = 1.0 สุ่มแบบไม่ซ้ำจนครบ `count` หรือพูลหมด ที่เหลือเติมด้วย `fallbacks` ตามลำดับวนซ้ำ (ใบสำรองซ้ำกันได้เมื่อไม่มีทางเลือกอื่น) คืนอาร์เรย์ขนาด `count` เสมอเมื่อ `fallbacks` ไม่ว่าง
 
-- [ ] **Step 1: เขียนเทสต์** (เมธอดช่วยสร้าง `ClassDef` ที่มี 3 อาวุธ `a b c` และ `fallbacks` สองใบ)
+- [x] **Step 1: เขียนเทสต์** (เมธอดช่วยสร้าง `ClassDef` ที่มี 3 อาวุธ `a b c` และ `fallbacks` สองใบ)
 ```gdscript
 # tests/test_rng.gd
 func test_weighted_pick_never_chooses_a_zero_weight() -> void:
@@ -1303,10 +1303,10 @@ func test_the_same_seed_gives_the_same_hand() -> void:
 	var two: Array[LevelUpCard] = LevelUpDeck.draw(_state, _class, _fallbacks, Rng.new(9))
 	for i in 3: assert_eq(one[i].weapon, two[i].weapon)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่ม `Rng.weighted_pick`, เขียน `LevelUpCard`, `CardDef` ขั้นต่ำ และ `LevelUpDeck.draw`**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-12: add level-up deck with weighted draws`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่ม `Rng.weighted_pick`, เขียน `LevelUpCard`, `CardDef` ขั้นต่ำ และ `LevelUpDeck.draw`**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-12: add level-up deck with weighted draws`**
 
 ---
 
