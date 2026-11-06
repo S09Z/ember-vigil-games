@@ -125,8 +125,9 @@ res://
 
 ### Rules
 - PRs are stacked: a feature branch cut from `origin/development` also contains earlier unmerged
-  commits. Say so in the PR body and give the merge order, oldest first. After a merge, bring
-  `development` up to date with `main`.
+  commits. Say so in the PR body and give the merge order, oldest first.
+- Never touch `main`: do not commit to it, do not merge a PR, and do not bring `development` up to
+  date with `main`. I merge the PRs into `main` manually. Your work ends at opening the draft PR.
 - If a pre-commit hook fails, nothing was committed. Fix the cause, re-stage, and make a new commit.
   Never use `--no-verify`.
 - Never commit secrets, data, model weights or generated artifacts. Check `git status` before
