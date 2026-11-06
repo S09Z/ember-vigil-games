@@ -1,0 +1,82 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" uid="uid://ddlrk3aqene5i" path="res://data/weapon_def.gd" id="1_weapondef"]
+[ext_resource type="Script" uid="uid://ydki8cxvhum4" path="res://data/weapon_level_def.gd" id="2_leveldef"]
+
+[sub_resource type="Resource" id="Resource_lv1"]
+script = ExtResource("2_leveldef")
+cooldown = 6.0
+damage = 0.0
+arc_degrees = 0.0
+range = 0.0
+radius = 70.0
+knockback = 30.0
+stun_seconds = 0.0
+both_sides = false
+buff_percent = 15.0
+buff_seconds = 3.0
+heal = 0.0
+
+[sub_resource type="Resource" id="Resource_lv2"]
+script = ExtResource("2_leveldef")
+cooldown = 6.0
+damage = 0.0
+arc_degrees = 0.0
+range = 0.0
+radius = 80.0
+knockback = 30.0
+stun_seconds = 0.0
+both_sides = false
+buff_percent = 15.0
+buff_seconds = 3.0
+heal = 0.0
+
+[sub_resource type="Resource" id="Resource_lv3"]
+script = ExtResource("2_leveldef")
+cooldown = 6.0
+damage = 0.0
+arc_degrees = 0.0
+range = 0.0
+radius = 90.0
+knockback = 30.0
+stun_seconds = 0.0
+both_sides = false
+buff_percent = 15.0
+buff_seconds = 3.0
+heal = 0.0
+
+[sub_resource type="Resource" id="Resource_lv4"]
+script = ExtResource("2_leveldef")
+cooldown = 6.0
+damage = 0.0
+arc_degrees = 0.0
+range = 0.0
+radius = 100.0
+knockback = 30.0
+stun_seconds = 0.0
+both_sides = false
+buff_percent = 25.0
+buff_seconds = 3.0
+heal = 0.0
+
+[sub_resource type="Resource" id="Resource_lv5"]
+script = ExtResource("2_leveldef")
+cooldown = 6.0
+damage = 0.0
+arc_degrees = 0.0
+range = 0.0
+radius = 110.0
+knockback = 30.0
+stun_seconds = 0.0
+both_sides = false
+buff_percent = 25.0
+buff_seconds = 3.0
+heal = 10.0
+
+[resource]
+script = ExtResource("1_weapondef")
+id = &"warhorn"
+display_name = "Warhorn"
+tag = &"holy"
+class_id = &"knight"
+levels = Array[ExtResource("2_leveldef")]([SubResource("Resource_lv1"), SubResource("Resource_lv2"), SubResource("Resource_lv3"), SubResource("Resource_lv4"), SubResource("Resource_lv5")])
