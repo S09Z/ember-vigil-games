@@ -41,30 +41,30 @@ graph LR
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-1 | `SpatialGrid`: hash grid, `clear()` / `insert(id, pos)` / `query_radius(pos, r, out_buffer)` คืนค่าใส่ buffer ที่ส่งเข้ามา ห้าม allocate ต่อการเรียก | `core/spatial_grid.gd` | T | M |
+| ✅ M1-1 | `SpatialGrid`: hash grid, `clear()` / `insert(id, pos)` / `query_radius(pos, r, out_buffer)` คืนค่าใส่ buffer ที่ส่งเข้ามา ห้าม allocate ต่อการเรียก | `core/spatial_grid.gd` | T | M |
 | ✅ M1-2 | `Pool`: free-list ของ index สำหรับ struct-of-arrays โตเป็นชั้น ๆ ไม่ย่อกลับกลางรอบ | `core/pool.gd` | T | S |
 | ✅ M1-3 | `Rng`: wrapper ของ `RandomNumberGenerator` ที่ seed ได้ + `point_in_ring()` ใช้ซ้ำรอบเดิมตอน debug (`weighted_pick()` เลื่อนไป M2-12 ตาม YAGNI) | `core/rng.gd` | T | S |
-| M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
-| M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS ปัจจุบัน + avg และ 1% low ในหน้าต่าง 600 เฟรม (ring buffer) + จำนวนศัตรู + ms ต่อขั้น อ่านผ่าน getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | M |
+| ✅ M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
+| ✅ M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS ปัจจุบัน + avg และ 1% low ในหน้าต่าง 600 เฟรม (ring buffer) + จำนวนศัตรู + ms ต่อขั้น อ่านผ่าน getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | M |
 
 ### M1-B ผู้เล่น
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-5 | `ClassDef` schema + `knight.tres` (HP 140 / speed 95 / armor 2 / pickup 40) อ่านค่าจากตารางหัวข้อ 4 | `data/class_def.gd`, `data/classes/knight.tres` | T | S |
-| M1-6 | `Player`: CharacterBody2D ตัวเดียวในเกม เดินตาม input, จำ `last_move_dir` ไว้ให้อาวุธระยะใกล้ใช้ | `run/player.gd`, `run/player.tscn` | T | M |
-| M1-7 | HP / armor / อมตะ 0.5 วิ: ดาเมจที่รับ = `max(1, dmg − armor)` ยิง signal `health_changed` และ `died` | `run/player.gd` | T | S |
+| ✅ M1-5 | `ClassDef` schema + `knight.tres` (HP 140 / speed 95 / armor 2 / pickup 40) อ่านค่าจากตารางหัวข้อ 4 | `data/class_def.gd`, `data/classes/knight.tres` | T | S |
+| ✅ M1-6 | `Player`: CharacterBody2D ตัวเดียวในเกม เดินตาม input, จำ `last_move_dir` ไว้ให้อาวุธระยะใกล้ใช้ | `run/player.gd`, `run/player.tscn` | T | M |
+| ✅ M1-7 | HP / armor / อมตะ 0.5 วิ: ดาเมจที่รับ = `max(1, dmg − armor)` ยิง signal `health_changed` และ `died` | `run/player.gd` | T | S |
 
 ### M1-C ศัตรูแบบ data-oriented
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
-| M1-9 | `EnemySystem` โครง SoA: pos/vel เป็น `PackedVector2Array`, hp เป็น `PackedFloat32Array`, type/alive เป็น `PackedByteArray`, `spawn()` / `kill()` คืน slot เข้า `Pool` โดย **slot คงที่ ไม่บีบอัด array** (index ต้องอ้างข้ามเฟรมได้ให้ M3) ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
-| M1-10 | วาดด้วย `MultiMeshInstance2D` ชิ้นเดียว อัปเดต transform ต่อเฟรมแบบไม่ allocate | `run/enemy_system.gd` | — | M |
-| M1-11 | การเดิน: ไล่ผู้เล่นตรง ๆ + HP scaling `1 + t/150` ตอน spawn + ตัวที่ห่างเกิน 600 ถูกย้ายไป spawn ใหม่ใกล้ผู้เล่น | `run/enemy_system.gd` | T | M |
-| M1-12 | ชนผู้เล่น: หาเพื่อนบ้านจาก `SpatialGrid` ไม่ใช้ `Area2D`/physics body กับศัตรู | `run/enemy_system.gd` | T | M |
-| M1-17 | separation: ศัตรูผลักกันเองทุกเฟรม คิดเฉพาะคู่ `j > i` ผลักสองฝั่งพร้อมกัน เข้าเป็นความเร็วไม่ใช่การกระโดดตำแหน่ง | `run/enemy_system.gd` | T | M |
+| ✅ M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
+| ✅ M1-9 | `EnemySystem` โครง SoA: pos/vel เป็น `PackedVector2Array`, hp เป็น `PackedFloat32Array`, type/alive เป็น `PackedByteArray`, `spawn()` / `kill()` คืน slot เข้า `Pool` โดย **slot คงที่ ไม่บีบอัด array** (index ต้องอ้างข้ามเฟรมได้ให้ M3) ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
+| ✅ M1-10 | วาดด้วย `MultiMeshInstance2D` ชิ้นเดียว อัปเดต transform ต่อเฟรมแบบไม่ allocate | `run/enemy_system.gd` | — | M |
+| ✅ M1-11 | การเดิน: ไล่ผู้เล่นตรง ๆ + HP scaling `1 + t/150` ตอน spawn + ตัวที่ห่างเกิน 600 ถูกย้ายไป spawn ใหม่ใกล้ผู้เล่น | `run/enemy_system.gd` | T | M |
+| ✅ M1-12 | ชนผู้เล่น: หาเพื่อนบ้านจาก `SpatialGrid` ไม่ใช้ `Area2D`/physics body กับศัตรู | `run/enemy_system.gd` | T | M |
+| ✅ M1-17 | separation: ศัตรูผลักกันเองทุกเฟรม คิดเฉพาะคู่ `j > i` ผลักสองฝั่งพร้อมกัน เข้าเป็นความเร็วไม่ใช่การกระโดดตำแหน่ง | `run/enemy_system.gd` | T | M |
 | M1-13 | `SpawnDirector`: อัตรา `min(12, 1.0 + t/20)` ตัว/วิ, เกิดในวงแหวน 380–420 จากผู้เล่น, เพดาน 400 ตัว อ่านค่าจาก data ไม่ hardcode | `run/spawn_director.gd` | T | M |
 
 ### M1-D ยืนยัน gate
