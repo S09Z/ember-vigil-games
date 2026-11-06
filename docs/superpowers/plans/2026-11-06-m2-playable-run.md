@@ -1462,7 +1462,7 @@ func test_xp_bar_reflects_progress() -> void:
 - Produces: `PauseScreen extends CanvasLayer` — `show_build(lines: PackedStringArray) -> void` (แสดงบิลด์ปัจจุบัน หนึ่งบรรทัดต่อรายการ), `hide_screen() -> void`, `is_open() -> bool`; ไม่รับอินพุตเอง (Run เป็นคนสลับสถานะจาก action `pause`) ไม่แก้ระบบเกม
 - Produces: `static build_lines(state: RunState, name_of: Dictionary) -> PackedStringArray` (ฟังก์ชันล้วน: `"Greatsword  LV2"` ต่อหนึ่งอาวุธตามลำดับที่เพิ่ม; ไม่มีอาวุธเลย = `["(empty)"]`; `name_of` = id → ชื่อที่แสดง ถ้าไม่มี id ใช้ id เป็นชื่อ)
 
-- [ ] **Step 1: เขียนเทสต์**
+- [x] **Step 1: เขียนเทสต์**
 ```gdscript
 func test_build_lines_list_each_weapon_with_its_level() -> void:
 	_state.add_weapon(_weapon(&"greatsword")); _state.upgrade_weapon(&"greatsword")
@@ -1482,10 +1482,10 @@ func test_open_and_close() -> void:
 	_screen.show_build(PackedStringArray(["x"])); assert_true(_screen.is_open())
 	_screen.hide_screen(); assert_false(_screen.is_open())
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน script + ฉาก**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-17: add the pause screen`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน script + ฉาก**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-17: add the pause screen`**
 
 ---
 

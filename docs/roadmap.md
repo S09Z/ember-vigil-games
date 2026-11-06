@@ -124,7 +124,7 @@ graph LR
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
 | ✅ M2-16 | `HUD` ตามหัวข้อ 11: แถบ XP บนสุด / HP ซ้ายบน / เวลากลางบน / kills+embers ขวาบน / ช่องอาวุธ+พาสซีฟ ซ้ายล่าง ฟัง signal อย่างเดียว | `ui/hud.gd/.tscn` | — | M |
-| M2-17 | หน้าหยุดเกม (Esc/P): แสดงบิลด์ปัจจุบัน | `ui/pause_screen.gd/.tscn` | — | S |
+| ✅ M2-17 | หน้าหยุดเกม (Esc/P): แสดงบิลด์ปัจจุบัน | `ui/pause_screen.gd/.tscn` | — | S |
 | ✅ M2-18 | สูตร Embers: `floor(kills/10) + floor(วิที่รอด/15) + 5×Elite + 40 ถ้าฆ่าบอส` (กดหนีกลางรอบไม่ได้) | `run/run_state.gd` | T | S |
 | M2-19 | `ResultsScreen`: เวลา kills เลเวล ดาเมจรวมต่ออาวุธ และที่มาของ Embers ทีละบรรทัด | `ui/results_screen.gd/.tscn` | — | M |
 | M2-20 | `CampScreen` ขั้นต่ำ: ปุ่มเริ่มคืน + โชว์ Embers (ร้านค่อยทำใน M4) | `ui/camp_screen.gd/.tscn` | — | S |
