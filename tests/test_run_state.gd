@@ -66,3 +66,42 @@ func test_setup_again_clears_everything() -> void:
 	assert_eq(_s.weapon_count(), 0)
 	assert_eq(_s.kills, 0)
 	assert_eq(_s.elapsed, 0.0)
+
+func test_xp_curve_matches_the_design() -> void:
+	assert_eq(_s.xp_needed(1), 10)    # round(5 + 1 * 4.5) = round(9.5)
+	assert_eq(_s.xp_needed(2), 14)
+	assert_eq(_s.xp_needed(3), 19)    # round(18.5) rounds half away from zero
+	assert_eq(_s.xp_needed(10), 50)
+
+func test_enough_xp_levels_up_and_keeps_the_remainder() -> void:
+	_s.add_xp(13)
+	assert_eq(_s.level, 2)
+	assert_eq(_s.xp, 3)
+
+func test_one_big_gem_can_gain_several_levels() -> void:
+	watch_signals(_s)
+	_s.add_xp(10 + 14 + 19 + 5)       # lv1->2, 2->3, 3->4 then 5 left
+	assert_eq(_s.level, 4)
+	assert_eq(_s.xp, 5)
+	assert_signal_emit_count(_s, "level_up_queued", 3)
+
+func test_exact_threshold_levels_up_with_zero_left() -> void:
+	_s.add_xp(10)
+	assert_eq(_s.level, 2)
+	assert_eq(_s.xp, 0)
+
+func test_one_xp_short_does_not_level_up() -> void:
+	_s.add_xp(9)
+	assert_eq(_s.level, 1)
+
+func test_zero_or_negative_xp_is_ignored() -> void:
+	watch_signals(_s)
+	_s.add_xp(0)
+	_s.add_xp(-5)
+	assert_eq(_s.xp, 0)
+	assert_signal_not_emitted(_s, "xp_changed")
+
+func test_xp_changed_reports_final_values() -> void:
+	watch_signals(_s)
+	_s.add_xp(13)
+	assert_signal_emitted_with_parameters(_s, "xp_changed", [3, 14, 2])

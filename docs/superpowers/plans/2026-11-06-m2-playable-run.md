@@ -427,7 +427,7 @@ func test_setup_again_clears_everything() -> void:
 - Produces: `add_xp(amount: int) -> void` เพิ่ม XP แล้วขึ้นเลเวลซ้ำตราบที่ `xp >= xp_needed(level)` โดยหัก XP ที่ใช้ เหลือเศษไว้ ขึ้นแต่ละเลเวลเพิ่ม `level` ทีละ 1 และยิง `level_up_queued(new_level: int)` ครั้งหนึ่งต่อเลเวล `amount <= 0` ไม่ทำอะไร
 - Produces: signal `xp_changed(xp: int, needed: int, level: int)` ยิงหลัง `add_xp` ทุกครั้งที่ amount > 0 (ด้วยค่าสุดท้าย)
 
-- [ ] **Step 1: เพิ่มเทสต์**
+- [x] **Step 1: เพิ่มเทสต์**
 ```gdscript
 func test_xp_curve_matches_the_design() -> void:
 	assert_eq(_s.xp_needed(1), 10)    # round(5 + 1 * 4.5) = round(9.5)
@@ -463,10 +463,10 @@ func test_xp_changed_reports_final_values() -> void:
 	_s.add_xp(13)
 	assert_signal_emitted_with_parameters(_s, "xp_changed", [3, 14, 2])
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่ม `xp_needed`, `add_xp`, signal ตาม Interfaces** (`RunState` เก็บ `_tuning` จาก `setup`)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-2: add xp curve and multi-level overflow`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่ม `xp_needed`, `add_xp`, signal ตาม Interfaces** (`RunState` เก็บ `_tuning` จาก `setup`)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-2: add xp curve and multi-level overflow`**
 
 ---
 

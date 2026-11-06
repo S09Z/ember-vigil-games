@@ -89,7 +89,7 @@ graph LR
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
 | ✅ M2-1 | `RunState`: เวลา kills xp level และช่องบิลด์ (อาวุธ 4 / พาสซีฟ 4) สื่อสารออกด้วย signal เท่านั้น | `run/run_state.gd` | T | M |
-| M2-2 | XP curve `round(5 + lv × 4.5)` + XP ล้นต้องยกไปเลเวลถัดไป (เก็บ XP ก้อนใหญ่ทีเดียวต้องขึ้นหลายเลเวล) | `run/run_state.gd` | T | S |
+| ✅ M2-2 | XP curve `round(5 + lv × 4.5)` + XP ล้นต้องยกไปเลเวลถัดไป (เก็บ XP ก้อนใหญ่ทีเดียวต้องขึ้นหลายเลเวล) | `run/run_state.gd` | T | S |
 | M2-3 | state machine ใน `main.tscn`: Camp → Run → Results และกลับมา Camp ได้ โดยไม่มีสถานะรอบเก่าค้าง | `main.gd`, `main.tscn` | T | M |
 
 ### M2-B อาวุธ (โครง + Greatsword)

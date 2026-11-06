@@ -6,6 +6,8 @@ extends RefCounted
 
 signal kills_changed(kills: int)
 signal build_changed()
+signal xp_changed(xp: int, needed: int, level: int)
+signal level_up_queued(new_level: int)
 
 const WEAPON_SLOTS: int = 4
 const PASSIVE_SLOTS: int = 4
@@ -37,6 +39,22 @@ func tick(delta: float) -> void:
 func add_kill() -> void:
 	kills += 1
 	kills_changed.emit(kills)
+
+
+func xp_needed(for_level: int) -> int:
+	return roundi(_tuning.xp_base + for_level * _tuning.xp_per_level)
+
+
+## Adds XP and levels up as many times as the total allows, keeping the remainder.
+func add_xp(amount: int) -> void:
+	if amount <= 0:
+		return
+	xp += amount
+	while xp >= xp_needed(level):
+		xp -= xp_needed(level)
+		level += 1
+		level_up_queued.emit(level)
+	xp_changed.emit(xp, xp_needed(level), level)
 
 
 func add_weapon(def: WeaponDef) -> bool:
