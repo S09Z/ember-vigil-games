@@ -108,3 +108,25 @@ func test_setup_revives_the_player() -> void:
 	assert_false(_player.is_dead())
 	assert_false(_player.is_invulnerable())
 	assert_eq(_player.hp, 140.0)
+
+func test_heal_restores_hp_up_to_the_maximum() -> void:
+	_player.take_damage(25.0)            # 140 - 23 = 117
+	_player.heal(10.0)
+	assert_almost_eq(_player.hp, 127.0, 0.01)
+	_player.heal(1000.0)
+	assert_eq(_player.hp, 140.0)
+
+func test_heal_signals_only_when_hp_changes() -> void:
+	watch_signals(_player)
+	_player.heal(10.0)                   # already full
+	assert_signal_not_emitted(_player, "health_changed")
+
+func test_a_dead_player_cannot_be_healed() -> void:
+	_player.take_damage(1000.0)
+	_player.heal(50.0)
+	assert_eq(_player.hp, 0.0)
+
+func test_non_positive_heal_is_ignored() -> void:
+	_player.take_damage(25.0)
+	_player.heal(0.0); _player.heal(-5.0)
+	assert_almost_eq(_player.hp, 117.0, 0.01)

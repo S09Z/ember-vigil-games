@@ -70,6 +70,18 @@ func take_damage(amount: float) -> void:
 		died.emit()
 
 
+## Restores HP up to max_hp. Ignored after death or for non-positive amounts;
+## health_changed fires only when hp actually changes.
+func heal(amount: float) -> void:
+	if _dead or amount <= 0.0:
+		return
+	var new_hp: float = minf(max_hp, hp + amount)
+	if new_hp == hp:
+		return
+	hp = new_hp
+	health_changed.emit(hp, max_hp)
+
+
 func is_invulnerable() -> bool:
 	return _iframe_timer > 0.0
 

@@ -598,7 +598,7 @@ func test_setup_clears_the_bonus() -> void:
 - Produces: `Player.heal(amount: float) -> void` เพิ่ม HP ไม่เกิน `max_hp` ยิง `health_changed` ถ้าค่าเปลี่ยน ไม่ทำอะไรถ้าตายแล้วหรือ `amount <= 0`
 - (ตัวเต็มที่รวมพาสซีฟ/แท็ก/meta เป็นของ M3-1 ไฟล์นี้จะถูกขยายตอนนั้น)
 
-- [ ] **Step 1: เขียน `tests/test_stat_block.gd` และเพิ่มเทสต์ heal**
+- [x] **Step 1: เขียน `tests/test_stat_block.gd` และเพิ่มเทสต์ heal**
 ```gdscript
 func test_the_multiplier_is_one_without_a_buff() -> void:
 	assert_eq(_s.damage_multiplier(), 1.0)
@@ -654,10 +654,10 @@ func test_non_positive_heal_is_ignored() -> void:
 	_player.heal(0.0); _player.heal(-5.0)
 	assert_almost_eq(_player.hp, 117.0, 0.01)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: สร้าง `StatBlock` และเพิ่ม `Player.heal` ตาม Interfaces**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-26: add temporary damage buff and player heal`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: สร้าง `StatBlock` และเพิ่ม `Player.heal` ตาม Interfaces**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-26: add temporary damage buff and player heal`**
 
 ---
 

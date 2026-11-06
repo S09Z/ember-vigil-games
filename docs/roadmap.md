@@ -133,7 +133,7 @@ graph LR
 | ✅ M2-23 | stun ใน EnemySystem | `run/enemy_system.gd` | T | S |
 | M2-24 | Shield Bash LV1–5 | `run/weapons/shield_bash.gd`, `data/weapons/shield_bash.tres` | T | M |
 | M2-25 | Warhorn LV1–5 | `run/weapons/warhorn.gd`, `data/weapons/warhorn.tres` | T | M |
-| M2-26 | `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` | `run/stat_block.gd`, `run/player.gd` | T | S |
+| ✅ M2-26 | `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` | `run/stat_block.gd`, `run/player.gd` | T | S |
 | ✅ M2-27 | ตัวเลขใหม่ลง design.md + RunTuning | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
 | M2-28 | `FxLayer` | `run/fx_layer.gd` | T | S |
 | M2-29 | ต่อทุกระบบเข้า `Run` + สถานะของรอบ | `run/run.gd`, `main.gd` | T | L |
