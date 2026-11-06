@@ -1423,6 +1423,8 @@ git commit -m "Add soft separation between enemies"
 
 ### Task 9: contact — ศัตรูแตะผู้เล่นแล้วเกิดดาเมจ
 
+> **สถานะ:** ทำแล้วใน M1-12 รวม `tick_grid()` ที่ย้ายมาจาก Task 7 ต่างจากโค้ดตัวอย่าง: คง `_alive[j]` เช็คไว้ใน `tick_contact()` เพราะกริดสร้างครั้งเดียวต่อเฟรม ตัวที่ตายหลังจากนั้นยังค้างอยู่ในกริด (มีเทสต์ครอบ) และเพิ่ม `usec_grid` / `usec_contact` ให้ overlay ส่วน `tick_separation()` ที่แผนอ้างถึงยังไม่มี (M1-17) จึงยังไม่ติ๊ก step ด้านล่าง
+
 **Files:**
 - Modify: `run/enemy_system.gd` (เพิ่ม `tick_contact()`)
 - Modify: `tests/test_enemy_system.gd`

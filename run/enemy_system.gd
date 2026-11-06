@@ -38,6 +38,15 @@ var _type_xp: PackedInt32Array = PackedInt32Array()
 var _pool: Pool = null
 var _tuning: RunTuning = null
 var _rng: Rng = null
+var _grid: SpatialGrid = null
+var _max_radius: float = 0.0
+
+## Scratch buffer for neighbour queries, allocated once in setup()
+var _query: PackedInt32Array = PackedInt32Array()
+
+## Stage timings in microseconds, read by the debug overlay
+var usec_grid: int = 0
+var usec_contact: int = 0
 var _alive_count: int = 0
 
 
@@ -52,6 +61,7 @@ func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) ->
 	_type.resize(capacity)
 	_alive.resize(capacity)
 	_alive.fill(0)
+	_query.resize(capacity)
 
 	var kinds: int = defs.size()
 	_type_hp.resize(kinds)
@@ -59,6 +69,7 @@ func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) ->
 	_type_damage.resize(kinds)
 	_type_radius.resize(kinds)
 	_type_xp.resize(kinds)
+	_max_radius = 0.0
 	for i in kinds:
 		var def: EnemyDef = defs[i]
 		_type_hp[i] = def.hp
@@ -66,8 +77,10 @@ func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) ->
 		_type_damage[i] = def.contact_damage
 		_type_radius[i] = def.body_radius
 		_type_xp[i] = def.xp
+		_max_radius = maxf(_max_radius, def.body_radius)
 
 	_pool = Pool.new(capacity)
+	_grid = SpatialGrid.new(capacity, tuning.grid_cell_size)
 	_alive_count = 0
 	_build_multimesh()
 
@@ -95,6 +108,45 @@ func kill(id: int) -> void:
 	_pool.release(id)
 	multimesh.set_instance_transform_2d(id, DEAD_TRANSFORM)
 	enemy_died.emit(_pos[id], _type_xp[_type[id]])
+
+
+## Rebuilds the neighbour grid from the current positions. Everything that
+## queries neighbours this frame must run after this and before anything moves.
+func tick_grid() -> void:
+	var started: int = Time.get_ticks_usec()
+	_grid.clear()
+	for i in _capacity:
+		if _alive[i] == 1:
+			_grid.insert(i, _pos[i])
+	usec_grid = Time.get_ticks_usec() - started
+
+
+## Charges the player for touching enemies. design.md gives the player a single
+## invulnerability window rather than a per-enemy cooldown, so one hit is
+## resolved per frame and the hardest hitter is the one that lands; taking the
+## maximum keeps the result independent of slot order.
+##
+## Must run while the grid still matches the current positions, i.e. after
+## tick_grid() and before tick_movement().
+func tick_contact(player: Player) -> void:
+	var started: int = Time.get_ticks_usec()
+	if not player.is_invulnerable() and not player.is_dead():
+		var center: Vector2 = player.global_position
+		var found: int = _grid.query_radius(center, player.body_radius + _max_radius, _query)
+		var worst: float = 0.0
+		for k in found:
+			var j: int = _query[k]
+			# the grid is built once per frame, so an enemy killed since then
+			# is still in it
+			if _alive[j] == 0:
+				continue
+			var reach: float = player.body_radius + _type_radius[_type[j]]
+			if center.distance_squared_to(_pos[j]) > reach * reach:
+				continue
+			worst = maxf(worst, _type_damage[_type[j]])
+		if worst > 0.0:
+			player.take_damage(worst)
+	usec_contact = Time.get_ticks_usec() - started
 
 
 ## Moves every live enemy straight at the player. An enemy further away than

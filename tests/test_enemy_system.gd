@@ -172,3 +172,114 @@ func test_recycling_is_repeatable_with_the_same_seed() -> void:
 	_sys.tick_movement(0.1, Vector2.ZERO)
 	other.tick_movement(0.1, Vector2.ZERO)
 	assert_eq(_sys.position_of(a), other.position_of(b))
+
+func _make_knight() -> Player:
+	var def: ClassDef = ClassDef.new()
+	def.max_hp = 140.0
+	def.move_speed = 95.0
+	def.armor = 2
+	def.pickup_radius = 40.0
+	def.body_radius = 7.0
+	var player: Player = Player.new()
+	autofree(player)
+	player.setup(def, _tuning)
+	return player
+
+func test_a_touching_enemy_damages_the_player_once() -> void:
+	var player: Player = _make_knight()
+	_sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	_sys.spawn(0, Vector2(-5.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	assert_almost_eq(player.hp, 137.0, 0.01, "max(1, 5 - 2) = 3, charged once not twice")
+
+func test_a_distant_enemy_does_not_damage_the_player() -> void:
+	var player: Player = _make_knight()
+	_sys.spawn(0, Vector2(200.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	assert_eq(player.hp, 140.0)
+
+func test_an_enemy_just_out_of_reach_does_not_damage_the_player() -> void:
+	var player: Player = _make_knight()
+	_sys.spawn(0, Vector2(13.5, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	assert_eq(player.hp, 140.0, "the body radii sum to 13, so 13.5 misses")
+
+func test_an_enemy_just_inside_reach_damages_the_player() -> void:
+	var player: Player = _make_knight()
+	_sys.spawn(0, Vector2(12.5, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	assert_almost_eq(player.hp, 137.0, 0.01)
+
+func test_contact_respects_invulnerability() -> void:
+	var player: Player = _make_knight()
+	_sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	_sys.tick_contact(player)
+	assert_almost_eq(player.hp, 137.0, 0.01)
+	player.tick_timers(_tuning.player_iframe_duration)
+	_sys.tick_contact(player)
+	assert_almost_eq(player.hp, 134.0, 0.01)
+
+func test_the_hardest_hitting_toucher_wins() -> void:
+	var brute: EnemyDef = EnemyDef.new()
+	brute.id = &"brute"
+	brute.hp = 70.0
+	brute.move_speed = 28.0
+	brute.contact_damage = 12.0
+	brute.xp = 5
+	brute.body_radius = 11.0
+	var defs: Array[EnemyDef] = [_ghoul, brute]
+	var sys: EnemySystem = EnemySystem.new()
+	autofree(sys)
+	sys.setup(defs, _tuning, Rng.new(1), 8)
+	var player: Player = _make_knight()
+	sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	sys.spawn(1, Vector2(-5.0, 0.0), 0.0)
+	sys.tick_grid()
+	sys.tick_contact(player)
+	assert_almost_eq(player.hp, 130.0, 0.01,
+		"max(1, 12 - 2) = 10 from the brute, independent of slot order")
+
+func test_a_bigger_enemy_reaches_further() -> void:
+	var brute: EnemyDef = EnemyDef.new()
+	brute.hp = 70.0
+	brute.contact_damage = 12.0
+	brute.body_radius = 11.0
+	var defs: Array[EnemyDef] = [_ghoul, brute]
+	var sys: EnemySystem = EnemySystem.new()
+	autofree(sys)
+	sys.setup(defs, _tuning, Rng.new(1), 8)
+	var player: Player = _make_knight()
+	sys.spawn(1, Vector2(17.0, 0.0), 0.0)
+	sys.tick_grid()
+	sys.tick_contact(player)
+	assert_almost_eq(player.hp, 130.0, 0.01, "reach is 7 + 11 = 18, so 17 hits")
+
+func test_dead_enemies_do_not_hurt() -> void:
+	var player: Player = _make_knight()
+	var id: int = _sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	_sys.kill(id)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	assert_eq(player.hp, 140.0)
+
+func test_an_enemy_killed_after_the_grid_was_built_does_not_hurt() -> void:
+	var player: Player = _make_knight()
+	var id: int = _sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.kill(id)
+	_sys.tick_contact(player)
+	assert_eq(player.hp, 140.0, "the grid still holds the dead id until the next tick_grid()")
+
+func test_a_dead_player_takes_no_contact_damage() -> void:
+	var player: Player = _make_knight()
+	player.take_damage(1000.0)
+	_sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_contact(player)
+	assert_eq(player.hp, 0.0)
