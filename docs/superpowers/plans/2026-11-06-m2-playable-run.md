@@ -670,7 +670,7 @@ func test_non_positive_heal_is_ignored() -> void:
 - Produces: `class_name FxLayer extends Node2D`; `const CAPACITY: int = 32`; `add_arc(origin: Vector2, facing: Vector2, arc_degrees: float, range: float, color: Color, lifetime: float) -> void`, `add_ring(origin: Vector2, radius: float, color: Color, lifetime: float) -> void`, `tick(delta: float) -> void` (เพิ่มอายุ ปล่อยช่องที่หมดอายุ แล้วเรียก `queue_redraw()` เมื่อมีเอฟเฟกต์ทำงาน), `active_count() -> int`, `clear() -> void`
 - ข้อมูลเก็บเป็น SoA ขนาดคงที่ `CAPACITY` ไม่สร้างโหนด/Array ใหม่ต่อเอฟเฟกต์ เต็มแล้วเอฟเฟกต์ใหม่**ทับช่องที่เก่าที่สุด** (ไม่ทิ้ง ไม่ error) `_draw()` วาดส่วนโค้งด้วย `draw_arc` และวงด้วย `draw_arc` เต็มวง โดยโปร่งใสลงตามอายุ
 
-- [ ] **Step 1: เขียน `tests/test_fx_layer.gd`** (สร้าง `FxLayer.new()` ผ่าน `autofree`)
+- [x] **Step 1: เขียน `tests/test_fx_layer.gd`** (สร้าง `FxLayer.new()` ผ่าน `autofree`)
 ```gdscript
 func test_a_new_effect_is_active_then_expires() -> void:
 	_fx.add_arc(Vector2.ZERO, Vector2.RIGHT, 140.0, 48.0, Color.WHITE, 0.2)
@@ -701,10 +701,10 @@ func test_a_zero_facing_does_not_break_an_arc() -> void:
 	assert_eq(_fx.active_count(), 1)
 ```
 (เทสต์ใช้ `has_effect_at(origin: Vector2) -> bool` เป็นเมธอดตรวจสถานะสำหรับเทสต์ ให้เพิ่มด้วย)
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `run/fx_layer.gd` ตาม Interfaces** วาดจริงตรวจบน renderer ใน Task 31 (ตอนนี้ตรวจด้วย headless ว่าไม่มี error ตอน `tick`)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-28: add FxLayer for weapon visuals`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `run/fx_layer.gd` ตาม Interfaces** วาดจริงตรวจบน renderer ใน Task 31 (ตอนนี้ตรวจด้วย headless ว่าไม่มี error ตอน `tick`)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-28: add FxLayer for weapon visuals`**
 
 ---
 
