@@ -485,7 +485,7 @@ git commit -m "Add allocation-free spatial grid for neighbour queries"
 
 ### Task 4: Resource schema + ตัวเลขจาก design.md
 
-> **สถานะ:** ส่วน `RunTuning` + แถว design.md ทำแล้วใน M1-18 (ทดสอบใน `tests/test_run_tuning.gd`) ส่วน `ClassDef` ทำใน M1-5 และ `EnemyDef` ทำใน M1-8 จึงยังไม่ติ๊ก step ด้านล่าง
+> **สถานะ:** ส่วน `RunTuning` + แถว design.md ทำแล้วใน M1-18 (ทดสอบใน `tests/test_run_tuning.gd`) ส่วน `ClassDef` + `knight.tres` ทำแล้วใน M1-5 (`tests/test_class_def.gd`) `EnemyDef` ทำใน M1-8 จึงยังไม่ติ๊ก step ด้านล่าง
 
 **Files:**
 - Create: `data/class_def.gd`, `data/enemy_def.gd`, `data/run_tuning.gd`
