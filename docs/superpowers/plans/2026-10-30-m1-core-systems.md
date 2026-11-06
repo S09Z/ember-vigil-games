@@ -1550,11 +1550,13 @@ git commit -m "Damage the player from enemy contact through the grid"
 
 ### Task 10: `SpawnDirector` — ปล่อยศัตรูตามเวลา
 
+> **สถานะ (M1-13):** ทำแล้ว ต่างจากโค้ดตัวอย่าง: `SpawnDirector` สืบทอด `RefCounted` แทน `Node` เพราะไม่มี process callback (run.gd เรียก `tick()` เอง) จึงไม่ต้อง `autofree` ในเทสต์ และเพิ่มเทสต์ 3 ข้อ (ทิ้ง backlog ตอนถึงเพดาน, เพดานอ่านจาก tuning, seed เดียวกันได้จุดเกิดเดียวกัน)
+
 **Files:**
 - Create: `run/spawn_director.gd`
 - Test: `tests/test_spawn_director.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_spawn_director.gd`:
 
@@ -1623,11 +1625,11 @@ func test_spawned_enemies_carry_the_time_scaled_hp() -> void:
 	assert_almost_eq(_sys.hp_of(0), 20.0, 0.01)
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `SpawnDirector`
 
-- [ ] **Step 3: เขียน `run/spawn_director.gd`**
+- [x] **Step 3: เขียน `run/spawn_director.gd`**
 
 ```gdscript
 class_name SpawnDirector
@@ -1681,11 +1683,11 @@ func _spawn_one(elapsed: float, player_pos: Vector2) -> bool:
 	return _enemies.spawn(GHOUL, pos, elapsed) != -1
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add run/spawn_director.gd tests/test_spawn_director.gd
