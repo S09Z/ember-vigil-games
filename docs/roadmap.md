@@ -131,7 +131,7 @@ graph LR
 | ✅ M2-21 | ติดตามดาเมจรวมต่ออาวุธเพื่อเอาไปโชว์ในหน้าสรุป | `run/run_state.gd` | T | S |
 | ✅ M2-22 | `EnemySystem.query_radius` + `damage` | `run/enemy_system.gd` | T | S |
 | ✅ M2-23 | stun ใน EnemySystem | `run/enemy_system.gd` | T | S |
-| M2-24 | Shield Bash LV1–5 | `run/weapons/shield_bash.gd`, `data/weapons/shield_bash.tres` | T | M |
+| ✅ M2-24 | Shield Bash LV1–5 | `run/weapons/shield_bash.gd`, `data/weapons/shield_bash.tres` | T | M |
 | M2-25 | Warhorn LV1–5 | `run/weapons/warhorn.gd`, `data/weapons/warhorn.tres` | T | M |
 | ✅ M2-26 | `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` | `run/stat_block.gd`, `run/player.gd` | T | S |
 | ✅ M2-27 | ตัวเลขใหม่ลง design.md + RunTuning | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |

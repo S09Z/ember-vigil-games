@@ -993,7 +993,7 @@ func test_a_blocked_hit_on_a_dead_enemy_does_not_heal() -> void:
 - `.tres`: `id &"shield_bash"`, `tag &"steel"`, `class_id &"knight"`; ทุกแถว `range 40, arc_degrees 90, knockback 60, radius 0, both_sides false, buff 0, heal 0`; LV1 `damage 8, cooldown 3, stun_seconds 0.5`; LV2 `damage 12`; LV3 `damage 16, stun_seconds 1.0`; LV4 `damage 20`; LV5 `damage 24, cooldown 2` (สะสมค่าจากเลเวลก่อนหน้า ทุกฟิลด์ชัดเจน)
 - `ShieldBash._fire`: กรวยหน้าตาม `facing` เหมือน Greatsword (ใช้ `in_cone`) ศัตรูที่โดนได้ดาเมจ + `knockback` + `ctx.enemies.stun(id, lv.stun_seconds)`
 
-- [ ] **Step 1: เขียน `tests/test_shield_bash.gd`** (ศัตรูนิ่งแบบเดียวกับ Task 14; `_bash()` = `_weapon.tick(0.0, _ctx)`)
+- [x] **Step 1: เขียน `tests/test_shield_bash.gd`** (ศัตรูนิ่งแบบเดียวกับ Task 14; `_bash()` = `_weapon.tick(0.0, _ctx)`)
 ```gdscript
 func test_the_level_table_matches_the_design() -> void:
 	var d: WeaponDef = load("res://data/weapons/shield_bash.tres")
@@ -1036,10 +1036,10 @@ func test_bashing_with_no_enemies_is_harmless() -> void:
 	_bash(); assert_eq(_enemies.alive_count(), 0)
 ```
 และใน `tests/test_class_def.gd` ตรวจว่า `class_weapons` ของ Knight มี `shield_bash`
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `shield_bash.gd`, `.tres`, ลงทะเบียนใน `factories`, แก้ `knight.tres`**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-24: add Shield Bash levels 1 to 5`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `shield_bash.gd`, `.tres`, ลงทะเบียนใน `factories`, แก้ `knight.tres`**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-24: add Shield Bash levels 1 to 5`**
 
 ---
 

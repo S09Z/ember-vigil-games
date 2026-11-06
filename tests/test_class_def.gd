@@ -25,6 +25,14 @@ func test_class_def_has_weapon_fields() -> void:
 func test_knight_has_the_greatsword_and_steel_lifesteal() -> void:
 	var def: ClassDef = load("res://data/classes/knight.tres")
 	assert_eq(def.start_weapon.id, &"greatsword")
-	assert_eq(def.class_weapons.size(), 1)
+	assert_eq(def.class_weapons.size(), 2)
 	assert_eq(def.class_weapons[0].id, &"greatsword")
 	assert_eq(def.steel_lifesteal, 0.03)
+
+func test_knight_has_shield_bash() -> void:
+	var def: ClassDef = load("res://data/classes/knight.tres")
+	var ids: Array[StringName] = []
+	for w in def.class_weapons:
+		ids.append(w.id)
+	assert_true(ids.has(&"shield_bash"))
+	assert_eq(def.start_weapon.id, &"greatsword")
