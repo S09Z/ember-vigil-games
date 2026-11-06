@@ -707,6 +707,8 @@ git commit -m "Add class, enemy and run tuning resources with design numbers"
 
 ### Task 5: `Player` — เดิน, HP, armor, อมตะ
 
+> **สถานะ:** ส่วนเดิน + `last_move_dir` + `setup(def)` ทำแล้วใน M1-6 (`apply_input()` แยกออกมาให้เทสต์ได้ และตั้ง `motion_mode = FLOATING` สำหรับมุมมองจากบน, ยังไม่ใส่ Camera2D เพราะเป็นของ M1-19) ส่วน HP/armor/อมตะ/signal (`take_damage`, `tick_timers`, `setup(def, tuning)`) ทำใน M1-7 จึงยังไม่ติ๊ก step ด้านล่าง
+
 **Files:**
 - Create: `run/player.gd`, `run/player.tscn`
 - Test: `tests/test_player.gd`
