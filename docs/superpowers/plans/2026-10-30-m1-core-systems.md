@@ -308,7 +308,7 @@ git commit -m "Add seedable RNG wrapper"
 - Create: `core/spatial_grid.gd`
 - Test: `tests/test_spatial_grid.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_spatial_grid.gd`:
 
@@ -370,11 +370,11 @@ func test_query_never_grows_the_output_buffer() -> void:
 	assert_eq(_out.size(), before, "query_radius fills the caller's buffer, it never grows it")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `SpatialGrid`
 
-- [ ] **Step 3: เขียน `core/spatial_grid.gd`**
+- [x] **Step 3: เขียน `core/spatial_grid.gd`**
 
 ```gdscript
 class_name SpatialGrid
@@ -466,7 +466,7 @@ func _cell_index(cx: int, cy: int) -> int:
 	return ((cy & _grid_mask) << _grid_shift) | (cx & _grid_mask)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -474,7 +474,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add core/spatial_grid.gd tests/test_spatial_grid.gd
