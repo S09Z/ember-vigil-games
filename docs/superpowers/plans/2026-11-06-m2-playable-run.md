@@ -950,7 +950,7 @@ func test_level_four_swings_faster() -> void:
 **Interfaces:**
 - `WeaponContext.deal_damage` เพิ่ม: ถ้า `weapon.def.tag == &"steel"` เรียก `player.heal(final_damage * steel_lifesteal)` (ใช้ดาเมจหลังคูณบัฟ และนับเฉพาะส่วนที่ทำจริงต่อศัตรูที่ยังมีชีวิต) อาวุธแท็กอื่นไม่ดูด
 
-- [ ] **Step 1: เพิ่มเทสต์** (ผู้เล่นต้องเสียเลือดก่อนจึงเห็นผลฮีล)
+- [x] **Step 1: เพิ่มเทสต์** (ผู้เล่นต้องเสียเลือดก่อนจึงเห็นผลฮีล)
 ```gdscript
 func test_a_steel_weapon_heals_three_percent_of_damage() -> void:
 	_player.take_damage(32.0)                       # 140 - 30 = 110
@@ -976,10 +976,10 @@ func test_a_blocked_hit_on_a_dead_enemy_does_not_heal() -> void:
 	_ctx.deal_damage(_enemy_id, 100.0, _steel_weapon)
 	assert_almost_eq(_player.hp, 110.0, 0.01)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่มดูดเลือดใน `deal_damage`**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-9: add Oathguard lifesteal for STEEL weapons`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่มดูดเลือดใน `deal_damage`**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-9: add Oathguard lifesteal for STEEL weapons`**
 
 ---
 

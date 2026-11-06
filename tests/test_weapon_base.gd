@@ -8,6 +8,8 @@ var _stats: StatBlock
 var _player: Player
 var _ctx: WeaponContext
 var _enemy_id: int
+var _steel_weapon: CountingWeapon
+var _holy_weapon: CountingWeapon
 
 func _level(cooldown: float) -> WeaponLevelDef:
 	var lv: WeaponLevelDef = WeaponLevelDef.new()
@@ -39,7 +41,8 @@ func before_each() -> void:
 	_state.setup(RunTuning.new())
 	_stats = StatBlock.new()
 	var cdef: ClassDef = ClassDef.new()
-	cdef.max_hp = 100.0
+	cdef.max_hp = 140.0
+	cdef.armor = 2
 	cdef.move_speed = 90.0
 	cdef.body_radius = 7.0
 	cdef.pickup_radius = 40.0
@@ -47,7 +50,19 @@ func before_each() -> void:
 	autofree(_player)
 	_player.setup(cdef, RunTuning.new())
 	_ctx = WeaponContext.new()
-	_ctx.setup(_player, _enemies, null, _state, _stats, 0.0)
+	_ctx.setup(_player, _enemies, null, _state, _stats, 0.03)
+	_steel_weapon = _tagged_weapon(&"steel")
+	_holy_weapon = _tagged_weapon(&"holy")
+
+func _tagged_weapon(tag: StringName) -> CountingWeapon:
+	var d: WeaponDef = WeaponDef.new()
+	d.id = tag
+	d.tag = tag
+	var rows: Array[WeaponLevelDef] = [_level(1.0)]
+	d.levels = rows
+	var weapon: CountingWeapon = CountingWeapon.new()
+	weapon.setup(d)
+	return weapon
 
 func test_starts_at_level_one() -> void:
 	assert_eq(_w.level, 1)
@@ -115,3 +130,29 @@ func test_context_exposes_position_and_facing() -> void:
 
 func test_context_hits_buffer_matches_enemy_capacity() -> void:
 	assert_eq(_ctx.hits.size(), 8)
+
+func test_a_steel_weapon_heals_three_percent_of_damage() -> void:
+	_player.take_damage(32.0)
+	_ctx.deal_damage(_enemy_id, 100.0, _steel_weapon)
+	assert_almost_eq(_player.hp, 113.0, 0.01)
+
+func test_lifesteal_uses_the_buffed_damage() -> void:
+	_player.take_damage(32.0)
+	_stats.apply_damage_buff(25.0, 3.0)
+	_ctx.deal_damage(_enemy_id, 100.0, _steel_weapon)
+	assert_almost_eq(_player.hp, 110.0 + 3.75, 0.01)
+
+func test_a_holy_weapon_does_not_heal() -> void:
+	_player.take_damage(32.0)
+	_ctx.deal_damage(_enemy_id, 100.0, _holy_weapon)
+	assert_almost_eq(_player.hp, 110.0, 0.01)
+
+func test_lifesteal_never_exceeds_max_hp() -> void:
+	_ctx.deal_damage(_enemy_id, 100.0, _steel_weapon)
+	assert_eq(_player.hp, _player.max_hp)
+
+func test_a_blocked_hit_on_a_dead_enemy_does_not_heal() -> void:
+	_player.take_damage(32.0)
+	_enemies.kill(_enemy_id)
+	_ctx.deal_damage(_enemy_id, 100.0, _steel_weapon)
+	assert_almost_eq(_player.hp, 110.0, 0.01)

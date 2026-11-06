@@ -101,7 +101,7 @@ graph LR
 | ✅ M2-6 | `Greatsword` LV1: ฟันวง 140° ตาม `last_move_dir` ระยะ 48 ดาเมจ 20 คูลดาวน์ 1.1 ผลัก 20 | `run/weapons/greatsword.gd`, `data/weapons/greatsword.tres` | T | M |
 | ✅ M2-7 | Greatsword LV2–5 ตามตาราง (ดาเมจ +5 / วง 180° ระยะ 56 / คูลดาวน์ −0.2 / ฟันหลังด้วย) | เดิม | T | S |
 | ✅ M2-8 | Knockback ของศัตรู: ผลักแล้วกลับมาไล่ต่อ ไม่เด้งทะลุ grid | `run/enemy_system.gd` | T | S |
-| M2-9 | พาสซีฟอาชีพ **Oathguard**: ดูดเลือด 3% ของดาเมจจากอาวุธแท็ก STEEL | `run/player.gd` หรือ `run/stat_block.gd` | T | S |
+| ✅ M2-9 | พาสซีฟอาชีพ **Oathguard**: ดูดเลือด 3% ของดาเมจจากอาวุธแท็ก STEEL | `run/player.gd` หรือ `run/stat_block.gd` | T | S |
 
 ### M2-C XP และของเก็บ
 

@@ -32,6 +32,7 @@ func facing() -> Vector2:
 
 
 ## Applies the damage buff, hits the enemy and records the full final amount.
+## STEEL weapons also heal the player by steel_lifesteal of that amount.
 ## Returns true if the enemy died. A dead or bad id records nothing.
 func deal_damage(id: int, amount: float, weapon: WeaponBase) -> bool:
 	if not enemies.is_alive(id):
@@ -39,4 +40,6 @@ func deal_damage(id: int, amount: float, weapon: WeaponBase) -> bool:
 	var final_amount: float = amount * stats.damage_multiplier()
 	var killed: bool = enemies.damage(id, final_amount)
 	state.record_damage(weapon.def.id, final_amount)
+	if weapon.def.tag == &"steel":
+		player.heal(final_amount * steel_lifesteal)
 	return killed
