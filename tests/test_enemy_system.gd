@@ -381,3 +381,36 @@ func test_a_new_enemy_in_a_reused_slot_starts_with_no_push() -> void:
 	var again: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
 	_sys.tick_movement(0.1, Vector2.ZERO)
 	assert_almost_eq(_sys.position_of(again).x, 100.0, 0.01)
+
+func test_query_radius_returns_only_enemies_inside() -> void:
+	var near: int = _sys.spawn(0, Vector2(10.0, 0.0), 0.0)
+	_sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.tick_grid()
+	var buf: PackedInt32Array = PackedInt32Array(); buf.resize(8)
+	assert_eq(_sys.query_radius(Vector2.ZERO, 20.0, buf), 1)
+	assert_eq(buf[0], near)
+
+func test_query_radius_skips_enemies_killed_after_the_grid_was_built() -> void:
+	var id: int = _sys.spawn(0, Vector2(5.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.kill(id)
+	var buf: PackedInt32Array = PackedInt32Array(); buf.resize(8)
+	assert_eq(_sys.query_radius(Vector2.ZERO, 20.0, buf), 0)
+
+func test_damage_reduces_hp_without_killing() -> void:
+	var id: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	assert_false(_sys.damage(id, 4.0))
+	assert_almost_eq(_sys.hp_of(id), 6.0, 0.001)
+	assert_true(_sys.is_alive(id))
+
+func test_lethal_damage_kills_once_and_emits_enemy_died() -> void:
+	watch_signals(_sys)
+	var id: int = _sys.spawn(0, Vector2(3.0, 3.0), 0.0)
+	assert_true(_sys.damage(id, 10.0))
+	assert_false(_sys.is_alive(id))
+	assert_false(_sys.damage(id, 10.0), "a dead enemy cannot die twice")
+	assert_signal_emit_count(_sys, "enemy_died", 1)
+
+func test_damage_ignores_bad_ids() -> void:
+	assert_false(_sys.damage(-1, 5.0))
+	assert_false(_sys.damage(99, 5.0))

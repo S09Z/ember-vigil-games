@@ -118,6 +118,34 @@ func kill(id: int) -> void:
 	enemy_died.emit(_pos[id], _type_xp[_type[id]])
 
 
+## Fills `out` with the ids of live enemies within `radius` of `center`, measured
+## from their current positions, and returns how many. `out` must hold at least
+## capacity() entries. Uses the grid from the latest tick_grid(), so an enemy
+## killed since then is filtered out here.
+func query_radius(center: Vector2, radius: float, out: PackedInt32Array) -> int:
+	var found: int = _grid.query_radius(center, radius, out)
+	var radius_sq: float = radius * radius
+	var kept: int = 0
+	for k in found:
+		var id: int = out[k]
+		if _alive[id] == 1 and center.distance_squared_to(_pos[id]) <= radius_sq:
+			out[kept] = id
+			kept += 1
+	return kept
+
+
+## Subtracts hp. Returns true if this hit killed the enemy; kill() is called
+## here, so enemy_died fires exactly once. A bad or already dead id does nothing.
+func damage(id: int, amount: float) -> bool:
+	if id < 0 or id >= _capacity or _alive[id] == 0:
+		return false
+	_hp[id] -= amount
+	if _hp[id] > 0.0:
+		return false
+	kill(id)
+	return true
+
+
 ## Rebuilds the neighbour grid from the current positions. Everything that
 ## queries neighbours this frame must run after this and before anything moves.
 func tick_grid() -> void:

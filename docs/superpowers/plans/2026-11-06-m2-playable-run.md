@@ -167,7 +167,7 @@ func test_level_data_out_of_range_returns_null() -> void:
 - Produces: `damage(id: int, amount: float) -> bool` ลด HP คืน `true` ถ้าตายครั้งนี้ (เรียก `kill(id)` เอง จึงยิง `enemy_died` ครั้งเดียว) id ไม่ถูกต้องหรือตายแล้วคืน `false` ไม่ทำอะไร
 - Consumes: `_grid`, `_alive`, `_pos`, `_hp`, `kill()`
 
-- [ ] **Step 1: เพิ่มเทสต์ใน `tests/test_enemy_system.gd`**
+- [x] **Step 1: เพิ่มเทสต์ใน `tests/test_enemy_system.gd`**
 ```gdscript
 func test_query_radius_returns_only_enemies_inside() -> void:
 	var near: int = _sys.spawn(0, Vector2(10.0, 0.0), 0.0)
@@ -202,10 +202,10 @@ func test_damage_ignores_bad_ids() -> void:
 	assert_false(_sys.damage(-1, 5.0))
 	assert_false(_sys.damage(99, 5.0))
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่มสองเมธอดตาม Interfaces** `query_radius` เรียก `_grid.query_radius` ลง buffer ของผู้เรียกแล้วคัดตัวที่ตายออกในที่เดิม (เขียนทับ `out` โดยไม่สร้างอาร์เรย์ใหม่)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-22: add enemy query_radius and damage API`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่มสองเมธอดตาม Interfaces** `query_radius` เรียก `_grid.query_radius` ลง buffer ของผู้เรียกแล้วคัดตัวที่ตายออกในที่เดิม (เขียนทับ `out` โดยไม่สร้างอาร์เรย์ใหม่)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-22: add enemy query_radius and damage API`**
 
 ---
 
