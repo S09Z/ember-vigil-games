@@ -308,7 +308,7 @@ git commit -m "Add seedable RNG wrapper"
 - Create: `core/spatial_grid.gd`
 - Test: `tests/test_spatial_grid.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_spatial_grid.gd`:
 
@@ -370,11 +370,11 @@ func test_query_never_grows_the_output_buffer() -> void:
 	assert_eq(_out.size(), before, "query_radius fills the caller's buffer, it never grows it")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `SpatialGrid`
 
-- [ ] **Step 3: เขียน `core/spatial_grid.gd`**
+- [x] **Step 3: เขียน `core/spatial_grid.gd`**
 
 ```gdscript
 class_name SpatialGrid
@@ -466,7 +466,7 @@ func _cell_index(cx: int, cy: int) -> int:
 	return ((cy & _grid_mask) << _grid_shift) | (cx & _grid_mask)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -474,7 +474,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add core/spatial_grid.gd tests/test_spatial_grid.gd
@@ -485,6 +485,8 @@ git commit -m "Add allocation-free spatial grid for neighbour queries"
 
 ### Task 4: Resource schema + ตัวเลขจาก design.md
 
+> **สถานะ:** ทำครบแล้ว แบ่งเป็น M1-18 (`RunTuning` + design.md, `tests/test_run_tuning.gd`), M1-5 (`ClassDef` + knight, `tests/test_class_def.gd`) และ M1-8 (`EnemyDef` + ghoul, `tests/test_enemy_def.gd`) `.tres` เขียนด้วยมือพร้อมค่าครบ เพราะ `ResourceSaver` ไม่เก็บค่า default และเทสต์รวม `tests/test_data_defs.gd` ในแผนถูกแยกเป็นสามไฟล์ตามงาน
+
 **Files:**
 - Create: `data/class_def.gd`, `data/enemy_def.gd`, `data/run_tuning.gd`
 - Create: `data/classes/knight.tres`, `data/enemies/ghoul.tres`, `data/tuning/run_tuning.tres`
@@ -492,7 +494,7 @@ git commit -m "Add allocation-free spatial grid for neighbour queries"
 - Test: `tests/test_data_defs.gd`
 - Delete: `.gitkeep` ของโฟลเดอร์ที่มีไฟล์จริงแล้ว
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_data_defs.gd`:
 
@@ -538,11 +540,11 @@ func test_run_tuning_matches_the_design_numbers() -> void:
 	assert_eq(tuning.grid_cell_size, 16.0)
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `ClassDef` / โหลด `.tres` ไม่ได้
 
-- [ ] **Step 3: เขียน schema สามไฟล์**
+- [x] **Step 3: เขียน schema สามไฟล์**
 
 `data/class_def.gd`:
 
@@ -610,14 +612,14 @@ extends Resource
 @export var grid_cell_size: float = 16.0
 ```
 
-- [ ] **Step 4: import ให้ Godot รู้จัก class ใหม่**
+- [x] **Step 4: import ให้ Godot รู้จัก class ใหม่**
 
 ```bash
 godot --headless --path . --import
 ```
 Expected: ไม่มี error
 
-- [ ] **Step 5: สร้างไฟล์ `.tres` ด้วยสคริปต์ใช้ครั้งเดียว**
+- [x] **Step 5: สร้างไฟล์ `.tres` ด้วยสคริปต์ใช้ครั้งเดียว**
 
 เขียน `tools_make_data.gd` ที่รากโปรเจกต์ (ไฟล์นี้จะถูกลบใน step ถัดไป — เขียน `.tres` ด้วยมือเสี่ยงผิดฟอร์แมต):
 
@@ -661,7 +663,7 @@ godot --headless --path . -s tools_make_data.gd
 Expected: สามบรรทัดลงท้ายด้วย `-> 0` (0 = OK)
 ถ้าได้ค่าอื่น ให้หยุดและรายงาน ห้ามไปเขียน `.tres` ด้วยมือแทน
 
-- [ ] **Step 6: ลบสคริปต์ชั่วคราวและ `.gitkeep` ที่ไม่ต้องใช้แล้ว**
+- [x] **Step 6: ลบสคริปต์ชั่วคราวและ `.gitkeep` ที่ไม่ต้องใช้แล้ว**
 
 ```bash
 rm tools_make_data.gd
@@ -669,11 +671,11 @@ rm -f data/classes/.gitkeep data/enemies/.gitkeep
 godot --headless --path . --import
 ```
 
-- [ ] **Step 7: รันเทสต์ ต้องผ่าน**
+- [x] **Step 7: รันเทสต์ ต้องผ่าน**
 
 Expected: PASS ทั้งหมด ถ้าค่าใดไม่ตรง ให้แก้ `.tres` ไม่ใช่แก้เทสต์
 
-- [ ] **Step 8: เพิ่มตัวเลขที่ยังไม่มีลง `docs/design.md`**
+- [x] **Step 8: เพิ่มตัวเลขที่ยังไม่มีลง `docs/design.md`**
 
 ในหัวข้อ 4 (ตารางอาชีพ) เพิ่มแถวหลัง "รัศมีเก็บของ (px)":
 
@@ -694,7 +696,7 @@ Expected: PASS ทั้งหมด ถ้าค่าใดไม่ตรง 
 ขนาดเซลล์ของ grid ที่ใช้หาเพื่อนบ้าน 16 px (ปรับได้ตอนรอบวัดประสิทธิภาพ)
 ```
 
-- [ ] **Step 9: commit**
+- [x] **Step 9: commit**
 
 ```bash
 git add data/ tests/test_data_defs.gd docs/design.md
@@ -705,11 +707,13 @@ git commit -m "Add class, enemy and run tuning resources with design numbers"
 
 ### Task 5: `Player` — เดิน, HP, armor, อมตะ
 
+> **สถานะ:** ทำครบแล้ว แบ่งเป็น M1-6 (เดิน + `last_move_dir`) และ M1-7 (HP/armor/อมตะ/signal) ไม่ใส่ Camera2D ในฉากเพราะเป็นของ M1-19 และตั้ง `motion_mode = FLOATING`
+
 **Files:**
 - Create: `run/player.gd`, `run/player.tscn`
 - Test: `tests/test_player.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_player.gd`:
 
@@ -782,11 +786,11 @@ func test_last_move_dir_starts_valid() -> void:
 		"melee weapons in M2 aim along this, so it must never be zero")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `Player`
 
-- [ ] **Step 3: เขียน `run/player.gd`**
+- [x] **Step 3: เขียน `run/player.gd`**
 
 ```gdscript
 class_name Player
@@ -870,7 +874,7 @@ func is_dead() -> bool:
 	return _dead
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -878,7 +882,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: เขียน `run/player.tscn`**
+- [x] **Step 5: เขียน `run/player.tscn`**
 
 ```
 [gd_scene load_steps=3 format=3]
@@ -901,14 +905,14 @@ polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
 [node name="Camera2D" type="Camera2D" parent="."]
 ```
 
-- [ ] **Step 6: ตรวจว่าฉากโหลดได้**
+- [x] **Step 6: ตรวจว่าฉากโหลดได้**
 
 ```bash
 godot --headless --path . --import
 ```
 Expected: ไม่มี error และไม่มีคำว่า `player.tscn` ในบรรทัด error ใด
 
-- [ ] **Step 7: commit**
+- [x] **Step 7: commit**
 
 ```bash
 git add run/player.gd run/player.tscn tests/test_player.gd
@@ -919,12 +923,14 @@ git commit -m "Add player with movement, armor and invulnerability window"
 
 ### Task 6: `EnemySystem` — โครงข้อมูลและการวาด
 
+> **สถานะ:** ทำครบแล้ว แบ่งเป็น M1-9 (โครง SoA, `spawn`/`kill`, hp scaling) และ M1-10 (MultiMesh) ต่างจากโค้ดตัวอย่าง: `setup(defs, tuning, capacity)` ยังไม่รับ `Rng` และยังไม่มี grid/scratch buffer/ตัวจับเวลา (เพิ่มตอน M1-11/12/17) และเพิ่ม `transform_of(id)` เพราะ renderer แบบ headless ไม่เก็บข้อมูล MultiMesh ทำให้อ่านกลับด้วย `get_instance_transform_2d` ในเทสต์ไม่ได้ ตรวจการวาดจริงแยกด้วยการรันแบบมี renderer แล้ว
+
 **Files:**
 - Create: `run/enemy_system.gd`
 - Test: `tests/test_enemy_system.gd`
 - Delete: `data/.gitkeep` ถ้ายังเหลือ
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_enemy_system.gd`:
 
@@ -1007,11 +1013,11 @@ func test_dead_slots_are_drawn_at_zero_scale() -> void:
 	assert_almost_eq(t.get_scale().length(), 0.0, 0.001, "a dead slot must not be visible")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `EnemySystem`
 
-- [ ] **Step 3: เขียน `run/enemy_system.gd`**
+- [x] **Step 3: เขียน `run/enemy_system.gd`**
 
 ```gdscript
 class_name EnemySystem
@@ -1165,7 +1171,7 @@ func _build_multimesh() -> void:
 		mm.set_instance_transform_2d(i, DEAD_TRANSFORM)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -1174,7 +1180,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 Expected: PASS ทั้งหมด
 ถ้า `const DEAD_TRANSFORM` ใช้ constructor 4 ตัวไม่ได้ ให้เปลี่ยนเป็น `static var` แล้วรายงานไว้ในข้อความ commit
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add run/enemy_system.gd tests/test_enemy_system.gd
@@ -1185,6 +1191,8 @@ git commit -m "Add enemy system with struct-of-arrays storage and multimesh draw
 ---
 
 ### Task 7: ศัตรูเดินไล่ผู้เล่นและตัวที่หลงไกลถูกย้ายกลับ
+
+> **สถานะ:** ทำแล้วใน M1-11 แต่ไม่ติ๊ก step เพราะต่างจากโค้ดตัวอย่าง: `tick_movement(delta, player_pos)` ไม่รับ `elapsed` (hp scaling อยู่ที่ `spawn()` แล้ว) ไม่มี `tick_grid()` และ `_push` (เป็นของ M1-12/M1-17 ที่ยังไม่มีโค้ดใช้) และ `setup()` รับ `Rng` เพิ่ม ส่วนเทสต์ปรับตามนี้และเพิ่ม 3 ข้อ (เดินทแยง, รีไซเคิลรอบตำแหน่งผู้เล่น, ซ้ำได้ด้วย seed เดิม)
 
 **Files:**
 - Modify: `run/enemy_system.gd` (เพิ่ม `tick_grid()` และ `tick_movement()`)
@@ -1414,6 +1422,8 @@ git commit -m "Add soft separation between enemies"
 ---
 
 ### Task 9: contact — ศัตรูแตะผู้เล่นแล้วเกิดดาเมจ
+
+> **สถานะ:** ทำแล้วใน M1-12 รวม `tick_grid()` ที่ย้ายมาจาก Task 7 ต่างจากโค้ดตัวอย่าง: คง `_alive[j]` เช็คไว้ใน `tick_contact()` เพราะกริดสร้างครั้งเดียวต่อเฟรม ตัวที่ตายหลังจากนั้นยังค้างอยู่ในกริด (มีเทสต์ครอบ) และเพิ่ม `usec_grid` / `usec_contact` ให้ overlay ส่วน `tick_separation()` ที่แผนอ้างถึงยังไม่มี (M1-17) จึงยังไม่ติ๊ก step ด้านล่าง
 
 **Files:**
 - Modify: `run/enemy_system.gd` (เพิ่ม `tick_contact()`)
@@ -1750,13 +1760,15 @@ git commit -m "Add F4 debug action for filling the enemy cap"
 
 ### Task 12: `DebugOverlay` — F3, FPS avg และ 1% low, ms ต่อขั้น
 
+> **สถานะ (M1-4):** ทำแล้ว แต่ต่างจากโค้ดตัวอย่าง: `EnemySystem` ยังไม่มี จึงไม่ `bind(enemies)` ตรง ๆ แต่ใช้ `bind_extra_lines(provider: Callable)` ให้ระบบส่งข้อความมาเอง (จำนวนศัตรู / ms ต่อขั้น) และเพิ่ม `build_text()` เป็น public สำหรับเทสต์ ตอนทำ M1-9 ให้ bind จาก `run.gd` ด้วย Callable ที่ประกอบข้อความจาก getter ของ EnemySystem. แก้ `1%%` ในสตริงที่ไม่ผ่าน `%` ด้วย
+
 **Files:**
 - Create: `ui/debug_overlay.gd`, `ui/debug_overlay.tscn`
 - Test: `tests/test_debug_overlay.gd`
 
 เทสต์ครอบแค่คณิตศาสตร์ของสถิติ ส่วนการแสดงผลดูด้วยตา
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_debug_overlay.gd`:
 
@@ -1799,11 +1811,11 @@ func test_the_window_is_a_ring_buffer() -> void:
 	assert_almost_eq(_overlay.average_fps(), 120.0, 0.5, "old frames must be overwritten")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `DebugOverlay`
 
-- [ ] **Step 3: เขียน `ui/debug_overlay.gd`**
+- [x] **Step 3: เขียน `ui/debug_overlay.gd`**
 
 ```gdscript
 class_name DebugOverlay
@@ -1904,7 +1916,7 @@ func _build_text() -> String:
 	return "\n".join(lines)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -1912,7 +1924,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: เขียน `ui/debug_overlay.tscn`**
+- [x] **Step 5: เขียน `ui/debug_overlay.tscn`**
 
 ```
 [gd_scene load_steps=2 format=3]
@@ -1933,7 +1945,7 @@ theme_override_font_sizes/font_size = 8
 text = "F3"
 ```
 
-- [ ] **Step 6: commit**
+- [x] **Step 6: commit**
 
 ```bash
 git add ui/debug_overlay.gd ui/debug_overlay.tscn tests/test_debug_overlay.gd
