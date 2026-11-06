@@ -219,7 +219,7 @@ func test_damage_ignores_bad_ids() -> void:
 - Produces: SoA `_kb_vel: PackedVector2Array`, `_kb_left: PackedFloat32Array` (เวลาที่เหลือ) ล้างตอน `spawn()` เมื่อใช้ slot ซ้ำ
 - Consumes: `tick_movement(delta, player_pos)` เดิม เพิ่มการเลื่อนตำแหน่งจาก knockback ด้วย trapezoid ต่อก้าว (`pos += kb_vel * delta * (f_start + f_end) / 2` โดย `f = left / duration` และตัดที่ศูนย์) เพื่อให้ผลรวมระยะเท่ากับ `distance` พอดีไม่ว่า `delta` เป็นเท่าไร
 
-- [ ] **Step 1: เพิ่มเทสต์** (ใช้ศัตรูความเร็ว 0 ผ่านเมธอดช่วย `_use_still_enemies()` ที่มีอยู่แล้ว และตั้งผู้เล่นที่ `Vector2.ZERO`)
+- [x] **Step 1: เพิ่มเทสต์** (ใช้ศัตรูความเร็ว 0 ผ่านเมธอดช่วย `_use_still_enemies()` ที่มีอยู่แล้ว และตั้งผู้เล่นที่ `Vector2.ZERO`)
 ```gdscript
 func _run_ticks(n: int, delta: float) -> void:
 	for i in n:
@@ -278,10 +278,10 @@ func test_a_reused_slot_does_not_inherit_a_knockback() -> void:
 	_run_ticks(30, 1.0 / 60.0)
 	assert_eq(_sys.position_of(b), Vector2(200.0, 0.0))
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่ม SoA และเมธอดตาม Interfaces** ข้ามตัวที่ตายเหมือนเดิม และแยกเนื้อที่เลื่อนตำแหน่งเป็นฟังก์ชันย่อยเพื่อไม่ให้ `tick_movement` ยาวเกินไป
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-8: add enemy knockback`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่ม SoA และเมธอดตาม Interfaces** ข้ามตัวที่ตายเหมือนเดิม และแยกเนื้อที่เลื่อนตำแหน่งเป็นฟังก์ชันย่อยเพื่อไม่ให้ `tick_movement` ยาวเกินไป
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-8: add enemy knockback`**
 
 ---
 

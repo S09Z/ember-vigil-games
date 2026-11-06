@@ -25,6 +25,9 @@ var _pos: PackedVector2Array = PackedVector2Array()
 var _vel: PackedVector2Array = PackedVector2Array()
 ## Separation push in px/s, rebuilt every frame by tick_separation()
 var _push: PackedVector2Array = PackedVector2Array()
+## Knockback velocity in px/s at the start of a push, and seconds of push left
+var _kb_vel: PackedVector2Array = PackedVector2Array()
+var _kb_left: PackedFloat32Array = PackedFloat32Array()
 var _hp: PackedFloat32Array = PackedFloat32Array()
 var _type: PackedByteArray = PackedByteArray()
 var _alive: PackedByteArray = PackedByteArray()
@@ -64,6 +67,9 @@ func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) ->
 	_vel.resize(capacity)
 	_push.resize(capacity)
 	_push.fill(Vector2.ZERO)
+	_kb_vel.resize(capacity)
+	_kb_left.resize(capacity)
+	_kb_left.fill(0.0)
 	_hp.resize(capacity)
 	_type.resize(capacity)
 	_alive.resize(capacity)
@@ -101,6 +107,8 @@ func spawn(type_index: int, pos: Vector2, elapsed: float) -> int:
 	_pos[id] = pos
 	_vel[id] = Vector2.ZERO
 	_push[id] = Vector2.ZERO
+	_kb_vel[id] = Vector2.ZERO
+	_kb_left[id] = 0.0
 	_hp[id] = _type_hp[type_index] * (1.0 + elapsed / _tuning.hp_scale_divisor)
 	_type[id] = type_index
 	_alive[id] = 1
@@ -144,6 +152,20 @@ func damage(id: int, amount: float) -> bool:
 		return false
 	kill(id)
 	return true
+
+
+## Pushes an enemy `distance` px along `direction` in total. The push starts at
+## 2 * distance / duration and fades linearly to zero over knockback_duration, so
+## the area under it is exactly `distance`. A zero direction does nothing; a new
+## push while one is running replaces it instead of stacking.
+func knockback(id: int, direction: Vector2, distance: float) -> void:
+	if id < 0 or id >= _capacity or _alive[id] == 0:
+		return
+	if direction.is_zero_approx():
+		return
+	var duration: float = _tuning.knockback_duration
+	_kb_vel[id] = direction.normalized() * (2.0 * distance / duration)
+	_kb_left[id] = duration
 
 
 ## Rebuilds the neighbour grid from the current positions. Everything that
@@ -240,13 +262,29 @@ func tick_movement(delta: float, player_pos: Vector2) -> void:
 		if to_player.length_squared() > recycle_sq:
 			_pos[i] = _rng.point_in_ring(player_pos, _tuning.spawn_ring_min, _tuning.spawn_ring_max)
 			_vel[i] = Vector2.ZERO
+			_kb_left[i] = 0.0
 			continue
 		# normalized() of a zero vector is zero in Godot, so an enemy exactly on
 		# the player just stands still instead of producing NaN.
 		var v: Vector2 = to_player.normalized() * _type_speed[_type[i]] + _push[i]
 		_vel[i] = v
-		_pos[i] = p + v * delta
+		_pos[i] = p + v * delta + _knockback_step(i, delta)
 	usec_movement = Time.get_ticks_usec() - started
+
+
+## How far the knockback moves slot `i` this step, and ticks its timer down. The
+## push is a trapezoid over the step (average of the start and end strength) and
+## only counts the part of the step that still had push left, so the total is
+## the same whatever the frame length.
+func _knockback_step(i: int, delta: float) -> Vector2:
+	var left: float = _kb_left[i]
+	if left <= 0.0:
+		return Vector2.ZERO
+	var duration: float = _tuning.knockback_duration
+	var active: float = minf(delta, left)
+	var left_after: float = left - active
+	_kb_left[i] = left_after
+	return _kb_vel[i] * active * (left + left_after) / (2.0 * duration)
 
 
 ## Writes every live enemy's position into the MultiMesh. Free slots were already

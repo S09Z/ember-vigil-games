@@ -414,3 +414,60 @@ func test_lethal_damage_kills_once_and_emits_enemy_died() -> void:
 func test_damage_ignores_bad_ids() -> void:
 	assert_false(_sys.damage(-1, 5.0))
 	assert_false(_sys.damage(99, 5.0))
+
+func _run_ticks(n: int, delta: float) -> void:
+	for i in n:
+		_sys.tick_movement(delta, Vector2.ZERO)
+
+func test_knockback_moves_the_total_distance() -> void:
+	_use_still_enemies()
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	_run_ticks(30, 1.0 / 60.0)    # 0.5 s, longer than the 0.2 s push
+	assert_almost_eq(_sys.position_of(id).x, 120.0, 0.01)
+
+func test_knockback_total_is_independent_of_frame_rate() -> void:
+	_use_still_enemies()
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	_run_ticks(5, 0.1)
+	assert_almost_eq(_sys.position_of(id).x, 120.0, 0.01)
+
+func test_knockback_stops_after_the_duration() -> void:
+	_use_still_enemies()
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	_run_ticks(20, 1.0 / 60.0)
+	var settled: float = _sys.position_of(id).x
+	_run_ticks(20, 1.0 / 60.0)
+	assert_eq(_sys.position_of(id).x, settled)
+
+func test_a_pushed_enemy_resumes_chasing() -> void:
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)   # ghoul speed 45
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	_run_ticks(60, 1.0 / 60.0)                              # 1 s
+	assert_lt(_sys.position_of(id).x, 120.0, "it walked back towards the player")
+
+func test_a_new_knockback_restarts_instead_of_stacking() -> void:
+	_use_still_enemies()
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	_run_ticks(30, 1.0 / 60.0)
+	assert_almost_eq(_sys.position_of(id).x, 120.0, 0.01)
+
+func test_knockback_with_a_zero_direction_does_nothing() -> void:
+	_use_still_enemies()
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.knockback(id, Vector2.ZERO, 20.0)
+	_run_ticks(30, 1.0 / 60.0)
+	assert_eq(_sys.position_of(id), Vector2(100.0, 0.0))
+
+func test_a_reused_slot_does_not_inherit_a_knockback() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.knockback(a, Vector2.RIGHT, 20.0)
+	_sys.kill(a)
+	var b: int = _sys.spawn(0, Vector2(200.0, 0.0), 0.0)
+	_run_ticks(30, 1.0 / 60.0)
+	assert_eq(_sys.position_of(b), Vector2(200.0, 0.0))
