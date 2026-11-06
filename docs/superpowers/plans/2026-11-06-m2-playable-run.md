@@ -1350,7 +1350,7 @@ func test_every_fallback_has_a_display_name() -> void:
 - Produces: `LevelUpPanel extends CanvasLayer`; signal `card_picked(index: int)`; `show_cards(cards: Array[LevelUpCard], old_level: int, new_level: int) -> void` (แสดงหน้า ข้อความ "เลเวล old → new" และ 3 การ์ดพร้อมแท็ก/ชื่อ/เลเวลเดิม→ใหม่ของอาวุธ หรือข้อความการ์ดสำรอง), `hide_panel() -> void`, `is_open() -> bool`; รับอินพุตใน `_unhandled_input` เฉพาะเมื่อเปิดอยู่: คีย์ `KEY_1/2/3` เลือกใบที่ 1/2/3 (ถ้ามีใบนั้น) และคลิกบนปุ่มการ์ด; เลือกแล้วยิง `card_picked(index)` และ**ปิดตัวเอง** ไม่แก้ระบบเกมใด ๆ
 - Produces: `static card_title(card: LevelUpCard) -> String` (ฟังก์ชันล้วนสำหรับเทสต์: อาวุธใหม่ = `"<ชื่อ>"`, อัป = `"<ชื่อ> LV<ใหม่>"`, สำรอง = `fallback.display_name`) และ `static key_to_index(keycode: Key, count: int) -> int` (`KEY_1`→0 … `KEY_3`→2, ไม่มีใบนั้นหรือคีย์อื่น = -1)
 
-- [ ] **Step 1: เขียนเทสต์**
+- [x] **Step 1: เขียนเทสต์**
 ```gdscript
 func test_card_titles() -> void:
 	assert_eq(LevelUpPanel.card_title(_new_weapon_card("Greatsword")), "Greatsword")
@@ -1393,10 +1393,10 @@ func test_showing_the_next_queued_hand_reopens_the_panel() -> void:
 	assert_true(_panel.is_open())
 ```
 (เมธอดช่วย `_three_cards()` สร้างการ์ดจริง; `_key_event(k)` สร้าง `InputEventKey` ที่ `pressed = true`)
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน script และฉากด้วยโหนด `Control` มาตรฐาน** (`Label`, `Button` สามปุ่ม) สีตัวอักษร/ขนาดตามฉาก `debug_overlay.tscn` เป็นแนวทาง ฟอนต์ขนาดเล็กเหมาะกับ 640×360 ตรวจด้วยตาใน Task 31
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-14: add the level-up card panel`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน script และฉากด้วยโหนด `Control` มาตรฐาน** (`Label`, `Button` สามปุ่ม) สีตัวอักษร/ขนาดตามฉาก `debug_overlay.tscn` เป็นแนวทาง ฟอนต์ขนาดเล็กเหมาะกับ 640×360 ตรวจด้วยตาใน Task 31
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-14: add the level-up card panel`**
 
 ---
 
