@@ -1290,11 +1290,13 @@ git commit -m "Make enemies chase the player and recycle strays into the ring"
 
 ### Task 8: separation — ศัตรูผลักกันเอง
 
+> **สถานะ (M1-17):** ทำแล้ว ต่างจากโค้ดตัวอย่าง: `tick_separation()` ไม่รับ `delta` (แรงผลักเก็บเป็นความเร็วและ `tick_movement` เป็นคนคูณเวลา) ล้าง `_push` ตอน `spawn()` ด้วย และเทสต์ใช้ศัตรูความเร็ว 0 แทนผู้เล่นที่ `(0, 10000)` เพราะระยะนั้นเกิน `recycle_distance` ทำให้ศัตรูถูก recycle แทนที่จะถูกผลัก
+
 **Files:**
 - Modify: `run/enemy_system.gd` (เพิ่ม `tick_separation()`)
 - Modify: `tests/test_enemy_system.gd`
 
-- [ ] **Step 1: เพิ่มเทสต์ที่ต้องพัง**
+- [x] **Step 1: เพิ่มเทสต์ที่ต้องพัง**
 
 ต่อท้าย `tests/test_enemy_system.gd`:
 
@@ -1364,11 +1366,11 @@ func test_the_push_buffer_is_cleared_every_frame() -> void:
 		"with the neighbour gone, a stale push must not move a again")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่มีเมธอด `tick_separation`
 
-- [ ] **Step 3: เพิ่ม `tick_separation()` ลง `run/enemy_system.gd`** (วางไว้หลัง `tick_grid()`)
+- [x] **Step 3: เพิ่ม `tick_separation()` ลง `run/enemy_system.gd`** (วางไว้หลัง `tick_grid()`)
 
 ```gdscript
 ## Soft collision between enemies. Each overlapping pair is visited once (j > i)
@@ -1408,11 +1410,11 @@ func tick_separation(delta: float) -> void:
 	usec_separation = Time.get_ticks_usec() - started
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add run/enemy_system.gd tests/test_enemy_system.gd
@@ -1423,13 +1425,13 @@ git commit -m "Add soft separation between enemies"
 
 ### Task 9: contact — ศัตรูแตะผู้เล่นแล้วเกิดดาเมจ
 
-> **สถานะ:** ทำแล้วใน M1-12 รวม `tick_grid()` ที่ย้ายมาจาก Task 7 ต่างจากโค้ดตัวอย่าง: คง `_alive[j]` เช็คไว้ใน `tick_contact()` เพราะกริดสร้างครั้งเดียวต่อเฟรม ตัวที่ตายหลังจากนั้นยังค้างอยู่ในกริด (มีเทสต์ครอบ) และเพิ่ม `usec_grid` / `usec_contact` ให้ overlay ส่วน `tick_separation()` ที่แผนอ้างถึงยังไม่มี (M1-17) จึงยังไม่ติ๊ก step ด้านล่าง
+> **สถานะ:** ทำแล้วใน M1-12 รวม `tick_grid()` ที่ย้ายมาจาก Task 7 ต่างจากโค้ดตัวอย่าง: คง `_alive[j]` เช็คไว้ใน `tick_contact()` เพราะกริดสร้างครั้งเดียวต่อเฟรม ตัวที่ตายหลังจากนั้นยังค้างอยู่ในกริด (มีเทสต์ครอบ) และเพิ่ม `usec_grid` / `usec_contact` ให้ overlay `tick_separation()` ที่แผนอ้างถึงทำแล้วใน M1-17
 
 **Files:**
 - Modify: `run/enemy_system.gd` (เพิ่ม `tick_contact()`)
 - Modify: `tests/test_enemy_system.gd`
 
-- [ ] **Step 1: เพิ่มเทสต์ที่ต้องพัง**
+- [x] **Step 1: เพิ่มเทสต์ที่ต้องพัง**
 
 ต่อท้าย `tests/test_enemy_system.gd`:
 
@@ -1500,11 +1502,11 @@ func test_the_hardest_hitting_toucher_wins() -> void:
 		"max(1, 12 - 2) = 10 from the brute, independent of slot order")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่มีเมธอด `tick_contact`
 
-- [ ] **Step 3: เพิ่ม `tick_contact()` ลง `run/enemy_system.gd`** (วางไว้หลัง `tick_separation()`)
+- [x] **Step 3: เพิ่ม `tick_contact()` ลง `run/enemy_system.gd`** (วางไว้หลัง `tick_separation()`)
 
 ```gdscript
 ## Charges the player for touching enemies. design.md gives the player a single
@@ -1533,11 +1535,11 @@ func tick_contact(player: Player) -> void:
 	usec_contact = Time.get_ticks_usec() - started
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add run/enemy_system.gd tests/test_enemy_system.gd

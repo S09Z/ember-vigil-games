@@ -23,6 +23,8 @@ const DEAD_TRANSFORM: Transform2D = Transform2D(0.0, Vector2.ZERO, 0.0, Vector2.
 var _capacity: int = 0
 var _pos: PackedVector2Array = PackedVector2Array()
 var _vel: PackedVector2Array = PackedVector2Array()
+## Separation push in px/s, rebuilt every frame by tick_separation()
+var _push: PackedVector2Array = PackedVector2Array()
 var _hp: PackedFloat32Array = PackedFloat32Array()
 var _type: PackedByteArray = PackedByteArray()
 var _alive: PackedByteArray = PackedByteArray()
@@ -46,6 +48,7 @@ var _query: PackedInt32Array = PackedInt32Array()
 
 ## Stage timings in microseconds, read by the debug overlay
 var usec_grid: int = 0
+var usec_separation: int = 0
 var usec_contact: int = 0
 var _alive_count: int = 0
 
@@ -57,6 +60,8 @@ func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) ->
 
 	_pos.resize(capacity)
 	_vel.resize(capacity)
+	_push.resize(capacity)
+	_push.fill(Vector2.ZERO)
 	_hp.resize(capacity)
 	_type.resize(capacity)
 	_alive.resize(capacity)
@@ -93,6 +98,7 @@ func spawn(type_index: int, pos: Vector2, elapsed: float) -> int:
 		return -1
 	_pos[id] = pos
 	_vel[id] = Vector2.ZERO
+	_push[id] = Vector2.ZERO
 	_hp[id] = _type_hp[type_index] * (1.0 + elapsed / _tuning.hp_scale_divisor)
 	_type[id] = type_index
 	_alive[id] = 1
@@ -119,6 +125,45 @@ func tick_grid() -> void:
 		if _alive[i] == 1:
 			_grid.insert(i, _pos[i])
 	usec_grid = Time.get_ticks_usec() - started
+
+
+## Soft collision between enemies. Each overlapping pair is visited once (j > i)
+## and pushed both ways, which halves the work for the same result. The push is
+## stored as a velocity that tick_movement() adds, not a position jump, so the
+## behaviour does not change with frame rate.
+##
+## Must run after tick_grid() and before tick_movement().
+func tick_separation() -> void:
+	var started: int = Time.get_ticks_usec()
+	_push.fill(Vector2.ZERO)
+	var strength: float = _tuning.separation_strength
+	for i in _capacity:
+		if _alive[i] == 0:
+			continue
+		var pi: Vector2 = _pos[i]
+		var ri: float = _type_radius[_type[i]]
+		# reach uses the largest radius in the game so no pair is ever missed
+		var found: int = _grid.query_radius(pi, ri + _max_radius, _query)
+		for k in found:
+			var j: int = _query[k]
+			if j <= i or _alive[j] == 0:
+				continue
+			var offset: Vector2 = _pos[j] - pi
+			var dist: float = offset.length()
+			var min_dist: float = ri + _type_radius[_type[j]]
+			if dist >= min_dist:
+				continue
+			var dir: Vector2
+			if dist > 0.001:
+				dir = offset / dist
+			else:
+				# stacked on the same pixel: pick a stable per-slot direction so
+				# the pile unwinds instead of staying welded together
+				dir = Vector2(cos(float(i)), sin(float(i)))
+			var force: float = (1.0 - dist / min_dist) * strength
+			_push[i] -= dir * force
+			_push[j] += dir * force
+	usec_separation = Time.get_ticks_usec() - started
 
 
 ## Charges the player for touching enemies. design.md gives the player a single
@@ -149,7 +194,8 @@ func tick_contact(player: Player) -> void:
 	usec_contact = Time.get_ticks_usec() - started
 
 
-## Moves every live enemy straight at the player. An enemy further away than
+## Moves every live enemy straight at the player, plus whatever
+## tick_separation() pushed it by. An enemy further away than
 ## `recycle_distance` is dropped back into the spawn ring around the player
 ## instead of being killed and respawned; the player never sees where it came
 ## from, and it keeps its slot, hp and type.
@@ -166,7 +212,7 @@ func tick_movement(delta: float, player_pos: Vector2) -> void:
 			continue
 		# normalized() of a zero vector is zero in Godot, so an enemy exactly on
 		# the player just stands still instead of producing NaN.
-		var v: Vector2 = to_player.normalized() * _type_speed[_type[i]]
+		var v: Vector2 = to_player.normalized() * _type_speed[_type[i]] + _push[i]
 		_vel[i] = v
 		_pos[i] = p + v * delta
 

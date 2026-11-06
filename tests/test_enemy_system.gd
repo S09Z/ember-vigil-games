@@ -283,3 +283,101 @@ func test_a_dead_player_takes_no_contact_damage() -> void:
 	_sys.tick_grid()
 	_sys.tick_contact(player)
 	assert_eq(player.hp, 0.0)
+
+func _distance(a: int, b: int) -> float:
+	return _sys.position_of(a).distance_to(_sys.position_of(b))
+
+# These tests use enemies with zero speed, so the only thing that can change
+# a position is the separation push.
+func _use_still_enemies() -> void:
+	var still: EnemyDef = EnemyDef.new()
+	still.hp = 10.0
+	still.move_speed = 0.0
+	still.contact_damage = 5.0
+	still.xp = 1
+	still.body_radius = 6.0
+	var defs: Array[EnemyDef] = [still]
+	_sys.setup(defs, _tuning, Rng.new(7), 8)
+
+func _step_with_separation() -> void:
+	_sys.tick_grid()
+	_sys.tick_separation()
+	_sys.tick_movement(0.1, Vector2.ZERO)
+
+func test_overlapping_enemies_are_pushed_apart() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(0.0, 0.0), 0.0)
+	var b: int = _sys.spawn(0, Vector2(4.0, 0.0), 0.0)
+	var before: float = _distance(a, b)
+	_step_with_separation()
+	assert_gt(_distance(a, b), before)
+
+func test_enemies_that_do_not_overlap_are_left_alone() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(0.0, 0.0), 0.0)
+	var b: int = _sys.spawn(0, Vector2(50.0, 0.0), 0.0)
+	var before: float = _distance(a, b)
+	_step_with_separation()
+	assert_almost_eq(_distance(a, b), before, 0.01)
+
+func test_enemies_exactly_touching_are_left_alone() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(0.0, 0.0), 0.0)
+	var b: int = _sys.spawn(0, Vector2(12.0, 0.0), 0.0)
+	var before: float = _distance(a, b)
+	_step_with_separation()
+	assert_almost_eq(_distance(a, b), before, 0.01, "radii sum to 12, so 12 apart is not overlapping")
+
+func test_separation_is_symmetric() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(-2.0, 0.0), 0.0)
+	var b: int = _sys.spawn(0, Vector2(2.0, 0.0), 0.0)
+	_step_with_separation()
+	assert_almost_eq(_sys.position_of(a).x, -_sys.position_of(b).x, 0.01,
+		"an equal pair must be pushed by equal and opposite amounts")
+
+func test_push_strength_matches_the_tuning() -> void:
+	_use_still_enemies()
+	# fully overlapping pair offset by 6 of 12: force = (1 - 6/12) * 60 = 30 px/s each
+	var a: int = _sys.spawn(0, Vector2(0.0, 0.0), 0.0)
+	_sys.spawn(0, Vector2(6.0, 0.0), 0.0)
+	_step_with_separation()
+	assert_almost_eq(_sys.position_of(a).x, -3.0, 0.05, "30 px/s for 0.1 s")
+
+func test_a_dead_neighbour_pushes_nobody() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	var b: int = _sys.spawn(0, Vector2(1.0, 0.0), 0.0)
+	_sys.kill(b)
+	_step_with_separation()
+	assert_almost_eq(_sys.position_of(a).x, 0.0, 0.001)
+
+func test_exactly_stacked_enemies_still_separate() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	var b: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	_step_with_separation()
+	assert_gt(_distance(a, b), 0.0, "two enemies on the exact same pixel must not stay welded")
+
+func test_the_push_buffer_is_cleared_every_frame() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(0.0, 0.0), 0.0)
+	var b: int = _sys.spawn(0, Vector2(4.0, 0.0), 0.0)
+	_step_with_separation()
+	var pushed_x: float = _sys.position_of(a).x
+	assert_lt(pushed_x, 0.0, "the first frame must push a to the left")
+	_sys.kill(b)
+	_step_with_separation()
+	assert_almost_eq(_sys.position_of(a).x, pushed_x, 0.001,
+		"with the neighbour gone, a stale push must not move a again")
+
+func test_a_new_enemy_in_a_reused_slot_starts_with_no_push() -> void:
+	_use_still_enemies()
+	var a: int = _sys.spawn(0, Vector2(0.0, 0.0), 0.0)
+	_sys.spawn(0, Vector2(4.0, 0.0), 0.0)
+	_sys.tick_grid()
+	_sys.tick_separation()
+	_sys.kill(a)
+	var again: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_almost_eq(_sys.position_of(again).x, 100.0, 0.01)
