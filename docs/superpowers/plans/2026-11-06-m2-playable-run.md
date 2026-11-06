@@ -1590,7 +1590,7 @@ func test_negative_embers_are_clamped_to_zero() -> void:
 - Wiring: `enemies.enemy_died` → `state.add_kill()` และ `state.add_xp(pickups.spawn_or_grant(pos, xp))`; `pickups.xp_collected` → `state.add_xp`; `state.level_up_queued` → ถ้า `RUNNING` เข้า `LEVEL_UP` และแสดงการ์ด; `player.died` → สร้าง `RunSummary.from_state` → `state = ENDED` → ยิง `run_ended` (ครั้งเดียว); action `pause` ใน `_unhandled_input` → `toggle_pause()`; `PauseScreen` เปิด/ปิดตามสถานะ; `Player` ตั้งค่าจาก `KNIGHT` และอาวุธเริ่มต้นเข้า `state.add_weapon(KNIGHT.start_weapon)` ก่อน `loadout.sync`
 - รักษาของเดิม: `spawn_burst_to_cap()` และปุ่ม F4 ยังทำงาน
 
-- [ ] **Step 1: เพิ่มเทสต์ใน `tests/test_run.gd`** (ครอบ Review Focus ข้อ 1–3)
+- [x] **Step 1: เพิ่มเทสต์ใน `tests/test_run.gd`** (ครอบ Review Focus ข้อ 1–3)
 ```gdscript
 func test_a_run_starts_running_with_the_knights_starting_weapon() -> void:
 	assert_eq(_run.state, Run.State.RUNNING)
@@ -1679,10 +1679,10 @@ func test_the_buff_and_the_clock_do_not_run_while_paused() -> void:
 	assert_almost_eq(_run.stats().buff_time_left(), 3.0, 0.001)
 ```
 (`run_state()`, `stats()`, `loadout_weapon(id)`, `apply_card_for_test(card)` เป็น accessor ที่ Run เปิดไว้ให้เทสต์; `_fill_the_gem_pool`, `_kill_one_enemy_next_to_the_player`, `_player_pos` เป็นเมธอดช่วยในไฟล์เทสต์)
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: ต่อระบบตาม Interfaces และเพิ่มโหนดใน `run.tscn`** ถ้า `run.gd` ใกล้ 300 บรรทัด ให้แยกส่วนการ์ด/การ์ดสำรองออกเป็น `run/card_applier.gd` (RefCounted) ที่ `Run` เรียก
-- [ ] **Step 4: Verify (ต้องผ่าน)** และรันฉากหลักแบบ headless `--quit-after 300` เช็คว่าไม่มี error
-- [ ] **Step 5: Finish `M2-29: wire weapons, pickups, level-up and run states into Run`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: ต่อระบบตาม Interfaces และเพิ่มโหนดใน `run.tscn`** ถ้า `run.gd` ใกล้ 300 บรรทัด ให้แยกส่วนการ์ด/การ์ดสำรองออกเป็น `run/card_applier.gd` (RefCounted) ที่ `Run` เรียก
+- [x] **Step 4: Verify (ต้องผ่าน)** และรันฉากหลักแบบ headless `--quit-after 300` เช็คว่าไม่มี error
+- [x] **Step 5: Finish `M2-29: wire weapons, pickups, level-up and run states into Run`**
 
 ---
 

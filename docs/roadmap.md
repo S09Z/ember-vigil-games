@@ -136,7 +136,7 @@ graph LR
 | ✅ M2-26 | `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` | `run/stat_block.gd`, `run/player.gd` | T | S |
 | ✅ M2-27 | ตัวเลขใหม่ลง design.md + RunTuning | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
 | ✅ M2-28 | `FxLayer` | `run/fx_layer.gd` | T | S |
-| M2-29 | ต่อทุกระบบเข้า `Run` + สถานะของรอบ | `run/run.gd`, `main.gd` | T | L |
+| ✅ M2-29 | ต่อทุกระบบเข้า `Run` + สถานะของรอบ | `run/run.gd`, `main.gd` | T | L |
 | M2-30 | overlay แสดงเวลาขั้นอาวุธ/pickup + F4 ให้อาวุธครบ LV5 | `ui/debug_overlay.gd` | — | S |
 | M2-31 | ปิด M2: เล่นจริง วัด perf export เว็บ | — | — | M |
 

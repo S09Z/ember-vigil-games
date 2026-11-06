@@ -79,8 +79,10 @@ func is_open() -> bool:
 func _pick(index: int) -> void:
 	if not _open or index < 0 or index >= _count:
 		return
-	card_picked.emit(index)
+	# Close first: a listener may show the next queued hand while handling the
+	# signal, and closing afterwards would hide that new hand.
 	hide_panel()
+	card_picked.emit(index)
 
 
 func _unhandled_input(event: InputEvent) -> void:

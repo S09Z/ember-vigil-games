@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://run/run.gd" id="1_run"]
 [ext_resource type="Script" path="res://run/enemy_system.gd" id="2_enemies"]
 [ext_resource type="PackedScene" path="res://run/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://ui/debug_overlay.tscn" id="4_overlay"]
+[ext_resource type="Script" path="res://run/pickup_system.gd" id="5_pickups"]
+[ext_resource type="Script" path="res://run/fx_layer.gd" id="6_fx"]
+[ext_resource type="PackedScene" path="res://ui/hud.tscn" id="7_hud"]
+[ext_resource type="PackedScene" path="res://ui/level_up_panel.tscn" id="8_panel"]
+[ext_resource type="PackedScene" path="res://ui/pause_screen.tscn" id="9_pause"]
 
 [node name="Run" type="Node2D"]
 script = ExtResource("1_run")
@@ -12,6 +17,9 @@ script = ExtResource("1_run")
 color = Color(0.078, 0.051, 0.078, 1)
 polygon = PackedVector2Array(-4000, -4000, 4000, -4000, 4000, 4000, -4000, 4000)
 
+[node name="PickupSystem" type="MultiMeshInstance2D" parent="."]
+script = ExtResource("5_pickups")
+
 [node name="EnemySystem" type="MultiMeshInstance2D" parent="."]
 modulate = Color(0.722, 0.306, 0.325, 1)
 script = ExtResource("2_enemies")
@@ -19,5 +27,14 @@ script = ExtResource("2_enemies")
 [node name="Player" parent="." instance=ExtResource("3_player")]
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="FxLayer" type="Node2D" parent="."]
+script = ExtResource("6_fx")
+
+[node name="HUD" parent="." instance=ExtResource("7_hud")]
+
+[node name="LevelUpPanel" parent="." instance=ExtResource("8_panel")]
+
+[node name="PauseScreen" parent="." instance=ExtResource("9_pause")]
 
 [node name="DebugOverlay" parent="." instance=ExtResource("4_overlay")]
