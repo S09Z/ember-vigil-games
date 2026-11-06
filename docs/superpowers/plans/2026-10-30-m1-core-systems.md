@@ -707,13 +707,13 @@ git commit -m "Add class, enemy and run tuning resources with design numbers"
 
 ### Task 5: `Player` — เดิน, HP, armor, อมตะ
 
-> **สถานะ:** ส่วนเดิน + `last_move_dir` + `setup(def)` ทำแล้วใน M1-6 (`apply_input()` แยกออกมาให้เทสต์ได้ และตั้ง `motion_mode = FLOATING` สำหรับมุมมองจากบน, ยังไม่ใส่ Camera2D เพราะเป็นของ M1-19) ส่วน HP/armor/อมตะ/signal (`take_damage`, `tick_timers`, `setup(def, tuning)`) ทำใน M1-7 จึงยังไม่ติ๊ก step ด้านล่าง
+> **สถานะ:** ทำครบแล้ว แบ่งเป็น M1-6 (เดิน + `last_move_dir`) และ M1-7 (HP/armor/อมตะ/signal) ไม่ใส่ Camera2D ในฉากเพราะเป็นของ M1-19 และตั้ง `motion_mode = FLOATING`
 
 **Files:**
 - Create: `run/player.gd`, `run/player.tscn`
 - Test: `tests/test_player.gd`
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_player.gd`:
 
@@ -786,11 +786,11 @@ func test_last_move_dir_starts_valid() -> void:
 		"melee weapons in M2 aim along this, so it must never be zero")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `Player`
 
-- [ ] **Step 3: เขียน `run/player.gd`**
+- [x] **Step 3: เขียน `run/player.gd`**
 
 ```gdscript
 class_name Player
@@ -874,7 +874,7 @@ func is_dead() -> bool:
 	return _dead
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -882,7 +882,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: เขียน `run/player.tscn`**
+- [x] **Step 5: เขียน `run/player.tscn`**
 
 ```
 [gd_scene load_steps=3 format=3]
@@ -905,14 +905,14 @@ polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
 [node name="Camera2D" type="Camera2D" parent="."]
 ```
 
-- [ ] **Step 6: ตรวจว่าฉากโหลดได้**
+- [x] **Step 6: ตรวจว่าฉากโหลดได้**
 
 ```bash
 godot --headless --path . --import
 ```
 Expected: ไม่มี error และไม่มีคำว่า `player.tscn` ในบรรทัด error ใด
 
-- [ ] **Step 7: commit**
+- [x] **Step 7: commit**
 
 ```bash
 git add run/player.gd run/player.tscn tests/test_player.gd

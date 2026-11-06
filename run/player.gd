@@ -2,11 +2,14 @@ class_name Player
 extends CharacterBody2D
 
 ## The only physics body in the game. Enemies are plain data in EnemySystem and
-## their contacts are resolved there, so this node only has to move.
+## their contacts are resolved there, so this node only has to move and take
+## damage.
 ##
 ## run.gd drives it: there is no _physics_process here, so the update order of
 ## the whole run stays visible in one place and tests can step it by hand.
-## Damage, armor and invulnerability are added in M1-7.
+
+signal health_changed(hp: float, max_hp: float)
+signal died()
 
 var max_hp: float = 100.0
 var hp: float = 100.0
@@ -18,6 +21,10 @@ var body_radius: float = 7.0
 ## Direction of the last non-zero input. Melee weapons in M2 swing along it.
 var last_move_dir: Vector2 = Vector2.RIGHT
 
+var _iframe_duration: float = 0.5
+var _iframe_timer: float = 0.0
+var _dead: bool = false
+
 
 static func input_to_direction(raw: Vector2) -> Vector2:
 	if raw.length_squared() <= 0.0:
@@ -25,18 +32,50 @@ static func input_to_direction(raw: Vector2) -> Vector2:
 	return raw.normalized()
 
 
-func setup(def: ClassDef) -> void:
+func setup(def: ClassDef, tuning: RunTuning) -> void:
 	max_hp = def.max_hp
 	hp = def.max_hp
 	armor = def.armor
 	move_speed = def.move_speed
 	pickup_radius = def.pickup_radius
 	body_radius = def.body_radius
+	_iframe_duration = tuning.player_iframe_duration
+	_iframe_timer = 0.0
+	_dead = false
+	health_changed.emit(hp, max_hp)
 
 
-func tick(_delta: float) -> void:
+func tick(delta: float) -> void:
+	tick_timers(delta)
 	apply_input(Input.get_vector("move_left", "move_right", "move_up", "move_down"))
 	move_and_slide()
+
+
+## Split out from tick() so tests can advance time without a SceneTree.
+func tick_timers(delta: float) -> void:
+	if _iframe_timer > 0.0:
+		_iframe_timer -= delta
+
+
+## Damage taken is max(1, amount - armor). A hit starts the invulnerability
+## window; hits during the window and after death are ignored.
+func take_damage(amount: float) -> void:
+	if _dead or _iframe_timer > 0.0:
+		return
+	hp = maxf(0.0, hp - maxf(1.0, amount - float(armor)))
+	_iframe_timer = _iframe_duration
+	health_changed.emit(hp, max_hp)
+	if hp <= 0.0:
+		_dead = true
+		died.emit()
+
+
+func is_invulnerable() -> bool:
+	return _iframe_timer > 0.0
+
+
+func is_dead() -> bool:
+	return _dead
 
 
 ## Turns a raw input vector into velocity and remembers the facing. Split out

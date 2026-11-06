@@ -53,7 +53,7 @@ graph LR
 |---|---|---|---|---|
 | ✅ M1-5 | `ClassDef` schema + `knight.tres` (HP 140 / speed 95 / armor 2 / pickup 40) อ่านค่าจากตารางหัวข้อ 4 | `data/class_def.gd`, `data/classes/knight.tres` | T | S |
 | ✅ M1-6 | `Player`: CharacterBody2D ตัวเดียวในเกม เดินตาม input, จำ `last_move_dir` ไว้ให้อาวุธระยะใกล้ใช้ | `run/player.gd`, `run/player.tscn` | T | M |
-| M1-7 | HP / armor / อมตะ 0.5 วิ: ดาเมจที่รับ = `max(1, dmg − armor)` ยิง signal `health_changed` และ `died` | `run/player.gd` | T | S |
+| ✅ M1-7 | HP / armor / อมตะ 0.5 วิ: ดาเมจที่รับ = `max(1, dmg − armor)` ยิง signal `health_changed` และ `died` | `run/player.gd` | T | S |
 
 ### M1-C ศัตรูแบบ data-oriented
 
