@@ -24,3 +24,19 @@ extends Resource
 
 ## Neighbour-lookup cell size; retune during the performance pass
 @export var grid_cell_size: float = 16.0
+
+## XP needed for the next level is round(xp_base + level * xp_per_level)
+@export var xp_base: float = 5.0
+@export var xp_per_level: float = 4.5
+
+## Embers = floor(kills / embers_kills_divisor) + floor(seconds / embers_seconds_divisor) + bonuses
+@export var embers_kills_divisor: int = 10
+@export var embers_seconds_divisor: int = 15
+
+## A push of N px is delivered as a velocity that decays to zero over this many seconds
+@export var knockback_duration: float = 0.2
+
+## XP gems: pull speed in px/s once inside pickup range, pool size, and collect radius
+@export var gem_pull_speed: float = 180.0
+@export var gem_capacity: int = 512
+@export var gem_radius: float = 3.0

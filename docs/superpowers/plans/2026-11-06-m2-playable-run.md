@@ -99,7 +99,7 @@ $G --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit 2>&1 
 **Interfaces:**
 - Produces: ฟิลด์ใหม่ของ `RunTuning` — `xp_base: float = 5.0`, `xp_per_level: float = 4.5`, `embers_kills_divisor: int = 10`, `embers_seconds_divisor: int = 15`, `knockback_duration: float = 0.2`, `gem_pull_speed: float = 180.0`, `gem_capacity: int = 512`, `gem_radius: float = 3.0`
 
-- [ ] **Step 1: เพิ่มเทสต์ใน `tests/test_run_tuning.gd`** ให้ `test_run_tuning_matches_the_design_numbers` ตรวจเพิ่ม:
+- [x] **Step 1: เพิ่มเทสต์ใน `tests/test_run_tuning.gd`** ให้ `test_run_tuning_matches_the_design_numbers` ตรวจเพิ่ม:
 ```gdscript
 assert_eq(tuning.xp_base, 5.0)
 assert_eq(tuning.xp_per_level, 4.5)
@@ -110,10 +110,10 @@ assert_eq(tuning.gem_pull_speed, 180.0)
 assert_eq(tuning.gem_capacity, 512)
 assert_eq(tuning.gem_radius, 3.0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)** เพราะยังไม่มีฟิลด์
-- [ ] **Step 3: เพิ่มฟิลด์ลง `data/run_tuning.gd` และเขียนค่าชัดเจนลง `run_tuning.tres`** ใน `docs/design.md` เพิ่มย่อหน้า "**ค่าปรับจูนของ M2**" ต่อท้ายหัวข้อ 9: หน่วยผลัก "ผลัก N" = ระยะ N px รวม ส่งเป็นความเร็วที่ลดลงเป็นศูนย์ใน 0.2 วิ, XP gem ดูดที่ 180 px/s เมื่ออยู่ในรัศมีเก็บ เก็บเมื่อแตะตัว มีได้ 512 อัน เต็มแล้วให้ XP ทันที, เลเวลไม่มีเพดาน และเพิ่มในตารางหัวข้อ 5 ว่า Warhorn ไม่มีดาเมจ บัฟคือตัวคูณดาเมจทุกอาวุธของผู้เล่น ยิงซ้ำรีเซ็ตเวลาไม่ซ้อน ใน `docs/roadmap.md` เพิ่มแถวใต้ M2 (หลัง M2-21 ใช้รูปแบบตารางเดิม คอลัมน์ `# | งาน | ไฟล์ | T | ขนาด`): M2-22 `EnemySystem.query_radius` + `damage` (T, S) · M2-23 stun ใน EnemySystem (T, S) · M2-24 Shield Bash LV1–5 (T, M) · M2-25 Warhorn LV1–5 (T, M) · M2-26 `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` (T, S) · M2-27 ตัวเลขใหม่ลง design.md + RunTuning (T, S) · M2-28 `FxLayer` (T, S) · M2-29 ต่อทุกระบบเข้า `Run` + สถานะของรอบ (T, L) · M2-30 overlay แสดงเวลาขั้นอาวุธ/pickup + F4 ให้อาวุธครบ LV5 (—, S) · M2-31 ปิด M2: เล่นจริง วัด perf export เว็บ (—, M) แล้วแก้ตัวเลข "26 sub-task" ในหัวข้อความเสี่ยงถ้ามีการอ้างถึง M2
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-27: add M2 tuning numbers and new roadmap tasks`**
+- [x] **Step 2: Verify (ต้องตก)** เพราะยังไม่มีฟิลด์
+- [x] **Step 3: เพิ่มฟิลด์ลง `data/run_tuning.gd` และเขียนค่าชัดเจนลง `run_tuning.tres`** ใน `docs/design.md` เพิ่มย่อหน้า "**ค่าปรับจูนของ M2**" ต่อท้ายหัวข้อ 9: หน่วยผลัก "ผลัก N" = ระยะ N px รวม ส่งเป็นความเร็วที่ลดลงเป็นศูนย์ใน 0.2 วิ, XP gem ดูดที่ 180 px/s เมื่ออยู่ในรัศมีเก็บ เก็บเมื่อแตะตัว มีได้ 512 อัน เต็มแล้วให้ XP ทันที, เลเวลไม่มีเพดาน และเพิ่มในตารางหัวข้อ 5 ว่า Warhorn ไม่มีดาเมจ บัฟคือตัวคูณดาเมจทุกอาวุธของผู้เล่น ยิงซ้ำรีเซ็ตเวลาไม่ซ้อน ใน `docs/roadmap.md` เพิ่มแถวใต้ M2 (หลัง M2-21 ใช้รูปแบบตารางเดิม คอลัมน์ `# | งาน | ไฟล์ | T | ขนาด`): M2-22 `EnemySystem.query_radius` + `damage` (T, S) · M2-23 stun ใน EnemySystem (T, S) · M2-24 Shield Bash LV1–5 (T, M) · M2-25 Warhorn LV1–5 (T, M) · M2-26 `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` (T, S) · M2-27 ตัวเลขใหม่ลง design.md + RunTuning (T, S) · M2-28 `FxLayer` (T, S) · M2-29 ต่อทุกระบบเข้า `Run` + สถานะของรอบ (T, L) · M2-30 overlay แสดงเวลาขั้นอาวุธ/pickup + F4 ให้อาวุธครบ LV5 (—, S) · M2-31 ปิด M2: เล่นจริง วัด perf export เว็บ (—, M) แล้วแก้ตัวเลข "26 sub-task" ในหัวข้อความเสี่ยงถ้ามีการอ้างถึง M2
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-27: add M2 tuning numbers and new roadmap tasks`**
 
 ---
 

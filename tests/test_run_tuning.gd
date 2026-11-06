@@ -17,6 +17,14 @@ func test_run_tuning_matches_the_design_numbers() -> void:
 	assert_eq(tuning.player_iframe_duration, 0.5)
 	assert_eq(tuning.separation_strength, 60.0)
 	assert_eq(tuning.grid_cell_size, 16.0)
+	assert_eq(tuning.xp_base, 5.0)
+	assert_eq(tuning.xp_per_level, 4.5)
+	assert_eq(tuning.embers_kills_divisor, 10)
+	assert_eq(tuning.embers_seconds_divisor, 15)
+	assert_eq(tuning.knockback_duration, 0.2)
+	assert_eq(tuning.gem_pull_speed, 180.0)
+	assert_eq(tuning.gem_capacity, 512)
+	assert_eq(tuning.gem_radius, 3.0)
 
 func test_spawn_ring_is_ordered_and_inside_recycle_distance() -> void:
 	var tuning: RunTuning = load("res://data/tuning/run_tuning.tres")
