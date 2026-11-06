@@ -1696,7 +1696,7 @@ func test_the_buff_and_the_clock_do_not_run_while_paused() -> void:
 - Produces: `enum Screen { CAMP, RUN, RESULTS }`; `var embers_total: int` (ในหน่วยความจำเท่านั้น เริ่ม 0); `show_screen(screen: Screen) -> void` (เดิม คงชื่อ), `current_screen() -> Node`; เริ่มที่ `CAMP` ไม่ใช่ `RUN`; `CampScreen.start_pressed` → `RUN` ใหม่; `Run.run_ended(summary)` → `embers_total += summary.embers_total` แล้ว `RESULTS` พร้อม `show_summary`; `ResultsScreen.back_pressed` → `CAMP` (แสดงยอดล่าสุด)
 - ทุกการสลับ `queue_free()` ฉากเก่าและสร้างฉากใหม่ ไม่เก็บอะไรของรอบเก่า
 
-- [ ] **Step 1: อัปเดต `tests/test_main.gd`** (เทสต์เดิมที่คาดว่าเริ่มที่ `Run` ให้ปรับเป็นเริ่มที่ Camp) ครอบ Review Focus ข้อ 5
+- [x] **Step 1: อัปเดต `tests/test_main.gd`** (เทสต์เดิมที่คาดว่าเริ่มที่ `Run` ให้ปรับเป็นเริ่มที่ Camp) ครอบ Review Focus ข้อ 5
 ```gdscript
 func test_main_starts_on_the_camp_screen() -> void:
 	assert_true(_main.current_screen() is CampScreen)
@@ -1745,10 +1745,10 @@ func test_embers_are_not_changed_by_showing_camp_again() -> void:
 	assert_eq(_main.embers_total, 4)
 ```
 (`_die_once_with_embers(n)`, `_go_back()` เป็นเมธอดช่วย; `_go_back_noop` คือการเรียก `show_screen(CAMP)` ซ้ำ)
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `main.gd` เป็น state machine** ต่อ signal ของแต่ละหน้า (ตัดการเชื่อมเมื่อฉากถูก free ตาม `queue_free` ปกติ)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-3: add the Camp, Run and Results screen switcher`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `main.gd` เป็น state machine** ต่อ signal ของแต่ละหน้า (ตัดการเชื่อมเมื่อฉากถูก free ตาม `queue_free` ปกติ)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-3: add the Camp, Run and Results screen switcher`**
 
 ---
 
