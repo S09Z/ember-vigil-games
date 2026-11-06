@@ -2125,17 +2125,19 @@ git commit -m "Wire the run scene and turn main into a screen switcher"
 
 ### Task 14: เพิ่มกฎ copy-on-write ลง CLAUDE.md
 
+> **สถานะ (M1-20):** ทำแล้ว ต่างจากข้อความตัวอย่างเล็กน้อย: เพิ่มทางเลือก getter ต่อ id (เช่น `position_of(id)`) ซึ่งเป็นวิธีที่ `EnemySystem` ใช้จริง
+
 **Files:**
 - Modify: `CLAUDE.md`
 
-- [ ] **Step 1: เพิ่มข้อนี้ใต้หัวข้อ "Performance" ใน `CLAUDE.md`**
+- [x] **Step 1: เพิ่มข้อนี้ใต้หัวข้อ "Performance" ใน `CLAUDE.md`**
 
 ```
 - **ห้ามส่ง `Packed*Array` ออกจากระบบ** ให้รับ buffer เข้ามาเติมแล้วคืนจำนวนที่เติม (เช่น `query_radius(pos, r, out) -> int`)
   เพราะ array ใน GDScript เป็น copy-on-write ถ้ามีคนถือ reference ที่สองไว้แล้วเจ้าของเขียนทับ จะเกิดการ copy ทั้งก้อนเงียบ ๆ ทุกเฟรม
 ```
 
-- [ ] **Step 2: commit**
+- [x] **Step 2: commit**
 
 ```bash
 git add CLAUDE.md

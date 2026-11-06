@@ -72,7 +72,7 @@ graph LR
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
 | ✅ M1-19 | `run.tscn` + `run.gd` เป็นเจ้าของลำดับการอัปเดต (เรียก `tick()` ของทุกระบบเอง ระบบลูกไม่มี `_physics_process`) + `main.gd` เขียนเป็น state switcher ที่ M1 มีสถานะเดียว + Camera2D ตามผู้เล่น | `run/run.gd`, `run/run.tscn`, `main.gd`, `main.tscn` | — | M |
-| M1-20 | เพิ่มกฎ copy-on-write ลง CLAUDE.md: ห้ามส่ง Packed array ออกจากระบบ ให้รับ buffer เข้ามาเติมแทน | `CLAUDE.md` | — | S |
+| ✅ M1-20 | เพิ่มกฎ copy-on-write ลง CLAUDE.md: ห้ามส่ง Packed array ออกจากระบบ ให้รับ buffer เข้ามาเติมแทน | `CLAUDE.md` | — | S |
 | M1-14 | F4 = spawn ศัตรูให้เต็มเพดานทันทีในฉาก run จริง (ต้องติดไปกับ build เว็บ เพราะ gate วัดบนเว็บ) + ล็อก seed ของ `Rng` ให้วัดซ้ำได้ | `run/run.gd`, `run/spawn_director.gd` | — | S |
 | M1-15 | วัดบนเดสก์ท็อปก่อน แล้ว export เว็บ วัดใน Chrome จดค่า FPS และ ms ต่อระบบลงท้ายไฟล์นี้ | `docs/roadmap.md` (ส่วน perf log) | — | M |
 | M1-16 | ถ้าไม่ผ่านเกณฑ์: แก้ตามลำดับในหัวข้อ 8 ของ spec → อ่าน ms ต่อขั้นก่อน, ปรับ `cell_size`, แบ่ง separation เป็นหลายเฟรม, เปลี่ยนไปบีบอัด array + handle (index, generation), สุดท้ายลดเพดานศัตรูแล้วแก้ design.md | — | — | L |
