@@ -1192,6 +1192,8 @@ git commit -m "Add enemy system with struct-of-arrays storage and multimesh draw
 
 ### Task 7: ศัตรูเดินไล่ผู้เล่นและตัวที่หลงไกลถูกย้ายกลับ
 
+> **สถานะ:** ทำแล้วใน M1-11 แต่ไม่ติ๊ก step เพราะต่างจากโค้ดตัวอย่าง: `tick_movement(delta, player_pos)` ไม่รับ `elapsed` (hp scaling อยู่ที่ `spawn()` แล้ว) ไม่มี `tick_grid()` และ `_push` (เป็นของ M1-12/M1-17 ที่ยังไม่มีโค้ดใช้) และ `setup()` รับ `Rng` เพิ่ม ส่วนเทสต์ปรับตามนี้และเพิ่ม 3 ข้อ (เดินทแยง, รีไซเคิลรอบตำแหน่งผู้เล่น, ซ้ำได้ด้วย seed เดิม)
+
 **Files:**
 - Modify: `run/enemy_system.gd` (เพิ่ม `tick_grid()` และ `tick_movement()`)
 - Modify: `tests/test_enemy_system.gd`

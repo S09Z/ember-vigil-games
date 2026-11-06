@@ -37,11 +37,13 @@ var _type_xp: PackedInt32Array = PackedInt32Array()
 
 var _pool: Pool = null
 var _tuning: RunTuning = null
+var _rng: Rng = null
 var _alive_count: int = 0
 
 
-func setup(defs: Array[EnemyDef], tuning: RunTuning, capacity: int) -> void:
+func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) -> void:
 	_tuning = tuning
+	_rng = rng
 	_capacity = capacity
 
 	_pos.resize(capacity)
@@ -93,6 +95,28 @@ func kill(id: int) -> void:
 	_pool.release(id)
 	multimesh.set_instance_transform_2d(id, DEAD_TRANSFORM)
 	enemy_died.emit(_pos[id], _type_xp[_type[id]])
+
+
+## Moves every live enemy straight at the player. An enemy further away than
+## `recycle_distance` is dropped back into the spawn ring around the player
+## instead of being killed and respawned; the player never sees where it came
+## from, and it keeps its slot, hp and type.
+func tick_movement(delta: float, player_pos: Vector2) -> void:
+	var recycle_sq: float = _tuning.recycle_distance * _tuning.recycle_distance
+	for i in _capacity:
+		if _alive[i] == 0:
+			continue
+		var p: Vector2 = _pos[i]
+		var to_player: Vector2 = player_pos - p
+		if to_player.length_squared() > recycle_sq:
+			_pos[i] = _rng.point_in_ring(player_pos, _tuning.spawn_ring_min, _tuning.spawn_ring_max)
+			_vel[i] = Vector2.ZERO
+			continue
+		# normalized() of a zero vector is zero in Godot, so an enemy exactly on
+		# the player just stands still instead of producing NaN.
+		var v: Vector2 = to_player.normalized() * _type_speed[_type[i]]
+		_vel[i] = v
+		_pos[i] = p + v * delta
 
 
 ## Writes every live enemy's position into the MultiMesh. Free slots were already

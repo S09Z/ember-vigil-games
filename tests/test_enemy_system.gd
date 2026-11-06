@@ -16,7 +16,7 @@ func before_each() -> void:
 	var defs: Array[EnemyDef] = [_ghoul]
 	_sys = EnemySystem.new()
 	autofree(_sys)
-	_sys.setup(defs, _tuning, 8)
+	_sys.setup(defs, _tuning, Rng.new(7), 8)
 
 func test_a_fresh_system_is_empty() -> void:
 	assert_eq(_sys.alive_count(), 0)
@@ -118,3 +118,57 @@ func test_sync_multimesh_runs_with_live_and_dead_slots() -> void:
 	_sys.kill(a)
 	_sys.sync_multimesh()
 	assert_eq(_sys.alive_count(), 1)
+
+func test_enemy_walks_towards_the_player() -> void:
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_almost_eq(_sys.position_of(id).x, 95.5, 0.01, "45 px/s for 0.1 s")
+	assert_almost_eq(_sys.position_of(id).y, 0.0, 0.001)
+
+func test_enemy_walks_straight_at_a_diagonal_target() -> void:
+	var id: int = _sys.spawn(0, Vector2(30.0, 40.0), 0.0)
+	_sys.tick_movement(1.0, Vector2.ZERO)
+	assert_almost_eq(_sys.position_of(id).length(), 5.0, 0.01, "50 px away, moves 45")
+
+func test_enemy_on_top_of_the_player_does_not_produce_nan() -> void:
+	var id: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_false(is_nan(_sys.position_of(id).x), "normalising a zero vector must not leak NaN")
+	assert_false(is_nan(_sys.position_of(id).y))
+
+func test_a_stray_enemy_is_recycled_into_the_spawn_ring() -> void:
+	var id: int = _sys.spawn(0, Vector2(2000.0, 0.0), 0.0)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	var d: float = _sys.position_of(id).length()
+	assert_between(d, _tuning.spawn_ring_min, _tuning.spawn_ring_max)
+	assert_eq(_sys.alive_count(), 1, "recycling moves an enemy, it does not kill it")
+	assert_true(_sys.is_alive(id))
+
+func test_recycling_is_centred_on_the_player() -> void:
+	var player: Vector2 = Vector2(5000.0, -3000.0)
+	var id: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	_sys.tick_movement(0.1, player)
+	var d: float = _sys.position_of(id).distance_to(player)
+	assert_between(d, _tuning.spawn_ring_min, _tuning.spawn_ring_max)
+
+func test_an_enemy_just_inside_the_recycle_distance_keeps_walking() -> void:
+	var id: int = _sys.spawn(0, Vector2(599.0, 0.0), 0.0)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_almost_eq(_sys.position_of(id).x, 594.5, 0.01)
+
+func test_dead_slots_do_not_move() -> void:
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.kill(id)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_eq(_sys.position_of(id), Vector2(100.0, 0.0))
+
+func test_recycling_is_repeatable_with_the_same_seed() -> void:
+	var defs: Array[EnemyDef] = [_ghoul]
+	var other: EnemySystem = EnemySystem.new()
+	autofree(other)
+	other.setup(defs, _tuning, Rng.new(7), 8)
+	var a: int = _sys.spawn(0, Vector2(2000.0, 0.0), 0.0)
+	var b: int = other.spawn(0, Vector2(2000.0, 0.0), 0.0)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	other.tick_movement(0.1, Vector2.ZERO)
+	assert_eq(_sys.position_of(a), other.position_of(b))
