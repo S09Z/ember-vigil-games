@@ -519,7 +519,7 @@ func test_setup_clears_the_queue() -> void:
 **Interfaces:**
 - Produces: `record_damage(weapon_id: StringName, amount: float) -> void` (ค่าลบหรือศูนย์ไม่นับ), `damage_of(weapon_id: StringName) -> float` (ไม่เคยบันทึก = 0.0), `damage_by_weapon() -> Dictionary` (id → float ใหม่ทุกครั้งที่เรียก ใช้ตอนสรุปผลเท่านั้น)
 
-- [ ] **Step 1: เพิ่มเทสต์**
+- [x] **Step 1: เพิ่มเทสต์**
 ```gdscript
 func test_damage_accumulates_per_weapon() -> void:
 	_s.record_damage(&"a", 20.0); _s.record_damage(&"a", 5.0); _s.record_damage(&"b", 8.0)
@@ -536,10 +536,10 @@ func test_setup_clears_recorded_damage() -> void:
 	_s.record_damage(&"a", 9.0); _s.setup(RunTuning.new())
 	assert_eq(_s.damage_of(&"a"), 0.0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่มเมธอดตาม Interfaces**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-21: track total damage per weapon`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่มเมธอดตาม Interfaces**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-21: track total damage per weapon`**
 
 ---
 

@@ -128,7 +128,7 @@ graph LR
 | M2-18 | สูตร Embers: `floor(kills/10) + floor(วิที่รอด/15) + 5×Elite + 40 ถ้าฆ่าบอส` (กดหนีกลางรอบไม่ได้) | `run/run_state.gd` | T | S |
 | M2-19 | `ResultsScreen`: เวลา kills เลเวล ดาเมจรวมต่ออาวุธ และที่มาของ Embers ทีละบรรทัด | `ui/results_screen.gd/.tscn` | — | M |
 | M2-20 | `CampScreen` ขั้นต่ำ: ปุ่มเริ่มคืน + โชว์ Embers (ร้านค่อยทำใน M4) | `ui/camp_screen.gd/.tscn` | — | S |
-| M2-21 | ติดตามดาเมจรวมต่ออาวุธเพื่อเอาไปโชว์ในหน้าสรุป | `run/run_state.gd` | T | S |
+| ✅ M2-21 | ติดตามดาเมจรวมต่ออาวุธเพื่อเอาไปโชว์ในหน้าสรุป | `run/run_state.gd` | T | S |
 | ✅ M2-22 | `EnemySystem.query_radius` + `damage` | `run/enemy_system.gd` | T | S |
 | ✅ M2-23 | stun ใน EnemySystem | `run/enemy_system.gd` | T | S |
 | M2-24 | Shield Bash LV1–5 | `run/weapons/shield_bash.gd`, `data/weapons/shield_bash.tres` | T | M |

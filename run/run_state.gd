@@ -21,6 +21,7 @@ var _tuning: RunTuning = null
 var _weapon_levels: Dictionary = {}  # StringName id -> int level
 var _weapon_defs: Array[WeaponDef] = []  # in the order added
 var _levelups: PackedInt32Array = PackedInt32Array()  # FIFO of new levels, oldest first
+var _damage: Dictionary = {}  # StringName weapon id -> float total damage
 
 
 func setup(tuning: RunTuning) -> void:
@@ -32,6 +33,7 @@ func setup(tuning: RunTuning) -> void:
 	_weapon_levels.clear()
 	_weapon_defs.clear()
 	_levelups.clear()
+	_damage.clear()
 
 
 func tick(delta: float) -> void:
@@ -119,3 +121,19 @@ func _find_weapon(id: StringName) -> WeaponDef:
 		if def.id == id:
 			return def
 	return null
+
+
+## Called once per hit; only updates an existing entry (no allocation after the first hit).
+func record_damage(weapon_id: StringName, amount: float) -> void:
+	if amount <= 0.0:
+		return
+	_damage[weapon_id] = float(_damage.get(weapon_id, 0.0)) + amount
+
+
+func damage_of(weapon_id: StringName) -> float:
+	return _damage.get(weapon_id, 0.0)
+
+
+## Allocates a copy; for the end-of-run summary only, never per frame.
+func damage_by_weapon() -> Dictionary:
+	return _damage.duplicate()

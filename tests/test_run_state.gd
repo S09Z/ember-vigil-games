@@ -135,3 +135,18 @@ func test_setup_resets_level_and_xp() -> void:
 	_s.setup(RunTuning.new())
 	assert_eq(_s.level, 1)
 	assert_eq(_s.xp, 0)
+
+func test_damage_accumulates_per_weapon() -> void:
+	_s.record_damage(&"a", 20.0); _s.record_damage(&"a", 5.0); _s.record_damage(&"b", 8.0)
+	assert_eq(_s.damage_of(&"a"), 25.0); assert_eq(_s.damage_of(&"b"), 8.0)
+
+func test_an_unused_weapon_has_zero_damage() -> void:
+	assert_eq(_s.damage_of(&"never"), 0.0)
+
+func test_non_positive_damage_is_ignored() -> void:
+	_s.record_damage(&"a", 0.0); _s.record_damage(&"a", -3.0)
+	assert_eq(_s.damage_by_weapon().size(), 0)
+
+func test_setup_clears_recorded_damage() -> void:
+	_s.record_damage(&"a", 9.0); _s.setup(RunTuning.new())
+	assert_eq(_s.damage_of(&"a"), 0.0)
