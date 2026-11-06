@@ -1114,7 +1114,7 @@ func test_it_works_with_no_enemies_nearby() -> void:
 - Produces: `class_name PickupSystem extends MultiMeshInstance2D`; `setup(tuning: RunTuning) -> void` (ขนาดช่อง = `tuning.gem_capacity`), `spawn(pos: Vector2, xp: int) -> bool` (คืน `false` ถ้าช่องเต็ม ไม่ทำอะไร), `active_count() -> int`, `position_of(id: int) -> Vector2`, `is_active(id: int) -> bool`, `transform_of(id: int) -> Transform2D` (ขนาดตาม `gem_radius`, ช่องว่าง = `DEAD_TRANSFORM`), `sync_multimesh() -> void`, `clear() -> void`; ข้อมูลเก็บแบบ SoA (`_pos`, `_xp`, `_active`) + `Pool` ไม่มี Node ต่อ gem
 - (ดูด/เก็บเป็นของ Task 20)
 
-- [ ] **Step 1: เขียนเทสต์** (ใช้ `RunTuning` ที่ตั้ง `gem_capacity = 4`)
+- [x] **Step 1: เขียนเทสต์** (ใช้ `RunTuning` ที่ตั้ง `gem_capacity = 4`)
 ```gdscript
 func test_spawn_returns_true_and_counts_the_gem() -> void:
 	assert_true(_p.spawn(Vector2(5.0, 5.0), 1)); assert_eq(_p.active_count(), 1)
@@ -1147,10 +1147,10 @@ func test_clear_empties_the_system() -> void:
 	_p.spawn(Vector2.ZERO, 1); _p.clear()
 	assert_eq(_p.active_count(), 0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `pickup_system.gd`** สร้าง MultiMesh เหมือน `EnemySystem._build_multimesh` (quad ขนาด 2 ปรับด้วย scale)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-10: add PickupSystem storage and drawing`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `pickup_system.gd`** สร้าง MultiMesh เหมือน `EnemySystem._build_multimesh` (quad ขนาด 2 ปรับด้วย scale)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-10: add PickupSystem storage and drawing`**
 
 ---
 
