@@ -719,7 +719,7 @@ func test_a_zero_facing_does_not_break_an_arc() -> void:
 - Produces: `WeaponLoadout extends RefCounted` — `sync(state: RunState, catalog: Dictionary) -> void` (`catalog` = id → `WeaponDef`; สร้างอาวุธที่ยังไม่มีและตั้ง `level` ให้ตรง `state` เรียกเมื่อ `build_changed`), `tick(delta: float, ctx: WeaponContext) -> void`, `weapon_count() -> int`, `get_weapon(id: StringName) -> WeaponBase`; การสร้างอาวุธเลือกคลาสจาก `def.id` ผ่านตัวแปรอินสแตนซ์ `factories: Dictionary` (id → GDScript) ที่ `_init` เติมให้ (Task 14, 17, 18 เพิ่มทีละชิ้น) เทสต์เพิ่มรายการเองได้ id ที่ไม่รู้จักใช้ `WeaponBase` ธรรมดา (ไม่ทำอะไร)
 - Produces (ตัวช่วยเทสต์): `tests/helpers/counting_weapon.gd` — `CountingWeapon extends WeaponBase` ที่ `_fire` เพิ่ม `var fired: int` (โฟลเดอร์ `tests/` ไม่ติดไปกับ build เว็บ)
 
-- [ ] **Step 1: เขียนเทสต์**
+- [x] **Step 1: เขียนเทสต์**
 ```gdscript
 # tests/test_weapon_base.gd — ใช้ CountingWeapon ที่ _fire เพิ่มตัวนับ
 func test_fires_on_the_first_tick() -> void:
@@ -813,10 +813,10 @@ func test_deal_damage_on_a_dead_enemy_records_nothing() -> void:
 	assert_false(_ctx.deal_damage(_enemy_id, 10.0, _weapon))
 	assert_eq(_state.damage_of(&"w"), 0.0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียนสามคลาสตาม Interfaces** `deal_damage` บันทึกดาเมจเต็มหลังคูณบัฟ ไม่ตัดตาม HP ที่เหลือของศัตรู
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-5: add weapon base, context and loadout`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียนสามคลาสตาม Interfaces** `deal_damage` บันทึกดาเมจเต็มหลังคูณบัฟ ไม่ตัดตาม HP ที่เหลือของศัตรู
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-5: add weapon base, context and loadout`**
 
 ---
 
