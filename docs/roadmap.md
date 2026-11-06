@@ -96,7 +96,7 @@ graph LR
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M2-4 | `WeaponDef` schema: แท็ก คูลดาวน์ ดาเมจ และตารางค่าต่อเลเวล 1–5 | `data/weapon_def.gd` | T | M |
+| ✅ M2-4 | `WeaponDef` schema: แท็ก คูลดาวน์ ดาเมจ และตารางค่าต่อเลเวล 1–5 | `data/weapon_def.gd` | T | M |
 | M2-5 | `WeaponBase`: นับคูลดาวน์ อ่านค่าตามเลเวล และ hook `_fire()` เพิ่มอาวุธใหม่ต้องไม่ต้องแก้ระบบกลาง | `run/weapons/weapon_base.gd` | T | M |
 | M2-6 | `Greatsword` LV1: ฟันวง 140° ตาม `last_move_dir` ระยะ 48 ดาเมจ 20 คูลดาวน์ 1.1 ผลัก 20 | `run/weapons/greatsword.gd`, `data/weapons/greatsword.tres` | T | M |
 | M2-7 | Greatsword LV2–5 ตามตาราง (ดาเมจ +5 / วง 180° ระยะ 56 / คูลดาวน์ −0.2 / ฟันหลังด้วย) | เดิม | T | S |

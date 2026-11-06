@@ -11,3 +11,6 @@ extends Resource
 @export var armor: int = 0
 @export var pickup_radius: float = 40.0
 @export var body_radius: float = 7.0
+@export var start_weapon: WeaponDef
+@export var class_weapons: Array[WeaponDef] = []
+@export var steel_lifesteal: float = 0.0

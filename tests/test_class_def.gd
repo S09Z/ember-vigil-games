@@ -13,3 +13,10 @@ func test_knight_matches_the_design_table() -> void:
 	assert_eq(def.armor, 2)
 	assert_eq(def.pickup_radius, 40.0)
 	assert_eq(def.body_radius, 7.0)
+
+
+func test_class_def_has_weapon_fields() -> void:
+	var def: ClassDef = ClassDef.new()
+	assert_null(def.start_weapon)
+	assert_eq(def.class_weapons.size(), 0)
+	assert_eq(def.steel_lifesteal, 0.0)

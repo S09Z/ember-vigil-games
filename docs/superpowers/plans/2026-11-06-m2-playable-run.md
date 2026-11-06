@@ -128,7 +128,7 @@ assert_eq(tuning.gem_radius, 3.0)
 - Produces: `WeaponDef` (Resource) ฟิลด์ `id: StringName`, `display_name: String`, `tag: StringName` (`&"steel"` / `&"holy"`), `class_id: StringName` (`&""` = อาวุธกลาง), `levels: Array[WeaponLevelDef]`; เมธอด `level_data(level: int) -> WeaponLevelDef` (level เริ่มที่ 1, ค่านอกช่วงคืน `null` พร้อม `push_error`), `max_level() -> int`
 - Produces: `ClassDef` เพิ่ม `start_weapon: WeaponDef`, `class_weapons: Array[WeaponDef]`, `steel_lifesteal: float`
 
-- [ ] **Step 1: เขียน `tests/test_weapon_def.gd`**
+- [x] **Step 1: เขียน `tests/test_weapon_def.gd`**
 ```gdscript
 func _def_with_levels(n: int) -> WeaponDef:
 	var d: WeaponDef = WeaponDef.new()
@@ -150,10 +150,10 @@ func test_level_data_out_of_range_returns_null() -> void:
 	assert_null(_def_with_levels(5).level_data(6))
 ```
 และใน `tests/test_class_def.gd` เพิ่ม `test_class_def_has_weapon_fields` ที่สร้าง `ClassDef.new()` แล้วตรวจ `start_weapon == null`, `class_weapons.size() == 0`, `steel_lifesteal == 0.0` (ค่า Knight จริงตรวจใน Task 14, 17, 18)
-- [ ] **Step 2: Verify (ต้องตก)** เพราะไม่รู้จัก `WeaponDef`
-- [ ] **Step 3: สร้างสอง schema ตาม Interfaces** (`level_data` คืนช่วง 1..`levels.size()`) และเพิ่มสามฟิลด์ลง `ClassDef` (ยังไม่แก้ `knight.tres`)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-4: add WeaponDef schema and class weapon fields`**
+- [x] **Step 2: Verify (ต้องตก)** เพราะไม่รู้จัก `WeaponDef`
+- [x] **Step 3: สร้างสอง schema ตาม Interfaces** (`level_data` คืนช่วง 1..`levels.size()`) และเพิ่มสามฟิลด์ลง `ClassDef` (ยังไม่แก้ `knight.tres`)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-4: add WeaponDef schema and class weapon fields`**
 
 ---
 
