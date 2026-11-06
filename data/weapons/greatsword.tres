@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="WeaponDef" format=3]
+
+[ext_resource type="Script" uid="uid://ddlrk3aqene5i" path="res://data/weapon_def.gd" id="1_weapondef"]
+[ext_resource type="Script" uid="uid://ydki8cxvhum4" path="res://data/weapon_level_def.gd" id="2_leveldef"]
+
+[sub_resource type="Resource" id="Resource_lv1"]
+script = ExtResource("2_leveldef")
+cooldown = 1.1
+damage = 20.0
+arc_degrees = 140.0
+range = 48.0
+radius = 0.0
+knockback = 20.0
+stun_seconds = 0.0
+both_sides = false
+buff_percent = 0.0
+buff_seconds = 0.0
+heal = 0.0
+
+[resource]
+script = ExtResource("1_weapondef")
+id = &"greatsword"
+display_name = "Greatsword"
+tag = &"steel"
+class_id = &"knight"
+levels = Array[ExtResource("2_leveldef")]([SubResource("Resource_lv1")])
