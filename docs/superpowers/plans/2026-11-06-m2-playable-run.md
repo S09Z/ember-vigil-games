@@ -892,7 +892,7 @@ func test_damage_is_recorded_for_the_results_screen() -> void:
 - แถวใน `.tres` (สะสมจากเลเวลก่อนหน้า ทุกฟิลด์ชัดเจน): LV2 `damage 25`; LV3 `damage 25, arc 180, range 56`; LV4 `damage 25, arc 180, range 56, cooldown 0.9`; LV5 เหมือน LV4 และ `both_sides = true`
 - `_fire` เมื่อ `both_sides` ฟันทั้ง `facing` และ `-facing` โดยศัตรูหนึ่งตัวโดน**ครั้งเดียวต่อการฟัน** (เก็บ id ที่โดนแล้วใน buffer ที่ใช้ซ้ำ ไม่สร้าง Array ใหม่)
 
-- [ ] **Step 1: เพิ่มเทสต์**
+- [x] **Step 1: เพิ่มเทสต์**
 ```gdscript
 func test_level_table_matches_the_design() -> void:
 	var d: WeaponDef = load("res://data/weapons/greatsword.tres")
@@ -935,10 +935,10 @@ func test_level_four_swings_faster() -> void:
 	_weapon.tick(0.02, _ctx); assert_eq(_swings(), 2)
 ```
 (`_set_level`, `_swings` เป็นเมธอดช่วยในไฟล์เทสต์)
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่มแถว LV2–5 และพฤติกรรม `both_sides`**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-7: add Greatsword levels 2 to 5`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่มแถว LV2–5 และพฤติกรรม `both_sides`**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-7: add Greatsword levels 2 to 5`**
 
 ---
 

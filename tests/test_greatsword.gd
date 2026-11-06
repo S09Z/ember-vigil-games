@@ -96,3 +96,62 @@ func test_damage_is_recorded_for_the_results_screen() -> void:
 func test_a_real_loadout_creates_a_greatsword() -> void:
 	var loadout: WeaponLoadout = WeaponLoadout.new()
 	assert_true(loadout.factories.has(&"greatsword"))
+
+
+func _set_level(n: int) -> void:
+	_weapon.level = n
+
+## Counts fired swings through the damage recorded against a single enemy that
+## sits in front of the player (damage per swing is read from the current level).
+func _swings() -> int:
+	return int(round(_state.damage_of(&"greatsword") / _weapon.current().damage))
+
+func test_level_table_matches_the_design() -> void:
+	var d: WeaponDef = load("res://data/weapons/greatsword.tres")
+	assert_eq(d.max_level(), 5)
+	assert_eq(d.level_data(2).damage, 25.0)
+	assert_eq(d.level_data(3).arc_degrees, 180.0); assert_eq(d.level_data(3).range, 56.0)
+	assert_almost_eq(d.level_data(4).cooldown, 0.9, 0.0001)
+	assert_true(d.level_data(5).both_sides); assert_false(d.level_data(4).both_sides)
+	for n in range(2, 6):
+		assert_eq(d.level_data(n).knockback, 20.0, "knockback never changes")
+
+func test_level_two_hits_for_25() -> void:
+	_set_level(2); var id: int = _spawn(Vector2(30.0, 0.0)); _swing()
+	assert_almost_eq(_enemies.hp_of(id), 975.0, 0.01)
+
+func test_level_three_reaches_further_and_wider() -> void:
+	_set_level(3)
+	var far: int = _spawn(Vector2(54.0, 0.0))
+	var wide: int = _spawn(Vector2.from_angle(deg_to_rad(85.0)) * 30.0)   # outside 140 deg, inside 180
+	_swing()
+	assert_lt(_enemies.hp_of(far), 1000.0); assert_lt(_enemies.hp_of(wide), 1000.0)
+
+func test_level_five_also_hits_behind() -> void:
+	_set_level(5); var id: int = _spawn(Vector2(-30.0, 0.0)); _swing()
+	assert_lt(_enemies.hp_of(id), 1000.0)
+
+func test_level_four_does_not_hit_behind() -> void:
+	_set_level(4); var id: int = _spawn(Vector2(-30.0, 0.0)); _swing()
+	assert_eq(_enemies.hp_of(id), 1000.0)
+
+func test_level_five_hits_an_enemy_beside_the_player_only_once() -> void:
+	_set_level(5)
+	var id: int = _spawn(Vector2(0.0, 30.0))         # on the 90 degree edge of both cones
+	_swing()
+	assert_almost_eq(_enemies.hp_of(id), 975.0, 0.01, "25, not 50")
+
+func test_level_five_hits_front_and_back_enemies_once_each() -> void:
+	_set_level(5)
+	var front: int = _spawn(Vector2(30.0, 0.0))
+	var back: int = _spawn(Vector2(-30.0, 0.0))
+	_swing()
+	assert_almost_eq(_enemies.hp_of(front), 975.0, 0.01)
+	assert_almost_eq(_enemies.hp_of(back), 975.0, 0.01)
+
+func test_level_four_swings_faster() -> void:
+	_set_level(4)
+	_spawn(Vector2(30.0, 0.0)); _enemies.tick_grid()
+	_weapon.tick(0.0, _ctx)            # first swing
+	_weapon.tick(0.89, _ctx); assert_eq(_swings(), 1)
+	_weapon.tick(0.02, _ctx); assert_eq(_swings(), 2)
