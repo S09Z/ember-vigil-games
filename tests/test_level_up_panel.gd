@@ -111,3 +111,9 @@ func test_showing_the_next_queued_hand_reopens_the_panel() -> void:
 	_panel._pick(0)
 	_panel.show_cards(_three_cards(), 2, 3)
 	assert_true(_panel.is_open())
+
+
+func test_card_subtitles() -> void:
+	assert_eq(LevelUpPanel.card_subtitle(_new_weapon_card("Greatsword")), "NEW  steel")
+	assert_eq(LevelUpPanel.card_subtitle(_upgrade_card("Greatsword", 3)), "LV2 -> LV3  steel")
+	assert_eq(LevelUpPanel.card_subtitle(_fallback_card("Hearth Bread")), "Heal 30")

@@ -47,10 +47,12 @@ static func key_to_index(keycode: Key, count: int) -> int:
 	return index
 
 
-static func _card_subtitle(card: LevelUpCard) -> String:
+static func card_subtitle(card: LevelUpCard) -> String:
 	if card.kind == LevelUpCard.Kind.FALLBACK:
 		return card.fallback.description
-	return String(card.weapon.tag)
+	if card.is_upgrade():
+		return "LV%d -> LV%d  %s" % [card.new_level - 1, card.new_level, card.weapon.tag]
+	return "NEW  %s" % card.weapon.tag
 
 
 func show_cards(cards: Array[LevelUpCard], old_level: int, new_level: int) -> void:
@@ -60,7 +62,7 @@ func show_cards(cards: Array[LevelUpCard], old_level: int, new_level: int) -> vo
 		var button: Button = _buttons[i]
 		button.visible = i < _count
 		if i < _count:
-			button.text = "[%d] %s\n%s" % [i + 1, card_title(cards[i]), _card_subtitle(cards[i])]
+			button.text = "[%d] %s\n%s" % [i + 1, card_title(cards[i]), card_subtitle(cards[i])]
 	_open = true
 	visible = true
 
