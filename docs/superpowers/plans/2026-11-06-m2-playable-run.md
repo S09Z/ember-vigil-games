@@ -363,7 +363,7 @@ func test_stun_on_a_dead_or_bad_id_is_ignored() -> void:
 - Produces: `tick(delta: float) -> void` (เพิ่ม `elapsed`), `add_kill() -> void`
 - Produces (บิลด์): `add_weapon(def: WeaponDef) -> bool` (เริ่ม LV1, คืน `false` ถ้าเต็มหรือมีอยู่แล้ว), `upgrade_weapon(id: StringName) -> bool` (คืน `false` ถ้าไม่มีหรือเต็มเลเวล), `weapon_level(id: StringName) -> int` (0 = ไม่มี), `weapon_count() -> int`, `has_weapon_room() -> bool`, `weapon_ids() -> Array[StringName]` (ลำดับที่เพิ่ม; เรียกเฉพาะตอนเปลี่ยนบิลด์ ไม่ใช่ทุกเฟรม) ทุกครั้งที่บิลด์เปลี่ยนยิง `build_changed`
 
-- [ ] **Step 1: เขียน `tests/test_run_state.gd`** (มีเมธอดช่วย `_weapon(id, levels)` สร้าง `WeaponDef` ที่มี `levels` ตามจำนวน)
+- [x] **Step 1: เขียน `tests/test_run_state.gd`** (มีเมธอดช่วย `_weapon(id, levels)` สร้าง `WeaponDef` ที่มี `levels` ตามจำนวน)
 ```gdscript
 func test_a_fresh_state_starts_at_level_one() -> void:
 	assert_eq(_s.level, 1); assert_eq(_s.kills, 0); assert_eq(_s.elapsed, 0.0)
@@ -410,10 +410,10 @@ func test_setup_again_clears_everything() -> void:
 	_s.setup(RunTuning.new())
 	assert_eq(_s.weapon_count(), 0); assert_eq(_s.kills, 0); assert_eq(_s.elapsed, 0.0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `run/run_state.gd` ตาม Interfaces** เก็บบิลด์เป็น `Dictionary` id → level และ `Array[WeaponDef]` ตามลำดับเพิ่ม
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-1: add RunState core`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `run/run_state.gd` ตาม Interfaces** เก็บบิลด์เป็น `Dictionary` id → level และ `Array[WeaponDef]` ตามลำดับเพิ่ม
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-1: add RunState core`**
 
 ---
 
