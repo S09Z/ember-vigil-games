@@ -551,7 +551,7 @@ func test_setup_clears_recorded_damage() -> void:
 **Interfaces:**
 - Produces: `embers_from_kills() -> int` = `kills / tuning.embers_kills_divisor` (หารจำนวนเต็มปัดลง), `embers_from_time() -> int` = `int(elapsed) / tuning.embers_seconds_divisor`, `add_embers_bonus(amount: int) -> void`, `embers_bonus() -> int`, `embers_total() -> int` = ผลรวมสามส่วน (ส่วนของ Elite และบอส = 0 ใน M2)
 
-- [ ] **Step 1: เพิ่มเทสต์**
+- [x] **Step 1: เพิ่มเทสต์**
 ```gdscript
 func test_embers_from_kills_is_one_per_ten() -> void:
 	for i in 29: _s.add_kill()
@@ -580,10 +580,10 @@ func test_setup_clears_the_bonus() -> void:
 	_s.add_embers_bonus(5); _s.setup(RunTuning.new())
 	assert_eq(_s.embers_bonus(), 0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่มเมธอดตาม Interfaces**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-18: add the embers formula`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่มเมธอดตาม Interfaces**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-18: add the embers formula`**
 
 ---
 

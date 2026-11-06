@@ -22,6 +22,7 @@ var _weapon_levels: Dictionary = {}  # StringName id -> int level
 var _weapon_defs: Array[WeaponDef] = []  # in the order added
 var _levelups: PackedInt32Array = PackedInt32Array()  # FIFO of new levels, oldest first
 var _damage: Dictionary = {}  # StringName weapon id -> float total damage
+var _embers_bonus: int = 0
 
 
 func setup(tuning: RunTuning) -> void:
@@ -34,6 +35,7 @@ func setup(tuning: RunTuning) -> void:
 	_weapon_defs.clear()
 	_levelups.clear()
 	_damage.clear()
+	_embers_bonus = 0
 
 
 func tick(delta: float) -> void:
@@ -137,3 +139,26 @@ func damage_of(weapon_id: StringName) -> float:
 ## Allocates a copy; for the end-of-run summary only, never per frame.
 func damage_by_weapon() -> Dictionary:
 	return _damage.duplicate()
+
+
+## Embers earned from kills: one per embers_kills_divisor kills (whole number, rounded down).
+func embers_from_kills() -> int:
+	return floori(float(kills) / float(_tuning.embers_kills_divisor))
+
+
+## Embers earned from time survived: one per embers_seconds_divisor whole seconds.
+func embers_from_time() -> int:
+	return floori(floorf(elapsed) / float(_tuning.embers_seconds_divisor))
+
+
+func add_embers_bonus(amount: int) -> void:
+	_embers_bonus += amount
+
+
+func embers_bonus() -> int:
+	return _embers_bonus
+
+
+## Elite and boss parts are 0 in M2 (no Elites or bosses yet).
+func embers_total() -> int:
+	return embers_from_kills() + embers_from_time() + _embers_bonus

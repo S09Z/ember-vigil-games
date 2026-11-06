@@ -150,3 +150,33 @@ func test_non_positive_damage_is_ignored() -> void:
 func test_setup_clears_recorded_damage() -> void:
 	_s.record_damage(&"a", 9.0); _s.setup(RunTuning.new())
 	assert_eq(_s.damage_of(&"a"), 0.0)
+
+func test_embers_from_kills_is_one_per_ten() -> void:
+	for i in 29: _s.add_kill()
+	assert_eq(_s.embers_from_kills(), 2)
+
+func test_embers_from_time_is_one_per_fifteen_seconds() -> void:
+	_s.tick(44.9)
+	assert_eq(_s.embers_from_time(), 2)
+	_s.tick(0.1)
+	assert_eq(_s.embers_from_time(), 3)
+
+func test_ember_purse_bonus_is_added() -> void:
+	_s.add_embers_bonus(5)
+	assert_eq(_s.embers_bonus(), 5)
+	assert_eq(_s.embers_total(), 5)
+
+func test_total_is_the_sum_of_all_sources() -> void:
+	for i in 30: _s.add_kill()          # 3
+	_s.tick(30.0)                       # 2
+	_s.add_embers_bonus(5)
+	_s.add_embers_bonus(5)
+	assert_eq(_s.embers_total(), 3 + 2 + 10)
+
+func test_a_run_that_just_started_earns_nothing() -> void:
+	assert_eq(_s.embers_total(), 0)
+
+func test_setup_clears_the_bonus() -> void:
+	_s.add_embers_bonus(5)
+	_s.setup(RunTuning.new())
+	assert_eq(_s.embers_bonus(), 0)
