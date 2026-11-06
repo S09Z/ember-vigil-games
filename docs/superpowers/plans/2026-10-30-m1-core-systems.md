@@ -2150,10 +2150,12 @@ git commit -m "Document the copy-on-write rule for packed arrays"
 
 ### Task 15: วัดบนเดสก์ท็อป
 
+> **สถานะ (M1-15):** วัดแล้ว ผลอยู่ในตาราง performance ของ roadmap วัดด้วยสคริปต์ชั่วคราวนอกโปรเจกต์บนเครื่อง Ryzen 7 7800X3D + RTX 5070 ไม่ใช่ M3
+
 **Files:**
 - Modify: `docs/roadmap.md` (ตาราง performance)
 
-- [ ] **Step 1: รันแล้วอัดศัตรูให้เต็ม**
+- [x] **Step 1: รันแล้วอัดศัตรูให้เต็ม**
 
 ```bash
 godot --path . --resolution 1280x720
@@ -2161,16 +2163,16 @@ godot --path . --resolution 1280x720
 กด F3 เปิด overlay แล้วกด F4 เพื่ออัดศัตรูให้เต็ม 400 ตัว เดินวนอยู่กลางฝูงประมาณ 15 วินาทีให้หน้าต่าง 600 เฟรมเต็ม
 แล้วจดค่า avg, 1% low และ ms ของแต่ละขั้น
 
-- [ ] **Step 2: ถ้า avg ต่ำกว่า 200 บนเดสก์ท็อป ให้หยุดและรายงาน**
+- [x] **Step 2: ถ้า avg ต่ำกว่า 200 บนเดสก์ท็อป ให้หยุดและรายงาน**
 
 เดสก์ท็อปควรมี headroom มากกว่าเว็บหลายเท่า ถ้าเดสก์ท็อปยังช้า อย่าเสียเวลา export เว็บ
 ให้ดู ms ต่อขั้นก่อนว่าขั้นไหนกิน แล้วรายงานตัวเลขออกมา
 
-- [ ] **Step 3: บันทึกผลลงตาราง performance ใน `docs/roadmap.md`**
+- [x] **Step 3: บันทึกผลลงตาราง performance ใน `docs/roadmap.md`**
 
 เพิ่มแถว: วันที่ / M1 / `M3 / desktop` / 400 / avg / ms ต่อขั้น / หมายเหตุ
 
-- [ ] **Step 4: commit**
+- [x] **Step 4: commit**
 
 ```bash
 git add docs/roadmap.md
@@ -2181,10 +2183,12 @@ git commit -m "Record desktop performance numbers for 400 enemies"
 
 ### Task 16: วัดบนเว็บ — ตัดสิน gate
 
+> **สถานะ (M1-15):** วัดบนเว็บแล้วด้วย Chromium 152 ของแอป Claude (Claude in Chrome ไม่ได้เชื่อมต่อ) ผ่านเกณฑ์ตัวเลขแต่ไม่ใช่เครื่อง gate จริง Step 5 ไม่ได้ใช้เพราะไม่มีการตกเกณฑ์ ยังไม่ปิด gate: ให้ยืนยันซ้ำบน M3 + Chrome ก่อนตัดสินใจ M1-16 และ M2
+
 **Files:**
 - Modify: `docs/roadmap.md` (ตาราง performance)
 
-- [ ] **Step 1: export แล้วเช็คว่า thread support ยังปิดอยู่**
+- [x] **Step 1: export แล้วเช็คว่า thread support ยังปิดอยู่**
 
 ```bash
 godot --headless --path . --export-release "Web" build/web/index.html
@@ -2192,14 +2196,14 @@ ls build/web/
 ```
 Expected: มี `index.html`, `index.js`, `index.pck`, `index.wasm` และ **ไม่มี** `index.worker.js`
 
-- [ ] **Step 2: เสิร์ฟแล้วเปิดใน Chrome**
+- [x] **Step 2: เสิร์ฟแล้วเปิดใน Chrome**
 
 ```bash
 python3 -m http.server 8000 -d build/web
 ```
 เปิด http://localhost:8000 → กด F3 → กด F4 → เดินวนกลางฝูง 15 วินาที
 
-- [ ] **Step 3: อ่านค่าและเทียบเกณฑ์**
+- [x] **Step 3: อ่านค่าและเทียบเกณฑ์**
 
 | ตัวชี้วัด | เกณฑ์ |
 |---|---|
@@ -2209,7 +2213,7 @@ python3 -m http.server 8000 -d build/web
 
 ตรวจ console ของเบราว์เซอร์ด้วย: ต้องไม่มี error และต้องมีบรรทัด `single-threaded, no GDExtension support`
 
-- [ ] **Step 4: บันทึกผลลงตาราง performance ใน `docs/roadmap.md`**
+- [x] **Step 4: บันทึกผลลงตาราง performance ใน `docs/roadmap.md`**
 
 เพิ่มแถว: วันที่ / M1 / `M3 / Chrome (web)` / 400 / avg + 1% low / ms ต่อขั้น / ผ่านหรือไม่ผ่าน
 
@@ -2217,7 +2221,7 @@ python3 -m http.server 8000 -d build/web
 
 ทำตามลำดับในหัวข้อ 8 ของ spec แล้ววัดใหม่ บันทึกทุกครั้งที่วัด **ห้ามข้ามไป M2**
 
-- [ ] **Step 6: commit**
+- [x] **Step 6: commit**
 
 ```bash
 git add docs/roadmap.md
