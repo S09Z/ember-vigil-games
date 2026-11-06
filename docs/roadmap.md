@@ -108,7 +108,7 @@ graph LR
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
 | ✅ M2-10 | `PickupSystem`: XP gem เป็น SoA + MultiMesh ผ่าน pool ห้ามสร้าง Node ต่อ gem | `run/pickup_system.gd` | T | M |
-| M2-11 | รัศมีเก็บของ: ดูดเข้าหาผู้เล่นเมื่ออยู่ในระยะ แล้วเพิ่ม XP เข้า `RunState` | `run/pickup_system.gd` | T | S |
+| ✅ M2-11 | รัศมีเก็บของ: ดูดเข้าหาผู้เล่นเมื่ออยู่ในระยะ แล้วเพิ่ม XP เข้า `RunState` | `run/pickup_system.gd` | T | S |
 
 ### M2-D เลเวลอัป
 

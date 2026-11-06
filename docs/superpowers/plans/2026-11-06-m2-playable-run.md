@@ -1163,7 +1163,7 @@ func test_clear_empties_the_system() -> void:
 - Produces: signal `xp_collected(amount: int)`; `tick(delta: float, player_pos: Vector2, pickup_radius: float, player_radius: float) -> void` gem ที่ห่างจากผู้เล่นไม่เกิน `pickup_radius` เคลื่อนเข้าหาผู้เล่นด้วย `gem_pull_speed` (ไม่เลยตำแหน่งผู้เล่นในก้าวเดียว) gem ที่ห่างไม่เกิน `player_radius + gem_radius` ถูกเก็บ: ปล่อยช่องคืน `Pool` และยิง `xp_collected(xp)` ครั้งเดียวต่อ gem; ไม่อยู่ในรัศมี = นิ่ง
 - Produces: `spawn_or_grant(pos: Vector2, xp: int) -> int` คืน `xp` ที่ต้องให้ทันที (`0` ถ้าวาง gem ได้, `xp` ถ้าช่องเต็ม) เพื่อให้ผู้เรียกบวกเข้า `RunState` เอง (ครอบ Review Focus ข้อ 2)
 
-- [ ] **Step 1: เพิ่มเทสต์**
+- [x] **Step 1: เพิ่มเทสต์**
 ```gdscript
 func test_a_gem_outside_the_pickup_radius_stays_put() -> void:
 	_p.spawn(Vector2(100.0, 0.0), 1)
@@ -1212,10 +1212,10 @@ func test_many_gems_collected_in_one_tick_all_report() -> void:
 	_p.tick(0.016, Vector2.ZERO, 40.0, 7.0)
 	assert_signal_emit_count(_p, "xp_collected", 4)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่ม `tick`, `xp_collected`, `spawn_or_grant`** ลูปอ่าน SoA อย่างเดียว ไม่ allocate
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-11: pull and collect XP gems`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่ม `tick`, `xp_collected`, `spawn_or_grant`** ลูปอ่าน SoA อย่างเดียว ไม่ allocate
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-11: pull and collect XP gems`**
 
 ---
 
