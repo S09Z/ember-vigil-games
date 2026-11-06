@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" uid="uid://bemhw1ew4ualk" path="res://data/class_def.gd" id="1_classdef"]
+
+[resource]
+script = ExtResource("1_classdef")
+id = &"knight"
+display_name = "Knight"
+max_hp = 140.0
+move_speed = 95.0
+armor = 2
+pickup_radius = 40.0
+body_radius = 7.0
