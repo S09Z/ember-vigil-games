@@ -478,7 +478,7 @@ func test_xp_changed_reports_final_values() -> void:
 **Interfaces:**
 - Produces: `pending_levelups() -> int` จำนวนเลเวลอัปที่ยังไม่ถูกจัดการ; `pop_levelup() -> int` คืนเลเวลใหม่ของเลเวลอัปที่เก่าที่สุดในคิวแล้วนำออก (คืน `-1` ถ้าคิวว่าง) ทุกการขึ้นเลเวลใน `add_xp` เพิ่มเข้าคิวตามลำดับ `setup()` ล้างคิว
 
-- [ ] **Step 1: เพิ่มเทสต์** (ครอบ Review Focus ข้อ 1)
+- [x] **Step 1: เพิ่มเทสต์** (ครอบ Review Focus ข้อ 1)
 ```gdscript
 func test_each_level_gained_is_queued_in_order() -> void:
 	_s.add_xp(10 + 14 + 19)            # reaches level 4
@@ -504,10 +504,10 @@ func test_setup_clears_the_queue() -> void:
 	_s.setup(RunTuning.new())
 	assert_eq(_s.pending_levelups(), 0)
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่มคิวด้วย `PackedInt32Array` ที่ใช้เป็น FIFO** และเรียกเข้าคิวใน `add_xp`
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-15: queue level-ups so none are lost`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่มคิวด้วย `PackedInt32Array` ที่ใช้เป็น FIFO** และเรียกเข้าคิวใน `add_xp`
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-15: queue level-ups so none are lost`**
 
 ---
 

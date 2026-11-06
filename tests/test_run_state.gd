@@ -105,3 +105,33 @@ func test_xp_changed_reports_final_values() -> void:
 	watch_signals(_s)
 	_s.add_xp(13)
 	assert_signal_emitted_with_parameters(_s, "xp_changed", [3, 14, 2])
+
+func test_each_level_gained_is_queued_in_order() -> void:
+	_s.add_xp(10 + 14 + 19)            # reaches level 4
+	assert_eq(_s.pending_levelups(), 3)
+	assert_eq(_s.pop_levelup(), 2)
+	assert_eq(_s.pop_levelup(), 3)
+	assert_eq(_s.pop_levelup(), 4)
+	assert_eq(_s.pop_levelup(), -1)
+
+func test_a_level_gained_while_one_is_pending_is_not_lost() -> void:
+	_s.add_xp(10)
+	_s.add_xp(14)                       # second level before the first was popped
+	assert_eq(_s.pending_levelups(), 2)
+	assert_eq(_s.pop_levelup(), 2)
+	assert_eq(_s.pop_levelup(), 3)
+
+func test_popping_an_empty_queue_is_safe() -> void:
+	assert_eq(_s.pop_levelup(), -1)
+	assert_eq(_s.pending_levelups(), 0)
+
+func test_setup_clears_the_queue() -> void:
+	_s.add_xp(100)
+	_s.setup(RunTuning.new())
+	assert_eq(_s.pending_levelups(), 0)
+
+func test_setup_resets_level_and_xp() -> void:
+	_s.add_xp(100)
+	_s.setup(RunTuning.new())
+	assert_eq(_s.level, 1)
+	assert_eq(_s.xp, 0)

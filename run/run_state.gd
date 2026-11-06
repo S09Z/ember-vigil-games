@@ -20,6 +20,7 @@ var xp: int = 0
 var _tuning: RunTuning = null
 var _weapon_levels: Dictionary = {}  # StringName id -> int level
 var _weapon_defs: Array[WeaponDef] = []  # in the order added
+var _levelups: PackedInt32Array = PackedInt32Array()  # FIFO of new levels, oldest first
 
 
 func setup(tuning: RunTuning) -> void:
@@ -30,6 +31,7 @@ func setup(tuning: RunTuning) -> void:
 	xp = 0
 	_weapon_levels.clear()
 	_weapon_defs.clear()
+	_levelups.clear()
 
 
 func tick(delta: float) -> void:
@@ -53,8 +55,22 @@ func add_xp(amount: int) -> void:
 	while xp >= xp_needed(level):
 		xp -= xp_needed(level)
 		level += 1
+		_levelups.append(level)
 		level_up_queued.emit(level)
 	xp_changed.emit(xp, xp_needed(level), level)
+
+
+func pending_levelups() -> int:
+	return _levelups.size()
+
+
+## Returns the new level of the oldest unhandled level-up and removes it, or -1 if none.
+func pop_levelup() -> int:
+	if _levelups.is_empty():
+		return -1
+	var lv: int = _levelups[0]
+	_levelups.remove_at(0)
+	return lv
 
 
 func add_weapon(def: WeaponDef) -> bool:
