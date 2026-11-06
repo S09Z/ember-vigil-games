@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" uid="uid://c18c26vojy2kb" path="res://data/enemy_def.gd" id="1_enemydef"]
+
+[resource]
+script = ExtResource("1_enemydef")
+id = &"ghoul"
+display_name = "Ghoul"
+hp = 10.0
+move_speed = 45.0
+contact_damage = 5.0
+xp = 1
+body_radius = 6.0
