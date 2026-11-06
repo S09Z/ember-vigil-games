@@ -923,14 +923,14 @@ git commit -m "Add player with movement, armor and invulnerability window"
 
 ### Task 6: `EnemySystem` — โครงข้อมูลและการวาด
 
-> **สถานะ:** ส่วนโครง SoA + `spawn`/`kill` + hp scaling ตอน spawn ทำแล้วใน M1-9 (`setup(defs, tuning, capacity)` ยังไม่รับ `Rng` และยังไม่มี grid/scratch buffer เพราะยังไม่มีโค้ดใช้ ให้เพิ่มตอน M1-11/12/17) ส่วน MultiMesh (`sync_multimesh`, `_build_multimesh`, `DEAD_TRANSFORM`, เทสต์ multimesh 3 ข้อ) เป็นของ M1-10 จึงยังไม่ติ๊ก step ด้านล่าง
+> **สถานะ:** ทำครบแล้ว แบ่งเป็น M1-9 (โครง SoA, `spawn`/`kill`, hp scaling) และ M1-10 (MultiMesh) ต่างจากโค้ดตัวอย่าง: `setup(defs, tuning, capacity)` ยังไม่รับ `Rng` และยังไม่มี grid/scratch buffer/ตัวจับเวลา (เพิ่มตอน M1-11/12/17) และเพิ่ม `transform_of(id)` เพราะ renderer แบบ headless ไม่เก็บข้อมูล MultiMesh ทำให้อ่านกลับด้วย `get_instance_transform_2d` ในเทสต์ไม่ได้ ตรวจการวาดจริงแยกด้วยการรันแบบมี renderer แล้ว
 
 **Files:**
 - Create: `run/enemy_system.gd`
 - Test: `tests/test_enemy_system.gd`
 - Delete: `data/.gitkeep` ถ้ายังเหลือ
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_enemy_system.gd`:
 
@@ -1013,11 +1013,11 @@ func test_dead_slots_are_drawn_at_zero_scale() -> void:
 	assert_almost_eq(t.get_scale().length(), 0.0, 0.001, "a dead slot must not be visible")
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `EnemySystem`
 
-- [ ] **Step 3: เขียน `run/enemy_system.gd`**
+- [x] **Step 3: เขียน `run/enemy_system.gd`**
 
 ```gdscript
 class_name EnemySystem
@@ -1171,7 +1171,7 @@ func _build_multimesh() -> void:
 		mm.set_instance_transform_2d(i, DEAD_TRANSFORM)
 ```
 
-- [ ] **Step 4: รันเทสต์ ต้องผ่าน**
+- [x] **Step 4: รันเทสต์ ต้องผ่าน**
 
 ```bash
 godot --headless --path . --import
@@ -1180,7 +1180,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 Expected: PASS ทั้งหมด
 ถ้า `const DEAD_TRANSFORM` ใช้ constructor 4 ตัวไม่ได้ ให้เปลี่ยนเป็น `static var` แล้วรายงานไว้ในข้อความ commit
 
-- [ ] **Step 5: commit**
+- [x] **Step 5: commit**
 
 ```bash
 git add run/enemy_system.gd tests/test_enemy_system.gd

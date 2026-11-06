@@ -79,3 +79,42 @@ func test_system_has_no_child_nodes() -> void:
 	for i in 8:
 		_sys.spawn(0, Vector2.ZERO, 0.0)
 	assert_eq(_sys.get_child_count(), 0, "no node per enemy")
+
+func test_multimesh_has_one_instance_per_slot() -> void:
+	assert_not_null(_sys.multimesh)
+	assert_eq(_sys.multimesh.instance_count, 8)
+	assert_eq(_sys.multimesh.transform_format, MultiMesh.TRANSFORM_2D)
+
+# The headless renderer does not store MultiMesh data, so these test the
+# transform that sync_multimesh() writes rather than reading it back.
+func test_drawn_transform_follows_the_enemy() -> void:
+	var id: int = _sys.spawn(0, Vector2(20.0, 5.0), 0.0)
+	assert_eq(_sys.transform_of(id).origin, Vector2(20.0, 5.0))
+
+func test_drawn_size_follows_the_body_radius() -> void:
+	var id: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	assert_almost_eq(_sys.transform_of(id).x.length(), 6.0, 0.001)
+	assert_almost_eq(_sys.transform_of(id).y.length(), 6.0, 0.001)
+
+func test_never_used_slots_are_hidden() -> void:
+	assert_eq(_sys.transform_of(5), EnemySystem.DEAD_TRANSFORM)
+
+func test_dead_slots_are_hidden() -> void:
+	var id: int = _sys.spawn(0, Vector2(20.0, 5.0), 0.0)
+	_sys.kill(id)
+	assert_eq(_sys.transform_of(id), EnemySystem.DEAD_TRANSFORM)
+	assert_almost_eq(EnemySystem.DEAD_TRANSFORM.get_scale().length(), 0.0, 0.001)
+
+func test_a_reused_slot_is_drawn_at_its_new_position() -> void:
+	var id: int = _sys.spawn(0, Vector2(20.0, 5.0), 0.0)
+	_sys.kill(id)
+	var again: int = _sys.spawn(0, Vector2(-7.0, 9.0), 0.0)
+	assert_eq(again, id)
+	assert_eq(_sys.transform_of(id).origin, Vector2(-7.0, 9.0))
+
+func test_sync_multimesh_runs_with_live_and_dead_slots() -> void:
+	var a: int = _sys.spawn(0, Vector2(1.0, 1.0), 0.0)
+	_sys.spawn(0, Vector2(2.0, 2.0), 0.0)
+	_sys.kill(a)
+	_sys.sync_multimesh()
+	assert_eq(_sys.alive_count(), 1)
