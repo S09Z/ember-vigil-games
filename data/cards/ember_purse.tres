@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardDef" format=3]
+
+[ext_resource type="Script" uid="uid://biatukv8lvarv" path="res://data/card_def.gd" id="1_carddef"]
+
+[resource]
+script = ExtResource("1_carddef")
+id = &"ember_purse"
+display_name = "Ember Purse"
+description = "Gain 5 Embers at the end of the run."
+heal_amount = 0.0
+embers_bonus = 5

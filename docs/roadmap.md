@@ -41,41 +41,41 @@ graph LR
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-1 | `SpatialGrid`: hash grid, `clear()` / `insert(id, pos)` / `query_radius(pos, r, out_buffer)` คืนค่าใส่ buffer ที่ส่งเข้ามา ห้าม allocate ต่อการเรียก | `core/spatial_grid.gd` | T | M |
+| ✅ M1-1 | `SpatialGrid`: hash grid, `clear()` / `insert(id, pos)` / `query_radius(pos, r, out_buffer)` คืนค่าใส่ buffer ที่ส่งเข้ามา ห้าม allocate ต่อการเรียก | `core/spatial_grid.gd` | T | M |
 | ✅ M1-2 | `Pool`: free-list ของ index สำหรับ struct-of-arrays โตเป็นชั้น ๆ ไม่ย่อกลับกลางรอบ | `core/pool.gd` | T | S |
 | ✅ M1-3 | `Rng`: wrapper ของ `RandomNumberGenerator` ที่ seed ได้ + `point_in_ring()` ใช้ซ้ำรอบเดิมตอน debug (`weighted_pick()` เลื่อนไป M2-12 ตาม YAGNI) | `core/rng.gd` | T | S |
-| M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
-| M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS ปัจจุบัน + avg และ 1% low ในหน้าต่าง 600 เฟรม (ring buffer) + จำนวนศัตรู + ms ต่อขั้น อ่านผ่าน getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | M |
+| ✅ M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
+| ✅ M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS ปัจจุบัน + avg และ 1% low ในหน้าต่าง 600 เฟรม (ring buffer) + จำนวนศัตรู + ms ต่อขั้น อ่านผ่าน getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | M |
 
 ### M1-B ผู้เล่น
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-5 | `ClassDef` schema + `knight.tres` (HP 140 / speed 95 / armor 2 / pickup 40) อ่านค่าจากตารางหัวข้อ 4 | `data/class_def.gd`, `data/classes/knight.tres` | T | S |
-| M1-6 | `Player`: CharacterBody2D ตัวเดียวในเกม เดินตาม input, จำ `last_move_dir` ไว้ให้อาวุธระยะใกล้ใช้ | `run/player.gd`, `run/player.tscn` | T | M |
-| M1-7 | HP / armor / อมตะ 0.5 วิ: ดาเมจที่รับ = `max(1, dmg − armor)` ยิง signal `health_changed` และ `died` | `run/player.gd` | T | S |
+| ✅ M1-5 | `ClassDef` schema + `knight.tres` (HP 140 / speed 95 / armor 2 / pickup 40) อ่านค่าจากตารางหัวข้อ 4 | `data/class_def.gd`, `data/classes/knight.tres` | T | S |
+| ✅ M1-6 | `Player`: CharacterBody2D ตัวเดียวในเกม เดินตาม input, จำ `last_move_dir` ไว้ให้อาวุธระยะใกล้ใช้ | `run/player.gd`, `run/player.tscn` | T | M |
+| ✅ M1-7 | HP / armor / อมตะ 0.5 วิ: ดาเมจที่รับ = `max(1, dmg − armor)` ยิง signal `health_changed` และ `died` | `run/player.gd` | T | S |
 
 ### M1-C ศัตรูแบบ data-oriented
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
-| M1-9 | `EnemySystem` โครง SoA: pos/vel เป็น `PackedVector2Array`, hp เป็น `PackedFloat32Array`, type/alive เป็น `PackedByteArray`, `spawn()` / `kill()` คืน slot เข้า `Pool` โดย **slot คงที่ ไม่บีบอัด array** (index ต้องอ้างข้ามเฟรมได้ให้ M3) ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
-| M1-10 | วาดด้วย `MultiMeshInstance2D` ชิ้นเดียว อัปเดต transform ต่อเฟรมแบบไม่ allocate | `run/enemy_system.gd` | — | M |
-| M1-11 | การเดิน: ไล่ผู้เล่นตรง ๆ + HP scaling `1 + t/150` ตอน spawn + ตัวที่ห่างเกิน 600 ถูกย้ายไป spawn ใหม่ใกล้ผู้เล่น | `run/enemy_system.gd` | T | M |
-| M1-12 | ชนผู้เล่น: หาเพื่อนบ้านจาก `SpatialGrid` ไม่ใช้ `Area2D`/physics body กับศัตรู | `run/enemy_system.gd` | T | M |
-| M1-17 | separation: ศัตรูผลักกันเองทุกเฟรม คิดเฉพาะคู่ `j > i` ผลักสองฝั่งพร้อมกัน เข้าเป็นความเร็วไม่ใช่การกระโดดตำแหน่ง | `run/enemy_system.gd` | T | M |
-| M1-13 | `SpawnDirector`: อัตรา `min(12, 1.0 + t/20)` ตัว/วิ, เกิดในวงแหวน 380–420 จากผู้เล่น, เพดาน 400 ตัว อ่านค่าจาก data ไม่ hardcode | `run/spawn_director.gd` | T | M |
+| ✅ M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
+| ✅ M1-9 | `EnemySystem` โครง SoA: pos/vel เป็น `PackedVector2Array`, hp เป็น `PackedFloat32Array`, type/alive เป็น `PackedByteArray`, `spawn()` / `kill()` คืน slot เข้า `Pool` โดย **slot คงที่ ไม่บีบอัด array** (index ต้องอ้างข้ามเฟรมได้ให้ M3) ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
+| ✅ M1-10 | วาดด้วย `MultiMeshInstance2D` ชิ้นเดียว อัปเดต transform ต่อเฟรมแบบไม่ allocate | `run/enemy_system.gd` | — | M |
+| ✅ M1-11 | การเดิน: ไล่ผู้เล่นตรง ๆ + HP scaling `1 + t/150` ตอน spawn + ตัวที่ห่างเกิน 600 ถูกย้ายไป spawn ใหม่ใกล้ผู้เล่น | `run/enemy_system.gd` | T | M |
+| ✅ M1-12 | ชนผู้เล่น: หาเพื่อนบ้านจาก `SpatialGrid` ไม่ใช้ `Area2D`/physics body กับศัตรู | `run/enemy_system.gd` | T | M |
+| ✅ M1-17 | separation: ศัตรูผลักกันเองทุกเฟรม คิดเฉพาะคู่ `j > i` ผลักสองฝั่งพร้อมกัน เข้าเป็นความเร็วไม่ใช่การกระโดดตำแหน่ง | `run/enemy_system.gd` | T | M |
+| ✅ M1-13 | `SpawnDirector`: อัตรา `min(12, 1.0 + t/20)` ตัว/วิ, เกิดในวงแหวน 380–420 จากผู้เล่น, เพดาน 400 ตัว อ่านค่าจาก data ไม่ hardcode | `run/spawn_director.gd` | T | M |
 
 ### M1-D ยืนยัน gate
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-19 | `run.tscn` + `run.gd` เป็นเจ้าของลำดับการอัปเดต (เรียก `tick()` ของทุกระบบเอง ระบบลูกไม่มี `_physics_process`) + `main.gd` เขียนเป็น state switcher ที่ M1 มีสถานะเดียว + Camera2D ตามผู้เล่น | `run/run.gd`, `run/run.tscn`, `main.gd`, `main.tscn` | — | M |
-| M1-20 | เพิ่มกฎ copy-on-write ลง CLAUDE.md: ห้ามส่ง Packed array ออกจากระบบ ให้รับ buffer เข้ามาเติมแทน | `CLAUDE.md` | — | S |
-| M1-14 | F4 = spawn ศัตรูให้เต็มเพดานทันทีในฉาก run จริง (ต้องติดไปกับ build เว็บ เพราะ gate วัดบนเว็บ) + ล็อก seed ของ `Rng` ให้วัดซ้ำได้ | `run/run.gd`, `run/spawn_director.gd` | — | S |
-| M1-15 | วัดบนเดสก์ท็อปก่อน แล้ว export เว็บ วัดใน Chrome จดค่า FPS และ ms ต่อระบบลงท้ายไฟล์นี้ | `docs/roadmap.md` (ส่วน perf log) | — | M |
-| M1-16 | ถ้าไม่ผ่านเกณฑ์: แก้ตามลำดับในหัวข้อ 8 ของ spec → อ่าน ms ต่อขั้นก่อน, ปรับ `cell_size`, แบ่ง separation เป็นหลายเฟรม, เปลี่ยนไปบีบอัด array + handle (index, generation), สุดท้ายลดเพดานศัตรูแล้วแก้ design.md | — | — | L |
+| ✅ M1-19 | `run.tscn` + `run.gd` เป็นเจ้าของลำดับการอัปเดต (เรียก `tick()` ของทุกระบบเอง ระบบลูกไม่มี `_physics_process`) + `main.gd` เขียนเป็น state switcher ที่ M1 มีสถานะเดียว + Camera2D ตามผู้เล่น | `run/run.gd`, `run/run.tscn`, `main.gd`, `main.tscn` | — | M |
+| ✅ M1-20 | เพิ่มกฎ copy-on-write ลง CLAUDE.md: ห้ามส่ง Packed array ออกจากระบบ ให้รับ buffer เข้ามาเติมแทน | `CLAUDE.md` | — | S |
+| ✅ M1-14 | F4 = spawn ศัตรูให้เต็มเพดานทันทีในฉาก run จริง (ต้องติดไปกับ build เว็บ เพราะ gate วัดบนเว็บ) + ล็อก seed ของ `Rng` ให้วัดซ้ำได้ | `run/run.gd`, `run/spawn_director.gd` | — | S |
+| ✅ M1-15 | วัดบนเดสก์ท็อปก่อน แล้ว export เว็บ วัดใน Chrome จดค่า FPS และ ms ต่อระบบลงท้ายไฟล์นี้ | `docs/roadmap.md` (ส่วน perf log) | — | M |
+| M1-16 (ไม่ต้องทำ: gate ผ่านบน M3) | ถ้าไม่ผ่านเกณฑ์: แก้ตามลำดับในหัวข้อ 8 ของ spec → อ่าน ms ต่อขั้นก่อน, ปรับ `cell_size`, แบ่ง separation เป็นหลายเฟรม, เปลี่ยนไปบีบอัด array + handle (index, generation), สุดท้ายลดเพดานศัตรูแล้วแก้ design.md | — | — | L |
 
 ---
 
@@ -88,36 +88,36 @@ graph LR
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M2-1 | `RunState`: เวลา kills xp level และช่องบิลด์ (อาวุธ 4 / พาสซีฟ 4) สื่อสารออกด้วย signal เท่านั้น | `run/run_state.gd` | T | M |
-| M2-2 | XP curve `round(5 + lv × 4.5)` + XP ล้นต้องยกไปเลเวลถัดไป (เก็บ XP ก้อนใหญ่ทีเดียวต้องขึ้นหลายเลเวล) | `run/run_state.gd` | T | S |
+| ✅ M2-1 | `RunState`: เวลา kills xp level และช่องบิลด์ (อาวุธ 4 / พาสซีฟ 4) สื่อสารออกด้วย signal เท่านั้น | `run/run_state.gd` | T | M |
+| ✅ M2-2 | XP curve `round(5 + lv × 4.5)` + XP ล้นต้องยกไปเลเวลถัดไป (เก็บ XP ก้อนใหญ่ทีเดียวต้องขึ้นหลายเลเวล) | `run/run_state.gd` | T | S |
 | M2-3 | state machine ใน `main.tscn`: Camp → Run → Results และกลับมา Camp ได้ โดยไม่มีสถานะรอบเก่าค้าง | `main.gd`, `main.tscn` | T | M |
 
 ### M2-B อาวุธ (โครง + Greatsword)
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M2-4 | `WeaponDef` schema: แท็ก คูลดาวน์ ดาเมจ และตารางค่าต่อเลเวล 1–5 | `data/weapon_def.gd` | T | M |
-| M2-5 | `WeaponBase`: นับคูลดาวน์ อ่านค่าตามเลเวล และ hook `_fire()` เพิ่มอาวุธใหม่ต้องไม่ต้องแก้ระบบกลาง | `run/weapons/weapon_base.gd` | T | M |
-| M2-6 | `Greatsword` LV1: ฟันวง 140° ตาม `last_move_dir` ระยะ 48 ดาเมจ 20 คูลดาวน์ 1.1 ผลัก 20 | `run/weapons/greatsword.gd`, `data/weapons/greatsword.tres` | T | M |
-| M2-7 | Greatsword LV2–5 ตามตาราง (ดาเมจ +5 / วง 180° ระยะ 56 / คูลดาวน์ −0.2 / ฟันหลังด้วย) | เดิม | T | S |
-| M2-8 | Knockback ของศัตรู: ผลักแล้วกลับมาไล่ต่อ ไม่เด้งทะลุ grid | `run/enemy_system.gd` | T | S |
-| M2-9 | พาสซีฟอาชีพ **Oathguard**: ดูดเลือด 3% ของดาเมจจากอาวุธแท็ก STEEL | `run/player.gd` หรือ `run/stat_block.gd` | T | S |
+| ✅ M2-4 | `WeaponDef` schema: แท็ก คูลดาวน์ ดาเมจ และตารางค่าต่อเลเวล 1–5 | `data/weapon_def.gd` | T | M |
+| ✅ M2-5 | `WeaponBase`: นับคูลดาวน์ อ่านค่าตามเลเวล และ hook `_fire()` เพิ่มอาวุธใหม่ต้องไม่ต้องแก้ระบบกลาง | `run/weapons/weapon_base.gd` | T | M |
+| ✅ M2-6 | `Greatsword` LV1: ฟันวง 140° ตาม `last_move_dir` ระยะ 48 ดาเมจ 20 คูลดาวน์ 1.1 ผลัก 20 | `run/weapons/greatsword.gd`, `data/weapons/greatsword.tres` | T | M |
+| ✅ M2-7 | Greatsword LV2–5 ตามตาราง (ดาเมจ +5 / วง 180° ระยะ 56 / คูลดาวน์ −0.2 / ฟันหลังด้วย) | เดิม | T | S |
+| ✅ M2-8 | Knockback ของศัตรู: ผลักแล้วกลับมาไล่ต่อ ไม่เด้งทะลุ grid | `run/enemy_system.gd` | T | S |
+| ✅ M2-9 | พาสซีฟอาชีพ **Oathguard**: ดูดเลือด 3% ของดาเมจจากอาวุธแท็ก STEEL | `run/player.gd` หรือ `run/stat_block.gd` | T | S |
 
 ### M2-C XP และของเก็บ
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M2-10 | `PickupSystem`: XP gem เป็น SoA + MultiMesh ผ่าน pool ห้ามสร้าง Node ต่อ gem | `run/pickup_system.gd` | T | M |
-| M2-11 | รัศมีเก็บของ: ดูดเข้าหาผู้เล่นเมื่ออยู่ในระยะ แล้วเพิ่ม XP เข้า `RunState` | `run/pickup_system.gd` | T | S |
+| ✅ M2-10 | `PickupSystem`: XP gem เป็น SoA + MultiMesh ผ่าน pool ห้ามสร้าง Node ต่อ gem | `run/pickup_system.gd` | T | M |
+| ✅ M2-11 | รัศมีเก็บของ: ดูดเข้าหาผู้เล่นเมื่ออยู่ในระยะ แล้วเพิ่ม XP เข้า `RunState` | `run/pickup_system.gd` | T | S |
 
 ### M2-D เลเวลอัป
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M2-12 | ตัวสุ่มการ์ด: 3 ใบจากของที่ถืออยู่และยังไม่เต็ม + ของใหม่ถ้ามีช่องว่าง + อาวุธเฉพาะอาชีพตัวเองเท่านั้น, ของที่ถืออยู่น้ำหนัก ×2 (ต้องเพิ่ม `Rng.weighted_pick()` ที่เลื่อนมาจาก M1) | `core/rng.gd`, `run/level_up_deck.gd` | T | L |
-| M2-13 | การ์ดสำรองเมื่อไม่มีอะไรให้เลือก: Hearth Bread (ฮีล 30) / Ember Purse (+5 Embers ตอนจบรอบ) | `run/level_up_deck.gd`, `data/` | T | S |
-| M2-14 | `LevelUpPanel`: หยุดเกม แสดง 3 การ์ด เลือกด้วย 1/2/3 หรือคลิก แสดงเลเวลเดิม → ใหม่ | `ui/level_up_panel.gd/.tscn` | — | M |
-| M2-15 | คิวเลเวลอัป: ขึ้นหลายเลเวลพร้อมกันต้องโชว์การ์ดต่อเนื่องทีละใบ ไม่ตกหาย | `run/run_state.gd`, `ui/level_up_panel.gd` | T | S |
+| ✅ M2-12 | ตัวสุ่มการ์ด: 3 ใบจากของที่ถืออยู่และยังไม่เต็ม + ของใหม่ถ้ามีช่องว่าง + อาวุธเฉพาะอาชีพตัวเองเท่านั้น, ของที่ถืออยู่น้ำหนัก ×2 (ต้องเพิ่ม `Rng.weighted_pick()` ที่เลื่อนมาจาก M1) | `core/rng.gd`, `run/level_up_deck.gd` | T | L |
+| ✅ M2-13 | การ์ดสำรองเมื่อไม่มีอะไรให้เลือก: Hearth Bread (ฮีล 30) / Ember Purse (+5 Embers ตอนจบรอบ) | `run/level_up_deck.gd`, `data/` | T | S |
+| ✅ M2-14 | `LevelUpPanel`: หยุดเกม แสดง 3 การ์ด เลือกด้วย 1/2/3 หรือคลิก แสดงเลเวลเดิม → ใหม่ | `ui/level_up_panel.gd/.tscn` | — | M |
+| ✅ M2-15 | คิวเลเวลอัป: ขึ้นหลายเลเวลพร้อมกันต้องโชว์การ์ดต่อเนื่องทีละใบ ไม่ตกหาย | `run/run_state.gd`, `ui/level_up_panel.gd` | T | S |
 
 ### M2-E หน้าจอ
 
@@ -125,10 +125,20 @@ graph LR
 |---|---|---|---|---|
 | M2-16 | `HUD` ตามหัวข้อ 11: แถบ XP บนสุด / HP ซ้ายบน / เวลากลางบน / kills+embers ขวาบน / ช่องอาวุธ+พาสซีฟ ซ้ายล่าง ฟัง signal อย่างเดียว | `ui/hud.gd/.tscn` | — | M |
 | M2-17 | หน้าหยุดเกม (Esc/P): แสดงบิลด์ปัจจุบัน | `ui/pause_screen.gd/.tscn` | — | S |
-| M2-18 | สูตร Embers: `floor(kills/10) + floor(วิที่รอด/15) + 5×Elite + 40 ถ้าฆ่าบอส` (กดหนีกลางรอบไม่ได้) | `run/run_state.gd` | T | S |
+| ✅ M2-18 | สูตร Embers: `floor(kills/10) + floor(วิที่รอด/15) + 5×Elite + 40 ถ้าฆ่าบอส` (กดหนีกลางรอบไม่ได้) | `run/run_state.gd` | T | S |
 | M2-19 | `ResultsScreen`: เวลา kills เลเวล ดาเมจรวมต่ออาวุธ และที่มาของ Embers ทีละบรรทัด | `ui/results_screen.gd/.tscn` | — | M |
 | M2-20 | `CampScreen` ขั้นต่ำ: ปุ่มเริ่มคืน + โชว์ Embers (ร้านค่อยทำใน M4) | `ui/camp_screen.gd/.tscn` | — | S |
-| M2-21 | ติดตามดาเมจรวมต่ออาวุธเพื่อเอาไปโชว์ในหน้าสรุป | `run/run_state.gd` | T | S |
+| ✅ M2-21 | ติดตามดาเมจรวมต่ออาวุธเพื่อเอาไปโชว์ในหน้าสรุป | `run/run_state.gd` | T | S |
+| ✅ M2-22 | `EnemySystem.query_radius` + `damage` | `run/enemy_system.gd` | T | S |
+| ✅ M2-23 | stun ใน EnemySystem | `run/enemy_system.gd` | T | S |
+| ✅ M2-24 | Shield Bash LV1–5 | `run/weapons/shield_bash.gd`, `data/weapons/shield_bash.tres` | T | M |
+| ✅ M2-25 | Warhorn LV1–5 | `run/weapons/warhorn.gd`, `data/weapons/warhorn.tres` | T | M |
+| ✅ M2-26 | `StatBlock` ขนาดเล็ก (ตัวคูณดาเมจชั่วคราว) + `Player.heal` | `run/stat_block.gd`, `run/player.gd` | T | S |
+| ✅ M2-27 | ตัวเลขใหม่ลง design.md + RunTuning | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
+| ✅ M2-28 | `FxLayer` | `run/fx_layer.gd` | T | S |
+| M2-29 | ต่อทุกระบบเข้า `Run` + สถานะของรอบ | `run/run.gd`, `main.gd` | T | L |
+| M2-30 | overlay แสดงเวลาขั้นอาวุธ/pickup + F4 ให้อาวุธครบ LV5 | `ui/debug_overlay.gd` | — | S |
+| M2-31 | ปิด M2: เล่นจริง วัด perf export เว็บ | — | — | M |
 
 ---
 
@@ -291,6 +301,9 @@ graph LR
 | วันที่ | milestone | เครื่อง / เบราว์เซอร์ | ศัตรู | FPS | ms ต่อระบบ | หมายเหตุ |
 |---|---|---|---|---|---|---|
 | 2026-10-30 | M0 | M3 / Chrome | 0 | 120 | — | หน้าเปล่า ยังไม่มีระบบเกม |
+| 2026-11-06 | M1-15 (เดสก์ท็อป) | Ryzen 7 7800X3D + RTX 5070 / Godot 4.7.2 opengl3 ปิด vsync 1280×720 | 400 (เต็มเพดาน) | avg 2,886 · 1% low 720 (p99 เฟรม 1.39 ms) | ต่อก้าว physics: เฉลี่ย 2.69 ms (p99 4.66, สูงสุด 5.90) แยกเป็น separation เฉลี่ย 2.34 (p99 4.28) ส่วน grid/hit/move/draw รวมกันราว 0.35 | วัด 15 วินาที ผู้เล่นเดินวนกลางฝูง HP ไม่จำกัด (สคริปต์วัดอยู่นอกโปรเจกต์) เครื่องนี้ไม่ใช่ M3 จึงใช้เทียบเกณฑ์เว็บตรง ๆ ไม่ได้ เฟรมช้าสุด 16.7 ms หนึ่งครั้ง ยังไม่ทราบสาเหตุ |
+| 2026-11-06 | M1-15 (เว็บ) | Ryzen 7 7800X3D + RTX 5070 (ANGLE/D3D11) / Chromium 152 ในแอป Claude (ไม่ใช่ Chrome) จอ 120 Hz / build เว็บ no-threads | 400 (F4 เต็มเพดาน) | avg 120 (เพดานของจอ) · 1% low 117.6 (p99 เฟรม 8.5 ms จาก rAF 2,071 เฟรม 17 วินาที, ไม่มีเฟรมเกิน 9 ms) overlay แสดง avg 120 / 1% low 120 | ต่อก้าว physics (อ่านจาก overlay): separation 4.7–5.2 · contact 2.0 · grid 0.2–0.3 · move 0.3 · draw 0.1–0.2 รวมราว 7.5–8 ms | ผ่านเกณฑ์ตัวเลข (avg ≥120, 1% low ≥90, 400/400, ไม่มี error, มีบรรทัด `single-threaded, no GDExtension support`, ไม่มี `index.worker.js`) แต่**ไม่ใช่เครื่อง gate จริง** (ต้องเป็น M3 + Chrome) และเพดาน 120 Hz บังว่ามี headroom เท่าไร ขั้น separation บนเว็บช้ากว่าเดสก์ท็อป ~2× และผู้เล่นยืนทับฝูงซึ่งเป็นกรณีแย่สุด ควรยืนยันซ้ำบนเครื่อง M3 |
+| 2026-11-06 | M1-15 (gate บน M3) | M3 / Chrome (web) วัดโดยผู้ใช้เอง | 400 | ผู้ใช้แจ้งว่า **ผ่าน** | ไม่ได้แจ้งตัวเลข | ผู้ใช้ยืนยันด้วยวาจาในแชตว่าผ่านเกณฑ์ gate ของ M1 (avg ≥120, 1% low ≥90) บนเครื่อง M3 จริง ยังไม่มี avg / 1% low / ms ต่อขั้นบันทึกไว้ ถ้าต้องการให้เติมตัวเลขภายหลัง |
 
 ---
 
