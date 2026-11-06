@@ -923,6 +923,8 @@ git commit -m "Add player with movement, armor and invulnerability window"
 
 ### Task 6: `EnemySystem` — โครงข้อมูลและการวาด
 
+> **สถานะ:** ส่วนโครง SoA + `spawn`/`kill` + hp scaling ตอน spawn ทำแล้วใน M1-9 (`setup(defs, tuning, capacity)` ยังไม่รับ `Rng` และยังไม่มี grid/scratch buffer เพราะยังไม่มีโค้ดใช้ ให้เพิ่มตอน M1-11/12/17) ส่วน MultiMesh (`sync_multimesh`, `_build_multimesh`, `DEAD_TRANSFORM`, เทสต์ multimesh 3 ข้อ) เป็นของ M1-10 จึงยังไม่ติ๊ก step ด้านล่าง
+
 **Files:**
 - Create: `run/enemy_system.gd`
 - Test: `tests/test_enemy_system.gd`
