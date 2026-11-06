@@ -2232,7 +2232,9 @@ git commit -m "Record web performance numbers and the M1 gate result"
 
 ### Task 17: ปิด M1
 
-- [ ] **Step 1: รันทุกอย่างอีกครั้งให้ครบ**
+> **สถานะ:** gate ผ่านบน M3 (ผู้ใช้ยืนยัน ไม่มีตัวเลข) M1-16 ไม่ต้องทำ Step 4 ยังไม่ทำ: ตาม CLAUDE.md ผู้ใช้เป็นคน merge PR เข้า `main` เอง (#1 → … → #20)
+
+- [x] **Step 1: รันทุกอย่างอีกครั้งให้ครบ**
 
 ```bash
 godot --headless --path . --import
@@ -2240,9 +2242,9 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: import ไม่มี error, เทสต์ผ่านทั้งหมด
 
-- [ ] **Step 2: ติ๊ก ✅ ให้ sub-task ของ M1 ใน `docs/roadmap.md`**
+- [x] **Step 2: ติ๊ก ✅ ให้ sub-task ของ M1 ใน `docs/roadmap.md`**
 
-- [ ] **Step 3: commit แล้วจบ branch**
+- [x] **Step 3: commit แล้วจบ branch**
 
 ```bash
 git add docs/roadmap.md
