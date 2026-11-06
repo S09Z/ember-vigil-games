@@ -78,5 +78,6 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("Style_normal")
 theme_override_styles/hover = SubResource("Style_hover")
+theme_override_styles/focus = SubResource("Style_hover")
 theme_override_styles/pressed = SubResource("Style_hover")
 text = "Begin the night"

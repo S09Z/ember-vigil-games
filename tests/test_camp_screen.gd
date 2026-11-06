@@ -29,3 +29,19 @@ func test_pressing_start_emits_once_per_press() -> void:
 
 func test_negative_embers_are_clamped_to_zero() -> void:
 	assert_eq(CampScreen.embers_text(-5), "Embers 0")
+
+
+func test_embers_set_before_entering_the_tree_is_applied() -> void:
+	var camp: CampScreen = CAMP_SCENE.instantiate() as CampScreen
+	camp.set_embers(7)
+	assert_eq(camp.embers_label_text(), "Embers 7")
+	add_child_autofree(camp)
+	assert_eq(camp.embers_label_text(), "Embers 7")
+
+
+func test_last_embers_set_before_entering_the_tree_wins() -> void:
+	var camp: CampScreen = CAMP_SCENE.instantiate() as CampScreen
+	camp.set_embers(3)
+	camp.set_embers(42)
+	add_child_autofree(camp)
+	assert_eq(camp.embers_label_text(), "Embers 42")
