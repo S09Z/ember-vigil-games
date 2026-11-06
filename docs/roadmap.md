@@ -44,7 +44,7 @@ graph LR
 | ✅ M1-1 | `SpatialGrid`: hash grid, `clear()` / `insert(id, pos)` / `query_radius(pos, r, out_buffer)` คืนค่าใส่ buffer ที่ส่งเข้ามา ห้าม allocate ต่อการเรียก | `core/spatial_grid.gd` | T | M |
 | ✅ M1-2 | `Pool`: free-list ของ index สำหรับ struct-of-arrays โตเป็นชั้น ๆ ไม่ย่อกลับกลางรอบ | `core/pool.gd` | T | S |
 | ✅ M1-3 | `Rng`: wrapper ของ `RandomNumberGenerator` ที่ seed ได้ + `point_in_ring()` ใช้ซ้ำรอบเดิมตอน debug (`weighted_pick()` เลื่อนไป M2-12 ตาม YAGNI) | `core/rng.gd` | T | S |
-| M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
+| ✅ M1-18 | `RunTuning` schema + `.tres` (เพดาน 400, วงแหวน 380–420, recycle 600, อัตราสูงสุด 12, hp_scale 150, อมตะ 0.5, separation 60) + เพิ่มรัศมีตัวและ separation_strength ลงตารางใน design.md | `data/run_tuning.gd`, `data/tuning/run_tuning.tres`, `docs/design.md` | T | S |
 | M1-4 | `DebugOverlay`: กด F3 สลับ แสดง FPS ปัจจุบัน + avg และ 1% low ในหน้าต่าง 600 เฟรม (ring buffer) + จำนวนศัตรู + ms ต่อขั้น อ่านผ่าน getter อย่างเดียว | `ui/debug_overlay.gd`, `ui/debug_overlay.tscn` | — | M |
 
 ### M1-B ผู้เล่น
