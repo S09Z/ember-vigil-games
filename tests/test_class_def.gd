@@ -25,7 +25,7 @@ func test_class_def_has_weapon_fields() -> void:
 func test_knight_has_the_greatsword_and_steel_lifesteal() -> void:
 	var def: ClassDef = load("res://data/classes/knight.tres")
 	assert_eq(def.start_weapon.id, &"greatsword")
-	assert_eq(def.class_weapons.size(), 2)
+	assert_eq(def.class_weapons.size(), 3)
 	assert_eq(def.class_weapons[0].id, &"greatsword")
 	assert_eq(def.steel_lifesteal, 0.03)
 

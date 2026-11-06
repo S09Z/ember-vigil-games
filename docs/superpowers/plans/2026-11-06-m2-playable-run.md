@@ -1053,7 +1053,7 @@ func test_bashing_with_no_enemies_is_harmless() -> void:
 - `.tres`: `id &"warhorn"`, `tag &"holy"`, `class_id &"knight"`; ทุกแถว `damage 0, knockback 30, stun 0, arc 0, range 0, cooldown 6, both_sides false, buff_seconds 3`; LV1 `radius 70, buff_percent 15, heal 0`; LV2 `radius 80`; LV3 `radius 90`; LV4 `radius 100, buff_percent 25`; LV5 `radius 110, buff_percent 25, heal 10` (สะสมค่า)
 - `Warhorn._fire`: ผลักศัตรูทุกตัวในรัศมี (`query_radius`) ออกจากผู้เล่น `knockback`, เรียก `ctx.stats.apply_damage_buff(lv.buff_percent, lv.buff_seconds)`, ถ้า `lv.heal > 0` เรียก `ctx.player.heal(lv.heal)` และ `ctx.fx.add_ring` (ถ้ามี) **ไม่ทำดาเมจ** และไม่เรียก `deal_damage`
 
-- [ ] **Step 1: เขียน `tests/test_warhorn.gd`** (ใช้ศัตรูนิ่งแบบเดียวกับ Task 14 และเมธอดช่วย `_spawn`, `_blow()` = `_weapon.tick(0.0, _ctx)`, `_advance`, `_set_level`)
+- [x] **Step 1: เขียน `tests/test_warhorn.gd`** (ใช้ศัตรูนิ่งแบบเดียวกับ Task 14 และเมธอดช่วย `_spawn`, `_blow()` = `_weapon.tick(0.0, _ctx)`, `_advance`, `_set_level`)
 ```gdscript
 func test_the_level_table_matches_the_design() -> void:
 	var d: WeaponDef = load("res://data/weapons/warhorn.tres")
@@ -1098,10 +1098,10 @@ func test_it_works_with_no_enemies_nearby() -> void:
 	_blow(); assert_almost_eq(_stats.damage_multiplier(), 1.15, 0.0001)
 ```
 และเพิ่มเทสต์รวมใน `tests/test_weapon_base.gd` หรือไฟล์ใหม่ว่า **บัฟ Warhorn เพิ่มดาเมจ Greatsword**: เป่า Warhorn แล้วฟัน → ศัตรูได้ `20 * 1.15 = 23`
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `warhorn.gd`, `.tres`, ลงทะเบียนใน `factories`, แก้ `knight.tres`**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-25: add Warhorn levels 1 to 5`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `warhorn.gd`, `.tres`, ลงทะเบียนใน `factories`, แก้ `knight.tres`**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-25: add Warhorn levels 1 to 5`**
 
 ---
 
