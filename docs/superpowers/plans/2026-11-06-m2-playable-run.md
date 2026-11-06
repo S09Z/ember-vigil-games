@@ -423,7 +423,7 @@ func test_setup_again_clears_everything() -> void:
 - Modify: `run/run_state.gd`, `tests/test_run_state.gd`
 
 **Interfaces:**
-- Produces: `xp_needed(for_level: int) -> int` = `roundi(tuning.xp_base + for_level * tuning.xp_per_level)` (lv1 = 10, lv2 = 14, lv10 = 50)
+- Produces: `xp_needed(for_level: int) -> int` = `roundi(tuning.xp_base + for_level * tuning.xp_per_level)` (lv1 = 10, lv2 = 14, lv3 = 19 เพราะ `roundi(18.5)` ปัดครึ่งออกจากศูนย์, lv10 = 50)
 - Produces: `add_xp(amount: int) -> void` เพิ่ม XP แล้วขึ้นเลเวลซ้ำตราบที่ `xp >= xp_needed(level)` โดยหัก XP ที่ใช้ เหลือเศษไว้ ขึ้นแต่ละเลเวลเพิ่ม `level` ทีละ 1 และยิง `level_up_queued(new_level: int)` ครั้งหนึ่งต่อเลเวล `amount <= 0` ไม่ทำอะไร
 - Produces: signal `xp_changed(xp: int, needed: int, level: int)` ยิงหลัง `add_xp` ทุกครั้งที่ amount > 0 (ด้วยค่าสุดท้าย)
 
@@ -432,6 +432,7 @@ func test_setup_again_clears_everything() -> void:
 func test_xp_curve_matches_the_design() -> void:
 	assert_eq(_s.xp_needed(1), 10)    # round(5 + 1 * 4.5) = round(9.5)
 	assert_eq(_s.xp_needed(2), 14)
+	assert_eq(_s.xp_needed(3), 19)    # round(18.5) rounds half away from zero
 	assert_eq(_s.xp_needed(10), 50)
 
 func test_enough_xp_levels_up_and_keeps_the_remainder() -> void:
@@ -440,7 +441,7 @@ func test_enough_xp_levels_up_and_keeps_the_remainder() -> void:
 
 func test_one_big_gem_can_gain_several_levels() -> void:
 	watch_signals(_s)
-	_s.add_xp(10 + 14 + 18 + 5)       # lv1->2, 2->3, 3->4 then 5 left
+	_s.add_xp(10 + 14 + 19 + 5)       # lv1->2, 2->3, 3->4 then 5 left
 	assert_eq(_s.level, 4); assert_eq(_s.xp, 5)
 	assert_signal_emit_count(_s, "level_up_queued", 3)
 
@@ -480,7 +481,7 @@ func test_xp_changed_reports_final_values() -> void:
 - [ ] **Step 1: เพิ่มเทสต์** (ครอบ Review Focus ข้อ 1)
 ```gdscript
 func test_each_level_gained_is_queued_in_order() -> void:
-	_s.add_xp(10 + 14 + 18)            # reaches level 4
+	_s.add_xp(10 + 14 + 19)            # reaches level 4
 	assert_eq(_s.pending_levelups(), 3)
 	assert_eq(_s.pop_levelup(), 2)
 	assert_eq(_s.pop_levelup(), 3)
@@ -1621,7 +1622,7 @@ func test_picking_a_card_resumes_the_run() -> void:
 	assert_eq(_run.state, Run.State.RUNNING)
 
 func test_a_big_gem_shows_every_level_in_turn() -> void:
-	_run.run_state().add_xp(10 + 14 + 18)        # three levels at once
+	_run.run_state().add_xp(10 + 14 + 19)        # three levels at once
 	var shown: int = 0
 	while _run.state == Run.State.LEVEL_UP:
 		_run.pick_card(0); shown += 1
