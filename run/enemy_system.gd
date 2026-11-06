@@ -50,6 +50,8 @@ var _query: PackedInt32Array = PackedInt32Array()
 var usec_grid: int = 0
 var usec_separation: int = 0
 var usec_contact: int = 0
+var usec_movement: int = 0
+var usec_multimesh: int = 0
 var _alive_count: int = 0
 
 
@@ -200,6 +202,7 @@ func tick_contact(player: Player) -> void:
 ## instead of being killed and respawned; the player never sees where it came
 ## from, and it keeps its slot, hp and type.
 func tick_movement(delta: float, player_pos: Vector2) -> void:
+	var started: int = Time.get_ticks_usec()
 	var recycle_sq: float = _tuning.recycle_distance * _tuning.recycle_distance
 	for i in _capacity:
 		if _alive[i] == 0:
@@ -215,16 +218,19 @@ func tick_movement(delta: float, player_pos: Vector2) -> void:
 		var v: Vector2 = to_player.normalized() * _type_speed[_type[i]] + _push[i]
 		_vel[i] = v
 		_pos[i] = p + v * delta
+	usec_movement = Time.get_ticks_usec() - started
 
 
 ## Writes every live enemy's position into the MultiMesh. Free slots were already
 ## hidden when they died, so only live slots are touched. Allocation-free: the
 ## transform is built on the stack and the loop reads flat arrays only.
 func sync_multimesh() -> void:
+	var started: int = Time.get_ticks_usec()
 	var mm: MultiMesh = multimesh
 	for i in _capacity:
 		if _alive[i] == 1:
 			mm.set_instance_transform_2d(i, transform_of(i))
+	usec_multimesh = Time.get_ticks_usec() - started
 
 
 ## The transform drawn for a slot: sized by body radius and placed at the

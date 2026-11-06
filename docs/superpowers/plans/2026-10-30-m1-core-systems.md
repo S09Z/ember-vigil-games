@@ -1962,12 +1962,14 @@ git commit -m "Add debug overlay with frame time window and stage timings"
 
 ### Task 13: ประกอบฉาก run และเปลี่ยน main.tscn เป็น state switcher
 
+> **สถานะ (M1-19):** ทำแล้ว ต่างจากโค้ดตัวอย่าง: `Run` เป็น `class_name` และมี `step(delta)` ที่ `_physics_process` เรียก เพื่อให้เทสต์ขยับทีละเฟรมได้; `SpawnDirector` เป็น `RefCounted` จึงสร้างด้วย `SpawnDirector.new()` ในโค้ดไม่ใช่ node ใน scene; overlay ผูกด้วย `bind_extra_lines(Callable)` แทน `bind(enemies)`; `tick_separation()` ไม่มี `delta` และ `tick_movement()` ไม่มี `elapsed`; ไม่มี `debug_spawn_burst` (เป็นของ M1-14); `Camera2D` อยู่ใต้ `Player` ใน run.tscn; เพิ่ม `usec_movement` / `usec_multimesh` ใน EnemySystem ให้ overlay แสดงครบทุกขั้น; คง `run/weapons/.gitkeep` ไว้ (ลบเฉพาะ `run/.gitkeep`) เพราะโฟลเดอร์นี้อยู่ในโครงสร้างโปรเจกต์ของ CLAUDE.md; step 6 ตรวจด้วยสคริปต์บน renderer จริงแทนการเปิดดูด้วยตา
+
 **Files:**
 - Create: `run/run.gd`, `run/run.tscn`
 - Modify: `main.gd`, `main.tscn`
 - Delete: `run/.gitkeep`
 
-- [ ] **Step 1: เขียน `run/run.gd`**
+- [x] **Step 1: เขียน `run/run.gd`**
 
 ```gdscript
 extends Node2D
@@ -2026,7 +2028,7 @@ func _on_player_died() -> void:
 ถ้า `preload` ของ `.tres` พังตอน parse (เกิดได้ถ้า `--import` ยังไม่เคยรันหลังเพิ่ม schema)
 ให้รัน `godot --headless --path . --import` หนึ่งครั้งแล้วลองใหม่ ห้ามเปลี่ยนไป hardcode ตัวเลข
 
-- [ ] **Step 2: เขียน `run/run.tscn`**
+- [x] **Step 2: เขียน `run/run.tscn`**
 
 ```
 [gd_scene load_steps=6 format=3]
@@ -2056,7 +2058,7 @@ script = ExtResource("4_spawner")
 [node name="DebugOverlay" parent="." instance=ExtResource("5_overlay")]
 ```
 
-- [ ] **Step 3: เขียน `main.gd` ใหม่เป็น state switcher**
+- [x] **Step 3: เขียน `main.gd` ใหม่เป็น state switcher**
 
 ```gdscript
 extends Node2D
@@ -2083,7 +2085,7 @@ func show_screen(screen: Screen) -> void:
 	add_child(_current)
 ```
 
-- [ ] **Step 4: เขียน `main.tscn` ใหม่ (ทิ้ง label ของ M0)**
+- [x] **Step 4: เขียน `main.tscn` ใหม่ (ทิ้ง label ของ M0)**
 
 ```
 [gd_scene load_steps=2 format=3]
@@ -2094,7 +2096,7 @@ func show_screen(screen: Screen) -> void:
 script = ExtResource("1_main")
 ```
 
-- [ ] **Step 5: import แล้วรันเทสต์**
+- [x] **Step 5: import แล้วรันเทสต์**
 
 ```bash
 rm -f run/.gitkeep run/weapons/.gitkeep
@@ -2103,7 +2105,7 @@ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 Expected: ไม่มี error ตอน import และเทสต์ผ่านทั้งหมด (`test_main_scene_is_set_and_loadable` ต้องยังผ่าน)
 
-- [ ] **Step 6: เปิดบนเดสก์ท็อปดูด้วยตา**
+- [x] **Step 6: เปิดบนเดสก์ท็อปดูด้วยตา**
 
 ```bash
 godot --path . --quit-after 600
@@ -2111,7 +2113,7 @@ godot --path . --quit-after 600
 Expected: เห็นสี่เหลี่ยมผู้เล่นอยู่กลางจอ มีศัตรูสีแดงค่อย ๆ เพิ่ม เดินเข้าหาผู้เล่น และ console ขึ้น `OpenGL API ... Compatibility`
 ถ้ามองไม่เห็นศัตรูเลย ให้เช็ค `modulate` ของ `EnemySystem` และว่า `sync_multimesh()` ถูกเรียก
 
-- [ ] **Step 7: commit**
+- [x] **Step 7: commit**
 
 ```bash
 git add main.gd main.tscn run/run.gd run/run.tscn
