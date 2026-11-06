@@ -32,6 +32,9 @@ var _life: PackedFloat32Array = PackedFloat32Array()
 var _seq: PackedInt32Array = PackedInt32Array()
 var _next_seq: int = 0
 var _active_count: int = 0
+## How many times queue_redraw() was requested by this layer. A state check
+## used by tests, since _draw() cannot run headless.
+var _redraw_requests: int = 0
 
 func _init() -> void:
 	_active.resize(CAPACITY)
@@ -60,6 +63,7 @@ func add_ring(origin: Vector2, radius: float, color: Color, lifetime: float) -> 
 
 ## Ages every effect, frees the expired ones and requests a redraw while any remain.
 func tick(delta: float) -> void:
+	var expired: bool = false
 	for i in CAPACITY:
 		if _active[i] == 0:
 			continue
@@ -67,8 +71,14 @@ func tick(delta: float) -> void:
 		if _age[i] >= _life[i]:
 			_active[i] = 0
 			_active_count -= 1
-	if _active_count > 0:
-		queue_redraw()
+			expired = true
+	# Redraw on the tick that expires the last effect too, or its faded ghost stays on the canvas
+	if expired or _active_count > 0:
+		_request_redraw()
+
+## State check used by tests: how many redraws this layer has requested.
+func redraw_requests() -> int:
+	return _redraw_requests
 
 func active_count() -> int:
 	return _active_count
@@ -84,7 +94,7 @@ func clear() -> void:
 	for i in CAPACITY:
 		_active[i] = 0
 	_active_count = 0
-	queue_redraw()
+	_request_redraw()
 
 func _draw() -> void:
 	for i in CAPACITY:
@@ -98,6 +108,10 @@ func _draw() -> void:
 			draw_arc(_origin[i], _size[i], _angle[i] - half, _angle[i] + half, ARC_POINTS, col, LINE_WIDTH)
 		else:
 			draw_arc(_origin[i], _size[i] * (0.5 + 0.5 * t), 0.0, TAU, RING_POINTS, col, LINE_WIDTH)
+
+func _request_redraw() -> void:
+	_redraw_requests += 1
+	queue_redraw()
 
 func _fill(slot: int, origin: Vector2, size: float, color: Color, lifetime: float) -> void:
 	_origin[slot] = origin
