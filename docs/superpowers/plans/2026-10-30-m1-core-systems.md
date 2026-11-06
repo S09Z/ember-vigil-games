@@ -485,7 +485,7 @@ git commit -m "Add allocation-free spatial grid for neighbour queries"
 
 ### Task 4: Resource schema + ตัวเลขจาก design.md
 
-> **สถานะ:** ส่วน `RunTuning` + แถว design.md ทำแล้วใน M1-18 (ทดสอบใน `tests/test_run_tuning.gd`) ส่วน `ClassDef` + `knight.tres` ทำแล้วใน M1-5 (`tests/test_class_def.gd`) `EnemyDef` ทำใน M1-8 จึงยังไม่ติ๊ก step ด้านล่าง
+> **สถานะ:** ทำครบแล้ว แบ่งเป็น M1-18 (`RunTuning` + design.md, `tests/test_run_tuning.gd`), M1-5 (`ClassDef` + knight, `tests/test_class_def.gd`) และ M1-8 (`EnemyDef` + ghoul, `tests/test_enemy_def.gd`) `.tres` เขียนด้วยมือพร้อมค่าครบ เพราะ `ResourceSaver` ไม่เก็บค่า default และเทสต์รวม `tests/test_data_defs.gd` ในแผนถูกแยกเป็นสามไฟล์ตามงาน
 
 **Files:**
 - Create: `data/class_def.gd`, `data/enemy_def.gd`, `data/run_tuning.gd`
@@ -494,7 +494,7 @@ git commit -m "Add allocation-free spatial grid for neighbour queries"
 - Test: `tests/test_data_defs.gd`
 - Delete: `.gitkeep` ของโฟลเดอร์ที่มีไฟล์จริงแล้ว
 
-- [ ] **Step 1: เขียนเทสต์ที่ต้องพัง**
+- [x] **Step 1: เขียนเทสต์ที่ต้องพัง**
 
 `tests/test_data_defs.gd`:
 
@@ -540,11 +540,11 @@ func test_run_tuning_matches_the_design_numbers() -> void:
 	assert_eq(tuning.grid_cell_size, 16.0)
 ```
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่รู้จัก `ClassDef` / โหลด `.tres` ไม่ได้
 
-- [ ] **Step 3: เขียน schema สามไฟล์**
+- [x] **Step 3: เขียน schema สามไฟล์**
 
 `data/class_def.gd`:
 
@@ -612,14 +612,14 @@ extends Resource
 @export var grid_cell_size: float = 16.0
 ```
 
-- [ ] **Step 4: import ให้ Godot รู้จัก class ใหม่**
+- [x] **Step 4: import ให้ Godot รู้จัก class ใหม่**
 
 ```bash
 godot --headless --path . --import
 ```
 Expected: ไม่มี error
 
-- [ ] **Step 5: สร้างไฟล์ `.tres` ด้วยสคริปต์ใช้ครั้งเดียว**
+- [x] **Step 5: สร้างไฟล์ `.tres` ด้วยสคริปต์ใช้ครั้งเดียว**
 
 เขียน `tools_make_data.gd` ที่รากโปรเจกต์ (ไฟล์นี้จะถูกลบใน step ถัดไป — เขียน `.tres` ด้วยมือเสี่ยงผิดฟอร์แมต):
 
@@ -663,7 +663,7 @@ godot --headless --path . -s tools_make_data.gd
 Expected: สามบรรทัดลงท้ายด้วย `-> 0` (0 = OK)
 ถ้าได้ค่าอื่น ให้หยุดและรายงาน ห้ามไปเขียน `.tres` ด้วยมือแทน
 
-- [ ] **Step 6: ลบสคริปต์ชั่วคราวและ `.gitkeep` ที่ไม่ต้องใช้แล้ว**
+- [x] **Step 6: ลบสคริปต์ชั่วคราวและ `.gitkeep` ที่ไม่ต้องใช้แล้ว**
 
 ```bash
 rm tools_make_data.gd
@@ -671,11 +671,11 @@ rm -f data/classes/.gitkeep data/enemies/.gitkeep
 godot --headless --path . --import
 ```
 
-- [ ] **Step 7: รันเทสต์ ต้องผ่าน**
+- [x] **Step 7: รันเทสต์ ต้องผ่าน**
 
 Expected: PASS ทั้งหมด ถ้าค่าใดไม่ตรง ให้แก้ `.tres` ไม่ใช่แก้เทสต์
 
-- [ ] **Step 8: เพิ่มตัวเลขที่ยังไม่มีลง `docs/design.md`**
+- [x] **Step 8: เพิ่มตัวเลขที่ยังไม่มีลง `docs/design.md`**
 
 ในหัวข้อ 4 (ตารางอาชีพ) เพิ่มแถวหลัง "รัศมีเก็บของ (px)":
 
@@ -696,7 +696,7 @@ Expected: PASS ทั้งหมด ถ้าค่าใดไม่ตรง 
 ขนาดเซลล์ของ grid ที่ใช้หาเพื่อนบ้าน 16 px (ปรับได้ตอนรอบวัดประสิทธิภาพ)
 ```
 
-- [ ] **Step 9: commit**
+- [x] **Step 9: commit**
 
 ```bash
 git add data/ tests/test_data_defs.gd docs/design.md

@@ -59,7 +59,7 @@ graph LR
 
 | # | งาน | ไฟล์ | T | ขนาด |
 |---|---|---|---|---|
-| M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
+| ✅ M1-8 | `EnemyDef` schema + `ghoul.tres` (HP 10 / speed 45 / dmg 5 / XP 1) | `data/enemy_def.gd`, `data/enemies/ghoul.tres` | T | S |
 | M1-9 | `EnemySystem` โครง SoA: pos/vel เป็น `PackedVector2Array`, hp เป็น `PackedFloat32Array`, type/alive เป็น `PackedByteArray`, `spawn()` / `kill()` คืน slot เข้า `Pool` โดย **slot คงที่ ไม่บีบอัด array** (index ต้องอ้างข้ามเฟรมได้ให้ M3) ห้ามมี Node ต่อตัว | `run/enemy_system.gd` | T | L |
 | M1-10 | วาดด้วย `MultiMeshInstance2D` ชิ้นเดียว อัปเดต transform ต่อเฟรมแบบไม่ allocate | `run/enemy_system.gd` | — | M |
 | M1-11 | การเดิน: ไล่ผู้เล่นตรง ๆ + HP scaling `1 + t/150` ตอน spawn + ตัวที่ห่างเกิน 600 ถูกย้ายไป spawn ใหม่ใกล้ผู้เล่น | `run/enemy_system.gd` | T | M |
