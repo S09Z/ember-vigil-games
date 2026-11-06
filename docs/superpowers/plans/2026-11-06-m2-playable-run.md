@@ -1498,7 +1498,7 @@ func test_open_and_close() -> void:
 - Produces: `RunSummary extends RefCounted` ฟิลด์ `survived_seconds: float`, `kills: int`, `level: int`, `damage_by_weapon: Dictionary` (id → float), `embers_from_kills: int`, `embers_from_time: int`, `embers_bonus: int`, `embers_total: int`; `static from_state(state: RunState) -> RunSummary` สำเนาค่าจาก `RunState` ณ ขณะนั้น (ไม่เก็บ reference ของ state)
 - Produces: `ResultsScreen extends CanvasLayer` — signal `back_pressed()`, `show_summary(summary: RunSummary, name_of: Dictionary) -> void`, `static summary_lines(summary: RunSummary, name_of: Dictionary) -> PackedStringArray` (ฟังก์ชันล้วน แต่ละบรรทัดข้อความภาษาอังกฤษ: `"Survived 02:05"`, `"Kills 29"`, `"Level 4"`, หนึ่งบรรทัดต่ออาวุธเรียงดาเมจมากไปน้อย `"Greatsword  1,250"` (คั่นหลักพันด้วยจุลภาค ปัดเป็นจำนวนเต็ม), แล้วที่มา Embers ทีละบรรทัด `"Embers from kills +2"`, `"Embers from time +8"`, `"Embers from Ember Purse +5"` (บรรทัด Purse แสดงเฉพาะเมื่อ > 0) และ `"Embers total 15"`)
 
-- [ ] **Step 1: เขียนเทสต์**
+- [x] **Step 1: เขียนเทสต์**
 ```gdscript
 func test_from_state_copies_the_numbers() -> void:
 	for i in 29: _state.add_kill()
@@ -1540,10 +1540,10 @@ func test_the_back_button_signal() -> void:
 	watch_signals(_screen); _screen._on_back_pressed()
 	assert_signal_emitted(_screen, "back_pressed")
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `RunSummary`, `ResultsScreen` (script + ฉาก)**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-19: add run summary and results screen`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `RunSummary`, `ResultsScreen` (script + ฉาก)**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-19: add run summary and results screen`**
 
 ---
 
