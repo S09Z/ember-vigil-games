@@ -471,3 +471,51 @@ func test_a_reused_slot_does_not_inherit_a_knockback() -> void:
 	var b: int = _sys.spawn(0, Vector2(200.0, 0.0), 0.0)
 	_run_ticks(30, 1.0 / 60.0)
 	assert_eq(_sys.position_of(b), Vector2(200.0, 0.0))
+
+
+func test_a_stunned_enemy_does_not_chase() -> void:
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.stun(id, 0.5)
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_eq(_sys.position_of(id).x, 100.0)
+	assert_true(_sys.is_stunned(id))
+
+func test_stun_wears_off_and_the_enemy_chases_again() -> void:
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.stun(id, 0.5)
+	for i in 6:
+		_sys.tick_movement(0.1, Vector2.ZERO)     # 0.6 s
+	assert_false(_sys.is_stunned(id))
+	_sys.tick_movement(0.1, Vector2.ZERO)
+	assert_almost_eq(_sys.position_of(id).x, 95.5, 0.01, "walks at 45 px/s again")
+
+func test_stunning_again_resets_instead_of_adding() -> void:
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.stun(id, 0.5)
+	_sys.tick_movement(0.3, Vector2.ZERO)
+	_sys.stun(id, 0.5)
+	_sys.tick_movement(0.4, Vector2.ZERO)
+	assert_true(_sys.is_stunned(id), "0.2 s of the reset stun is left")
+	_sys.tick_movement(0.2, Vector2.ZERO)
+	assert_false(_sys.is_stunned(id), "not stacked up to 0.8 s")
+
+func test_a_stunned_enemy_can_still_be_knocked_back() -> void:
+	_use_still_enemies()
+	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
+	_sys.stun(id, 1.0)
+	_sys.knockback(id, Vector2.RIGHT, 20.0)
+	for i in 30:
+		_sys.tick_movement(1.0 / 60.0, Vector2.ZERO)
+	assert_almost_eq(_sys.position_of(id).x, 120.0, 0.01)
+
+func test_a_reused_slot_is_not_stunned() -> void:
+	var a: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	_sys.stun(a, 5.0)
+	_sys.kill(a)
+	var b: int = _sys.spawn(0, Vector2.ZERO, 0.0)
+	assert_false(_sys.is_stunned(b))
+
+func test_stun_on_a_dead_or_bad_id_is_ignored() -> void:
+	_sys.stun(-1, 1.0)
+	_sys.stun(99, 1.0)
+	assert_false(_sys.is_stunned(-1))

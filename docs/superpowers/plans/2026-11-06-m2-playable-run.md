@@ -295,7 +295,7 @@ func test_a_reused_slot_does_not_inherit_a_knockback() -> void:
 - Produces: SoA `_stun_left: PackedFloat32Array` ล้างตอน `spawn()` ตัวที่มึนงงไม่ไล่ผู้เล่น (ความเร็วไล่ = 0) แต่ยังถูก knockback และ separation ผลักได้ เวลามึนงงลดใน `tick_movement`
 - Consumes: `tick_movement`, `knockback` (Task 4)
 
-- [ ] **Step 1: เพิ่มเทสต์**
+- [x] **Step 1: เพิ่มเทสต์**
 ```gdscript
 func test_a_stunned_enemy_does_not_chase() -> void:
 	var id: int = _sys.spawn(0, Vector2(100.0, 0.0), 0.0)
@@ -344,10 +344,10 @@ func test_stun_on_a_dead_or_bad_id_is_ignored() -> void:
 	_sys.stun(99, 1.0)
 	assert_false(_sys.is_stunned(-1))
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เพิ่ม SoA, `stun`, `is_stunned` และปรับ `tick_movement`** ให้ตัวที่มึนงงไม่บวกความเร็วไล่
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-23: add enemy stun`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เพิ่ม SoA, `stun`, `is_stunned` และปรับ `tick_movement`** ให้ตัวที่มึนงงไม่บวกความเร็วไล่
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-23: add enemy stun`**
 
 ---
 

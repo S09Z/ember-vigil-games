@@ -28,6 +28,8 @@ var _push: PackedVector2Array = PackedVector2Array()
 ## Knockback velocity in px/s at the start of a push, and seconds of push left
 var _kb_vel: PackedVector2Array = PackedVector2Array()
 var _kb_left: PackedFloat32Array = PackedFloat32Array()
+## Seconds of stun left. A stunned enemy does not chase but is still pushed
+var _stun_left: PackedFloat32Array = PackedFloat32Array()
 var _hp: PackedFloat32Array = PackedFloat32Array()
 var _type: PackedByteArray = PackedByteArray()
 var _alive: PackedByteArray = PackedByteArray()
@@ -70,6 +72,8 @@ func setup(defs: Array[EnemyDef], tuning: RunTuning, rng: Rng, capacity: int) ->
 	_kb_vel.resize(capacity)
 	_kb_left.resize(capacity)
 	_kb_left.fill(0.0)
+	_stun_left.resize(capacity)
+	_stun_left.fill(0.0)
 	_hp.resize(capacity)
 	_type.resize(capacity)
 	_alive.resize(capacity)
@@ -109,6 +113,7 @@ func spawn(type_index: int, pos: Vector2, elapsed: float) -> int:
 	_push[id] = Vector2.ZERO
 	_kb_vel[id] = Vector2.ZERO
 	_kb_left[id] = 0.0
+	_stun_left[id] = 0.0
 	_hp[id] = _type_hp[type_index] * (1.0 + elapsed / _tuning.hp_scale_divisor)
 	_type[id] = type_index
 	_alive[id] = 1
@@ -166,6 +171,18 @@ func knockback(id: int, direction: Vector2, distance: float) -> void:
 	var duration: float = _tuning.knockback_duration
 	_kb_vel[id] = direction.normalized() * (2.0 * distance / duration)
 	_kb_left[id] = duration
+
+
+## Stuns an enemy for `seconds`. Stunning again sets the time left to `seconds`
+## instead of adding to it. A bad or dead id does nothing.
+func stun(id: int, seconds: float) -> void:
+	if id < 0 or id >= _capacity or _alive[id] == 0:
+		return
+	_stun_left[id] = seconds
+
+
+func is_stunned(id: int) -> bool:
+	return id >= 0 and id < _capacity and _alive[id] == 1 and _stun_left[id] > 0.0
 
 
 ## Rebuilds the neighbour grid from the current positions. Everything that
@@ -263,13 +280,25 @@ func tick_movement(delta: float, player_pos: Vector2) -> void:
 			_pos[i] = _rng.point_in_ring(player_pos, _tuning.spawn_ring_min, _tuning.spawn_ring_max)
 			_vel[i] = Vector2.ZERO
 			_kb_left[i] = 0.0
+			_stun_left[i] = 0.0
 			continue
 		# normalized() of a zero vector is zero in Godot, so an enemy exactly on
 		# the player just stands still instead of producing NaN.
-		var v: Vector2 = to_player.normalized() * _type_speed[_type[i]] + _push[i]
+		var v: Vector2 = _chase_velocity(i, to_player, delta) + _push[i]
 		_vel[i] = v
 		_pos[i] = p + v * delta + _knockback_step(i, delta)
 	usec_movement = Time.get_ticks_usec() - started
+
+
+## The enemy's own velocity toward the player: zero while stunned. Also ticks the
+## stun timer down. Knockback and separation are added by the caller, so a stunned
+## enemy can still be shoved around.
+func _chase_velocity(i: int, to_player: Vector2, delta: float) -> Vector2:
+	var stun_left: float = _stun_left[i]
+	if stun_left > 0.0:
+		_stun_left[i] = maxf(stun_left - delta, 0.0)
+		return Vector2.ZERO
+	return to_player.normalized() * _type_speed[_type[i]]
 
 
 ## How far the knockback moves slot `i` this step, and ticks its timer down. The
