@@ -830,7 +830,7 @@ func test_deal_damage_on_a_dead_enemy_records_nothing() -> void:
 - Produces: `Greatsword extends WeaponBase` — `_fire` หาศัตรูด้วย `ctx.enemies.query_radius(ctx.player_pos(), lv.range, ctx.hits)` แล้วคัดด้วย `in_cone(origin, facing, lv.arc_degrees, lv.range, enemy_pos)` ศัตรูที่ผ่านแต่ละตัวถูก `ctx.deal_damage(id, lv.damage, self)` และ `ctx.enemies.knockback(id, enemy_pos - origin, lv.knockback)` พร้อมเรียก `ctx.fx.add_arc(...)` เมื่อ `fx != null` ยิงแม้ไม่มีศัตรูในระยะ
 - `data/weapons/greatsword.tres`: `id = &"greatsword"`, `display_name = "Greatsword"`, `tag = &"steel"`, `class_id = &"knight"`, `levels` มีแถว LV1 แถวเดียว: `cooldown 1.1, damage 20.0, arc_degrees 140.0, range 48.0, radius 0.0, knockback 20.0, stun_seconds 0.0, both_sides false, buff_percent 0.0, buff_seconds 0.0, heal 0.0`
 
-- [ ] **Step 1: เขียน `tests/test_greatsword.gd`** (เมธอดช่วยสร้าง `EnemySystem` จริงและ `WeaponContext`; ผู้เล่นอยู่ที่ศูนย์กลางหันขวา **ศัตรูในเทสต์อาวุธทุกไฟล์ใช้ `EnemyDef` ที่ `hp = 1000`, `move_speed = 0`** เพื่อไม่ตายและไม่เดินจนตำแหน่งที่ตรวจเพี้ยน; `_spawn(pos)` สร้างศัตรู, `_swing()` เรียก `_weapon.tick(0.0, _ctx)`, `_advance(t)` เรียก `_enemies.tick_movement` ซ้ำจนครบเวลา `t` ที่ก้าว 1/60)
+- [x] **Step 1: เขียน `tests/test_greatsword.gd`** (เมธอดช่วยสร้าง `EnemySystem` จริงและ `WeaponContext`; ผู้เล่นอยู่ที่ศูนย์กลางหันขวา **ศัตรูในเทสต์อาวุธทุกไฟล์ใช้ `EnemyDef` ที่ `hp = 1000`, `move_speed = 0`** เพื่อไม่ตายและไม่เดินจนตำแหน่งที่ตรวจเพี้ยน; `_spawn(pos)` สร้างศัตรู, `_swing()` เรียก `_weapon.tick(0.0, _ctx)`, `_advance(t)` เรียก `_enemies.tick_movement` ซ้ำจนครบเวลา `t` ที่ก้าว 1/60)
 ```gdscript
 func test_the_data_file_matches_the_design_table() -> void:
 	var d: WeaponDef = load("res://data/weapons/greatsword.tres")
@@ -876,10 +876,10 @@ func test_damage_is_recorded_for_the_results_screen() -> void:
 	assert_eq(_state.damage_of(&"greatsword"), 20.0)
 ```
 และใน `tests/test_class_def.gd` ตรวจ Knight: `start_weapon.id == &"greatsword"`, `class_weapons` มี `greatsword`, `steel_lifesteal == 0.03`
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เขียน `greatsword.gd` และ `.tres` (ทุกฟิลด์ชัดเจน) ปรับ `knight.tres`** ลงทะเบียน `&"greatsword"` ใน `WeaponLoadout.factories` (เติมใน `_init`)
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-6: add Greatsword level 1`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เขียน `greatsword.gd` และ `.tres` (ทุกฟิลด์ชัดเจน) ปรับ `knight.tres`** ลงทะเบียน `&"greatsword"` ใน `WeaponLoadout.factories` (เติมใน `_init`)
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-6: add Greatsword level 1`**
 
 ---
 

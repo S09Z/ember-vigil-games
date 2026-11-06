@@ -5,10 +5,14 @@ extends RefCounted
 ## tick() runs every weapon.
 
 ## weapon id -> GDScript (a WeaponBase subclass). Unknown ids get a plain WeaponBase.
-var factories: Dictionary = {}  ## filled by later tasks (greatsword, shield_bash, warhorn)
+var factories: Dictionary = {}  ## later tasks add shield_bash, warhorn
 
 var _weapons: Array[WeaponBase] = []
 var _by_id: Dictionary = {}
+
+
+func _init() -> void:
+	factories[&"greatsword"] = Greatsword
 
 
 ## Call on build_changed. Creates missing weapons and aligns levels; never
