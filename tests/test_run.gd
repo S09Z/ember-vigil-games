@@ -66,3 +66,33 @@ func test_the_same_seed_gives_the_same_run() -> void:
 	for i in a.capacity():
 		if a.is_alive(i):
 			assert_eq(a.position_of(i), b.position_of(i))
+
+func test_the_burst_fills_the_enemy_cap_at_once() -> void:
+	var enemies: EnemySystem = _run.get_node("EnemySystem")
+	assert_eq(enemies.alive_count(), 0)
+	var spawned: int = _run.spawn_burst_to_cap()
+	assert_eq(spawned, Run.TUNING.enemy_cap)
+	assert_eq(enemies.alive_count(), Run.TUNING.enemy_cap)
+
+func test_a_second_burst_adds_nothing_at_the_cap() -> void:
+	_run.spawn_burst_to_cap()
+	assert_eq(_run.spawn_burst_to_cap(), 0)
+
+func test_the_burst_tops_up_a_partly_filled_run() -> void:
+	for i in 300:
+		_run.step(1.0 / 60.0)
+	var enemies: EnemySystem = _run.get_node("EnemySystem")
+	var before: int = enemies.alive_count()
+	_run.spawn_burst_to_cap()
+	assert_eq(enemies.alive_count(), Run.TUNING.enemy_cap)
+	assert_gt(Run.TUNING.enemy_cap, before)
+
+func test_the_run_uses_a_fixed_seed_so_bursts_repeat() -> void:
+	var other: Run = RUN_SCENE.instantiate()
+	add_child_autofree(other)
+	_run.spawn_burst_to_cap()
+	other.spawn_burst_to_cap()
+	var a: EnemySystem = _run.get_node("EnemySystem")
+	var b: EnemySystem = other.get_node("EnemySystem")
+	for i in 20:
+		assert_eq(a.position_of(i), b.position_of(i))

@@ -1698,11 +1698,13 @@ git commit -m "Add spawn director with the design spawn rate curve"
 
 ### Task 11: ปุ่ม F4 สำหรับอัดศัตรูให้เต็มเพดาน
 
+> **สถานะ (M1-14):** ทำแล้ว ต่างจากแผน: เพิ่ม `Run.spawn_burst_to_cap()` กับ `_unhandled_input` ใน `run/run.gd` (แผน Task 13 ยังไม่ได้ผูกปุ่ม) และเทสต์ 4 ข้อใน `tests/test_run.gd` seed ล็อกอยู่แล้วจาก M1-19 (`START_SEED` ใน `run.gd`) จึงไม่ต้องแก้ ตรวจแล้วบน renderer จริงว่ากด F4 ได้ 400 / 400
+
 **Files:**
 - Modify: `project.godot` (`[input]`)
 - Modify: `tests/test_project_config.gd`
 
-- [ ] **Step 1: เพิ่มเทสต์ที่ต้องพัง**
+- [x] **Step 1: เพิ่มเทสต์ที่ต้องพัง**
 
 ใน `tests/test_project_config.gd` แก้ list ใน `test_movement_and_system_actions_exist` ให้เป็น:
 
@@ -1714,11 +1716,11 @@ git commit -m "Add spawn director with the design spawn rate curve"
 
 (ส่วนที่เหลือของฟังก์ชันไม่ต้องแก้)
 
-- [ ] **Step 2: รันแล้วต้องพัง**
+- [x] **Step 2: รันแล้วต้องพัง**
 
 Expected: FAIL — ไม่มี action `debug_spawn_burst`
 
-- [ ] **Step 3: เพิ่ม action ลง `project.godot`**
+- [x] **Step 3: เพิ่ม action ลง `project.godot`**
 
 ต่อท้ายบล็อก `toggle_debug={...}` ใน section `[input]` (ก่อนบรรทัดว่างที่คั่นกับ `[rendering]`) ใส่:
 
@@ -1732,7 +1734,7 @@ debug_spawn_burst={
 
 (4194335 = `KEY_F4` ตัวเดียวกับที่ `toggle_debug` ใช้ 4194334 = `KEY_F3`)
 
-- [ ] **Step 4: ยืนยันว่า keycode แมปเป็น F4 จริง**
+- [x] **Step 4: ยืนยันว่า keycode แมปเป็น F4 จริง**
 
 ```bash
 cat > check_input.gd <<'EOF'
@@ -1749,11 +1751,11 @@ rm check_input.gd
 ```
 Expected: `toggle_debug -> F3` และ `debug_spawn_burst -> F4`
 
-- [ ] **Step 5: รันเทสต์ ต้องผ่าน**
+- [x] **Step 5: รันเทสต์ ต้องผ่าน**
 
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 6: commit**
+- [x] **Step 6: commit**
 
 ```bash
 git add project.godot tests/test_project_config.gd

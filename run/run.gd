@@ -37,6 +37,19 @@ func _physics_process(delta: float) -> void:
 	step(delta)
 
 
+## Debug key (F4): fills the enemy cap immediately so the worst case can be
+## measured without waiting for the spawn curve. Ships in the web build on
+## purpose, because the M1 gate is measured there. Returns how many were added.
+func spawn_burst_to_cap() -> int:
+	var free: int = _enemies.capacity() - _enemies.alive_count()
+	return _spawner.spawn_burst(free, elapsed, _player.global_position)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("debug_spawn_burst"):
+		spawn_burst_to_cap()
+
+
 ## One frame of the run. Separate from _physics_process so tests can drive it by
 ## hand. The order matters: the grid must be rebuilt before anything queries it,
 ## and nothing may move between the rebuild and the last query.
