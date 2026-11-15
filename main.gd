@@ -1,35 +1,28 @@
 extends Node2D
 
-## M0 placeholder screen.
-##
-## Its only job is to prove, from inside a browser, that the web build renders,
-## the main loop runs and the project really uses the Compatibility renderer.
-## Replaced by the Camp / Run / Results state switch in M2.
+## Switches between the screens of the game. M1 only has RUN; Camp and Results
+## arrive in M2, which is why this is a switcher and not a direct load.
 
-const REFRESH_INTERVAL: float = 0.25
+enum Screen { RUN }
 
-@onready var _info_label: Label = $UI/InfoLabel
+const RUN_SCENE: PackedScene = preload("res://run/run.tscn")
 
-var _time_since_refresh: float = 0.0
+var _current: Node = null
 
 
 func _ready() -> void:
-	_refresh_info()
+	show_screen(Screen.RUN)
 
 
-func _process(delta: float) -> void:
-	_time_since_refresh += delta
-	if _time_since_refresh < REFRESH_INTERVAL:
-		return
-	_time_since_refresh = 0.0
-	_refresh_info()
+func show_screen(screen: Screen) -> void:
+	if _current != null:
+		_current.queue_free()
+		_current = null
+	match screen:
+		Screen.RUN:
+			_current = RUN_SCENE.instantiate()
+	add_child(_current)
 
 
-func _refresh_info() -> void:
-	var version: String = str(Engine.get_version_info().get("string", "unknown"))
-	var renderer: String = str(ProjectSettings.get_setting("rendering/renderer/rendering_method"))
-	_info_label.text = "FPS %d\nGodot %s\n%s" % [
-		Engine.get_frames_per_second(),
-		version,
-		renderer,
-	]
+func current_screen() -> Node:
+	return _current

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ClassDef" format=3]
+
+[ext_resource type="Script" uid="uid://bemhw1ew4ualk" path="res://data/class_def.gd" id="1_classdef"]
+[ext_resource type="Resource" path="res://data/weapons/greatsword.tres" id="2_greatsword"]
+[ext_resource type="Resource" path="res://data/weapons/shield_bash.tres" id="3_shieldbash"]
+[ext_resource type="Resource" path="res://data/weapons/warhorn.tres" id="4_warhorn"]
+
+[resource]
+script = ExtResource("1_classdef")
+id = &"knight"
+display_name = "Knight"
+max_hp = 140.0
+move_speed = 95.0
+armor = 2
+pickup_radius = 40.0
+body_radius = 7.0
+start_weapon = ExtResource("2_greatsword")
+class_weapons = Array[ExtResource("2_greatsword")]([ExtResource("2_greatsword"), ExtResource("3_shieldbash"), ExtResource("4_warhorn")])
+steel_lifesteal = 0.03

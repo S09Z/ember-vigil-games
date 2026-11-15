@@ -38,6 +38,7 @@ func test_canvas_texture_filter_is_nearest() -> void:
 func test_movement_and_system_actions_exist() -> void:
 	var required: Array[String] = [
 		"move_up", "move_down", "move_left", "move_right", "pause", "toggle_debug",
+		"debug_spawn_burst",
 	]
 	for action: String in required:
 		assert_true(InputMap.has_action(action), "missing input action: %s" % action)

@@ -46,3 +46,21 @@ func test_randf_range_stays_in_bounds() -> void:
 	var r: Rng = Rng.new(13)
 	for i in 100:
 		assert_between(r.randf_range(-2.5, 7.5), -2.5, 7.5)
+
+func test_weighted_pick_never_chooses_a_zero_weight() -> void:
+	var r: Rng = Rng.new(1)
+	for i in 200:
+		assert_ne(r.weighted_pick(PackedFloat32Array([0.0, 1.0, 0.0])), 0)
+		assert_ne(r.weighted_pick(PackedFloat32Array([0.0, 1.0, 0.0])), 2)
+
+func test_weighted_pick_follows_the_weights() -> void:
+	var r: Rng = Rng.new(1)
+	var counts: Array[int] = [0, 0]
+	for i in 3000:
+		counts[r.weighted_pick(PackedFloat32Array([1.0, 2.0]))] += 1
+	assert_between(float(counts[1]) / float(counts[0]), 1.7, 2.3)
+
+func test_weighted_pick_degenerate_inputs_return_minus_one() -> void:
+	var r: Rng = Rng.new(1)
+	assert_eq(r.weighted_pick(PackedFloat32Array()), -1)
+	assert_eq(r.weighted_pick(PackedFloat32Array([0.0, 0.0])), -1)

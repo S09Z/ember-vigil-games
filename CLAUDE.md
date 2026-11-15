@@ -79,6 +79,8 @@ res://
 - **ห้ามใช้ `Area2D` หรือ physics body กับศัตรู** ใช้ `SpatialGrid` เช็คการชนเอง ผู้เล่นเป็น physics body ตัวเดียว
 - ทุกอย่างที่เกิดและหายบ่อยต้องผ่าน pool
 - ห้าม allocate ใน `_physics_process` ของระบบหลัก (ห้ามสร้าง Array หรือ Dictionary ใหม่ทุกเฟรม)
+- **ห้ามส่ง `Packed*Array` ออกจากระบบ** ให้รับ buffer เข้ามาเติมแล้วคืนจำนวนที่เติม (เช่น `query_radius(pos, r, out) -> int`) หรือเปิด getter ต่อ id (เช่น `position_of(id)`)
+  เพราะ array ใน GDScript เป็น copy-on-write ถ้ามีคนถือ reference ที่สองไว้แล้วเจ้าของเขียนทับ จะเกิดการ copy ทั้งก้อนเงียบ ๆ ทุกเฟรม
 - เป้า: ศัตรู 400 ตัวที่ 60 FPS บนเว็บในแล็ปท็อประดับกลาง และ 1,000 ตัวบนเดสก์ท็อป
 - เพิ่มระบบใหม่แล้วต้องดูตัวเลขใน debug overlay (FPS, จำนวนศัตรู, ms ต่อระบบ) กด F3 เพื่อเปิด
 
@@ -125,8 +127,9 @@ res://
 
 ### Rules
 - PRs are stacked: a feature branch cut from `origin/development` also contains earlier unmerged
-  commits. Say so in the PR body and give the merge order, oldest first. After a merge, bring
-  `development` up to date with `main`.
+  commits. Say so in the PR body and give the merge order, oldest first.
+- Never touch `main`: do not commit to it, do not merge a PR, and do not bring `development` up to
+  date with `main`. I merge the PRs into `main` manually. Your work ends at opening the draft PR.
 - If a pre-commit hook fails, nothing was committed. Fix the cause, re-stage, and make a new commit.
   Never use `--no-verify`.
 - Never commit secrets, data, model weights or generated artifacts. Check `git status` before
