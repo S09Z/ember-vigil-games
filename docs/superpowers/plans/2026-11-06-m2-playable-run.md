@@ -1320,7 +1320,7 @@ func test_the_same_seed_gives_the_same_hand() -> void:
 - `CardDef extends Resource`: `id: StringName`, `display_name: String`, `description: String`, `heal_amount: float`, `embers_bonus: int`
 - `hearth_bread.tres`: `id &"hearth_bread"`, `display_name "Hearth Bread"`, `heal_amount 30.0`, `embers_bonus 0`; `ember_purse.tres`: `id &"ember_purse"`, `display_name "Ember Purse"`, `heal_amount 0.0`, `embers_bonus 5` (`description` เป็นข้อความสั้นภาษาอังกฤษของการ์ด ใส่ในไฟล์ได้ตามสะดวก ทุกฟิลด์ชัดเจน)
 
-- [ ] **Step 1: เขียน `tests/test_card_def.gd`**
+- [x] **Step 1: เขียน `tests/test_card_def.gd`**
 ```gdscript
 func test_hearth_bread_heals_thirty() -> void:
 	var c: CardDef = load("res://data/cards/hearth_bread.tres")
@@ -1334,10 +1334,10 @@ func test_every_fallback_has_a_display_name() -> void:
 	for p in ["hearth_bread", "ember_purse"]:
 		assert_ne((load("res://data/cards/%s.tres" % p) as CardDef).display_name, "")
 ```
-- [ ] **Step 2: Verify (ต้องตก)**
-- [ ] **Step 3: เติมฟิลด์ `CardDef` และเขียนสอง `.tres`**
-- [ ] **Step 4: Verify (ต้องผ่าน)**
-- [ ] **Step 5: Finish `M2-13: add fallback level-up cards`**
+- [x] **Step 2: Verify (ต้องตก)**
+- [x] **Step 3: เติมฟิลด์ `CardDef` และเขียนสอง `.tres`**
+- [x] **Step 4: Verify (ต้องผ่าน)**
+- [x] **Step 5: Finish `M2-13: add fallback level-up cards`**
 
 ---
 
